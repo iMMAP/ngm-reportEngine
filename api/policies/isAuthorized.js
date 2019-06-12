@@ -30,6 +30,8 @@ module.exports = function(req, res, next) {
 	} else {
 		return res.json(401, {err: 'No Authorization header was found'});
 	}
+	
+	req.userToken = token;
 
 	jwtToken.verifyToken(token, function(err, token) {
 		if (err) return res.json(401, {err: 'The token is not valid'});

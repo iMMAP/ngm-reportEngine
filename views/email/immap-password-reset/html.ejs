@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- Default home page -->
+<html>
+	<head>
+	<style>
+	</style>
+</head>
+	<body>
+
+		<p>Hi <%=recipientName%>,</p>
+		<br/>
+		<p>Need a password reset? Select from the options below to reset your password;
+
+		<ul>
+			<% for(var i=0; i < resets.length; i++) { %>
+			<li><%= resets[i].admin0name.toUpperCase() %> <a title="Reset your ReportHub password for <%=resets[i].admin0name%>" href="<%=url%><%=resets[i].token%>">Reset Link</a></li>
+			<% } %>
+		</ul>
+
+		<p><br/><%=senderName%></p>
+
+	</body>
+</html>

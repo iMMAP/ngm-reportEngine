@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!-- Default home page -->
+<html>
+	<head>
+	<style>
+	</style>
+</head>
+	<body>
+
+		<p>Hi <%=recipientName%>,</p>
+		<br/>
+		<p>Please verify your account by clicking the link;
+
+		<ul>
+			<li><%= user.admin0name.toUpperCase() %> <a title="Please verify your account by clicking the link: <%=user.admin0name%>" href="<%=url%><%=user.token%>">Activation link</a></li>
+		</ul>
+
+		<p><br/><%=senderName%></p>
+
+	</body>
+</html>

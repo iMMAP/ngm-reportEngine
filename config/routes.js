@@ -109,6 +109,25 @@ module.exports.routes = {
   'POST /immap/products/indicator': 'iMMAP/Products/ProductsController.getProductsIndicator',
 
 
+  // User authentication / password reset
+  'POST /immap/login': 'iMMAP/Reporting/ImmapUserController.login',
+  // 'POST /immap/create': 'iMMAP/Reporting/ImmapUserController.create',
+  'POST /immap/create': 'iMMAP/Reporting/ImmapUserController.createByVerification',
+  'GET /immap/confirm/:token': 'iMMAP/Reporting/ImmapUserController.confirm',
+  'POST /immap/confirm/:token': 'iMMAP/Reporting/ImmapUserController.confirm',
+  'POST /immap/resend/:email': 'iMMAP/Reporting/ImmapUserController.resend',
+
+  'POST /immap/delete': 'iMMAP/Reporting/ImmapUserController.delete',
+  'POST /immap/update': 'iMMAP/Reporting/ImmapUserController.updateLogin',
+  'POST /immap/deactivate': 'iMMAP/Reporting/ImmapUserController.deactivate',
+  
+  'POST /immap/profile/update': 'iMMAP/Reporting/ImmapUserController.updateProfile',
+  'POST /immap/send-email': 'iMMAP/Reporting/ImmapUserController.passwordResetEmail',
+  'POST /immap/password-reset': 'iMMAP/Reporting/ImmapUserController.passwordReset',
+  // user
+  'GET /immap/getUserByUsername': 'iMMAP/Reporting/ImmapUserController.getUserByUsername',
+  'POST /immap/getUserByUsername': 'iMMAP/Reporting/ImmapUserController.getUserByUsername',
+
   // -------- ETHIOPIA --------
   // -------- CTC --------
   'GET /ctc/getKoboData': 'Country/Eth/Ctc/CtcController.getKoboData',

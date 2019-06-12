@@ -33,6 +33,13 @@ module.exports.policies = {
   'ReportHub/UserController': {
     '*': true
   },
+
+  // public
+  'Immap/Reporting/ImmapUserController': {
+    '*': true,
+    'deactivate': ['isAuthorized'],
+    'delete': ['isAuthorized']
+  },
   
   // public
   'ReportHub/MetricsController': {
