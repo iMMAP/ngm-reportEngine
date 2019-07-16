@@ -23,7 +23,7 @@ var ClusterDashboardController = {
 		}
 		return array;
 	},
-	
+
 	// get params from req
 	getParams: function( req, res ){
 
@@ -64,15 +64,15 @@ var ClusterDashboardController = {
 
 	// return filters
 	getFilters: function( params ){
-		// filters, for waterline and native mongo queries (_Native)  
+		// filters, for waterline and native mongo queries (_Native)
 		return {
 			default: { report_year: { '>=': 2017 }, location_id: { '!': null } },
 			adminRpcode: params.adminRpcode === 'hq' ? {} : { adminRpcode: params.adminRpcode },
 			admin0pcode: params.admin0pcode === 'all' ? {} : { admin0pcode: params.admin0pcode },
 			admin1pcode: params.admin1pcode === 'all' ? {} : { admin1pcode: params.admin1pcode },
 			admin2pcode: params.admin2pcode === 'all' ? {} : { admin2pcode: params.admin2pcode },
-			cluster_id:  ( params.cluster_id === 'all' || params.cluster_id === 'rnr_chapter' || params.cluster_id === 'acbar' ) 
-								? {} 
+			cluster_id:  ( params.cluster_id === 'all' || params.cluster_id === 'rnr_chapter' || params.cluster_id === 'acbar' )
+								? {}
 								: ( params.cluster_id !== 'cvwg' )
 									? { or: [{ cluster_id: params.cluster_id }, { mpc_purpose_cluster_id: { contains: params.cluster_id } } ] }
 									: { or: [{ cluster_id: params.cluster_id }, { mpc_purpose_cluster_id: { contains: params.cluster_id } }, { activity_description_id: { contains: 'cash' } }, { mpc_delivery_type_id: ['cash', 'voucher'] } ] },
@@ -87,13 +87,13 @@ var ClusterDashboardController = {
 			admin0pcode_Native: params.admin0pcode === 'all' ? {} : { admin0pcode: params.admin0pcode.toUpperCase() },
 			admin1pcode_Native: params.admin1pcode === 'all' ? {} : { admin1pcode: params.admin1pcode.toUpperCase() },
 			admin2pcode_Native: params.admin2pcode === 'all' ? {} : { admin2pcode: params.admin2pcode.toUpperCase() },
-			cluster_id_Native: ( params.cluster_id === 'all' || params.cluster_id === 'rnr_chapter' || params.cluster_id === 'acbar' ) 
-								? {} 
+			cluster_id_Native: ( params.cluster_id === 'all' || params.cluster_id === 'rnr_chapter' || params.cluster_id === 'acbar' )
+								? {}
 								: ( params.cluster_id !== 'cvwg' )
-									? { $or: [{ cluster_id: params.cluster_id }, { mpc_purpose_cluster_id: { $regex : params.cluster_id } } ] } 
+									? { $or: [{ cluster_id: params.cluster_id }, { mpc_purpose_cluster_id: { $regex : params.cluster_id } } ] }
 									: { $or: [{ cluster_id: params.cluster_id }, { mpc_purpose_cluster_id: { $regex : params.cluster_id } }, { activity_description_id: { $regex: 'cash' } }, { mpc_delivery_type_id: { $in: ['cash', 'voucher'] } } ] },
-			cluster_ids_Native: ( params.cluster_ids.includes('all') || params.cluster_ids.includes('rnr_chapter') || params.cluster_ids.includes('acbar') ) 
-								? {} 
+			cluster_ids_Native: ( params.cluster_ids.includes('all') || params.cluster_ids.includes('rnr_chapter') || params.cluster_ids.includes('acbar') )
+								? {}
 								: ( params.cluster_ids.includes('cvwg') )
 									? { $or: [{ cluster_id: { $in: params.cluster_ids } }, { "mpc_purpose.cluster_id" : { $in : params.cluster_ids }}, { activity_description_id: { $regex: 'cash' } }, { mpc_delivery_type_id: { $in: ['cash', 'voucher'] } } ] }
 									: { $or: [{ cluster_id: { $in: params.cluster_ids } }, { "mpc_purpose.cluster_id" : { $in : params.cluster_ids }} ] },
@@ -172,11 +172,11 @@ var ClusterDashboardController = {
 
 
 			case 'organizations':
-				// list of organizations	
+				// list of organizations
 				if ( params.list ) {
 					Beneficiaries.native(function(err, collection) {
 						if (err) return res.serverError(err);
-					
+
 						collection.aggregate([
 							{ $match : filterObject },
 							{
@@ -186,7 +186,7 @@ var ClusterDashboardController = {
 							},
 						]).toArray(function (err, results) {
 							if (err) return res.serverError(err);
-							organizations=_.pluck(results,'_id')		
+							organizations=_.pluck(results,'_id')
 							organizations.sort(function(a, b) {
 								return a.organization.localeCompare(b.organization);
 							});
@@ -200,10 +200,10 @@ var ClusterDashboardController = {
 				} else {	// count of organizations
 					Beneficiaries.native(function(err, collection) {
 						if (err) return res.serverError(err);
-					
+
 						collection.aggregate([
-							{ 
-								$match : filterObject 
+							{
+								$match : filterObject
 							},
 							{
 								$group: {
@@ -222,19 +222,19 @@ var ClusterDashboardController = {
 							if (err) return res.serverError(err);
 							return res.json( 200, { 'value': results[0]?results[0].total:0 } );
 						});
-					});	
+					});
 				}
-				
+
 				break;
 
 			// count
 			case 'projects':
 				Beneficiaries.native(function(err, collection) {
 					if (err) return res.serverError(err);
-				
+
 					collection.aggregate([
-						{ 
-							$match : filterObject 
+						{
+							$match : filterObject
 						},
 						{
 							$group: {
@@ -253,18 +253,18 @@ var ClusterDashboardController = {
 						if (err) return res.serverError(err);
 						return res.json( 200, { 'value': results[0]?results[0].total:0 } );
 					});
-				});	
-				
+				});
+
 				break;
 
 			// count
 			case 'locations':
 				Beneficiaries.native(function(err, collection) {
 					if (err) return res.serverError(err);
-				
+
 					collection.aggregate([
-						{ 
-							$match : filterObject 
+						{
+							$match : filterObject
 						},
 						{
 							$group: {
@@ -288,9 +288,9 @@ var ClusterDashboardController = {
 						if (err) return res.serverError(err);
 						return res.json( 200, { 'value': results[0]?results[0].total:0 } );
 					});
-				});	
-				
-				break;	
+				});
+
+				break;
 
 			case 'contacts':
 
@@ -551,7 +551,7 @@ var ClusterDashboardController = {
 			case 'financial_report':
 
 				// fields
-				var fields = [ 
+				var fields = [
 							'cluster',
 							'organization',
 							'admin0name',
@@ -640,15 +640,15 @@ var ClusterDashboardController = {
 				break;
 
 			case 'households_population':
-				
+
 				// total sum
 				Beneficiaries.native(function(err, collection) {
 					if (err) return res.serverError(err);
-				
+
 					collection.aggregate(
 						[
-							{ 
-								$match : filterObject 
+							{
+								$match : filterObject
 							},
 							{
 								$group:
@@ -666,20 +666,20 @@ var ClusterDashboardController = {
 						return res.json( 200, { 'value': total } );
 					});
 				});
-				
+
 				break;
 
-			
+
 			case 'beneficiaries_population':
 
 				// total sum
 				Beneficiaries.native(function(err, collection) {
 					if (err) return res.serverError(err);
-				
+
 					collection.aggregate(
 						[
-							{ 
-								$match : filterObject 
+							{
+								$match : filterObject
 							},
 							{
 								$group:
@@ -698,9 +698,9 @@ var ClusterDashboardController = {
 						return res.json( 200, { 'value': total } );
 					});
 				});
-				
+
 				break;
-				
+
 
 
 			// raw data export
@@ -709,11 +709,11 @@ var ClusterDashboardController = {
 					// total sum
 					Beneficiaries.native(function(err, collection) {
 						if (err) return res.serverError(err);
-					
+
 						collection.aggregate(
 							[
-								{ 
-									$match : filterObject 
+								{
+									$match : filterObject
 								},
 								{
 									$group:
@@ -726,9 +726,9 @@ var ClusterDashboardController = {
 							]
 						).toArray(function (err, beneficiaries) {
 							if (err) return res.serverError(err);
-									
-							var total = beneficiaries[0]?beneficiaries[0].total:0;  
-		
+
+							var total = beneficiaries[0]?beneficiaries[0].total:0;
+
 							return res.json( 200, { 'value': total } );
 
 						});
@@ -737,10 +737,10 @@ var ClusterDashboardController = {
 					// get beneficiaries export
 					Beneficiaries.native(function(err, collection) {
 						if (err) return res.serverError(err);
-					
+
 						collection.find(filterObject).toArray(function (err, beneficiaries) {
 							if (err) return res.serverError(err);
-							
+
 							var fields = [
 								'project_id',
 								'report_id',
@@ -953,8 +953,14 @@ var ClusterDashboardController = {
 								'createdAt'
 							];
 
+              if (params.admin0pcode.toUpperCase() === 'AF') {
+                ix = fields.indexOf('activity_description_name') + 1;
+                ix && fields.splice(ix, 0, 'injury_treatment_same_province');
+                ix && fieldNames.splice(ix, 0, 'injury_treatment_same_province');
+              }
+
 							var total = 0;
-							
+
 							// format beneficiaries
 							async.eachLimit(beneficiaries, 200, function (d, next) {
 								// hrp code
@@ -1017,7 +1023,7 @@ var ClusterDashboardController = {
 											dashboard: 'cluster_dashboard',
 											theme: params.indicator,
 											url: req.url,
-										}, function (err) { return })									
+										}, function (err) { return })
 									} else {
 										return res.json(200, { data: csv });
 									}
@@ -1026,7 +1032,7 @@ var ClusterDashboardController = {
 						})
 					});
 				}
-				
+
 				break;
 
 
@@ -1151,7 +1157,7 @@ var ClusterDashboardController = {
 					});
 
 				break;
-			
+
 			// NG WASH
 			// accountability
 			case 'accountability':
@@ -1220,7 +1226,7 @@ var ClusterDashboardController = {
 
 				break;
 
-			
+
 			// boreholes
 			case 'boreholes':
 
@@ -1559,30 +1565,30 @@ var ClusterDashboardController = {
 
 				break;
 
-				
+
 
 			// markers
 			case 'markers':
-					
+
 				// params
 				var locations = [],
 					markers = {},
 					counter = 0,
 					length = 0;
-				// groupby	
+				// groupby
 				Beneficiaries.native(function(err, collection) {
 							if (err) return res.serverError(err);
-						  
+
 							collection.aggregate([
-								{ 
-									$match : filterObject 
+								{
+									$match : filterObject
 								},
 								{
 								  $group: {
 									_id: {
 										project_id:'$project_id',
 										site_lat :'$site_lat',
-										site_lng :'$site_lng', 
+										site_lng :'$site_lng',
 										site_name:'$site_name',
 										cluster:'$cluster',
 										organization:'$organization',
@@ -1598,14 +1604,14 @@ var ClusterDashboardController = {
 										site_name:'$site_name',
 										name:'$name',
 										position:'$position',
-										phone:'$phone', 
+										phone:'$phone',
 										email:'$email'
 									}
 								  }
 								}
 							]).toArray(function (err, locations) {
 							  	if (err) return res.serverError(err);
-							
+
 								// return no locations
 								if ( !locations.length ) return res.json( 200, { 'data': { 'marker0': { layer: 'projects', lat:34.5, lng:66.0, message: '<h5 style="text-align:center; font-size:1.5rem; font-weight:100;">NO PROJECTS</h5>' } } } );
 
@@ -1663,7 +1669,7 @@ var ClusterDashboardController = {
 				});
 
 				break;
-			
+
 			case 'pieChart':
 			// labels
 				var result = {
@@ -1711,11 +1717,11 @@ var ClusterDashboardController = {
 								}]
 							};
 						// beneficiaries
-						
-										
+
+
 						Beneficiaries.native(function (err, results) {
 							if(err) return res.serverError(err);
-			
+
 							results.aggregate([
 								{
 									$match : filterObject
@@ -1735,7 +1741,7 @@ var ClusterDashboardController = {
 									}
 								}
 							]).toArray(function (err, beneficiaries) {
-								if (err) return res.serverError(err);								
+								if (err) return res.serverError(err);
 
 								// if no length
 								if (!beneficiaries.length) return res.json(200, { 'value': 0 });
@@ -1765,7 +1771,7 @@ var ClusterDashboardController = {
 											// // highcharts elderly_men
 											result.data[1].y = 0;
 											result.data[1].label = 0;
-											
+
 											return res.json(200, result);
 
 										} else {
@@ -1791,7 +1797,7 @@ var ClusterDashboardController = {
 											// highcharts boys
 											result.data[1].y = boysPerCent;
 											result.data[1].label = $beneficiaries.childTotal;
-											
+
 											return res.json(200, result);
 										}
 
@@ -1817,7 +1823,7 @@ var ClusterDashboardController = {
 											// // highcharts elderly_men
 											result.data[1].y = 0;
 											result.data[1].label = 0;
-											
+
 											return res.json(200, result);
 
 										} else {
@@ -1826,7 +1832,7 @@ var ClusterDashboardController = {
 											var mensPerCent = ($beneficiaries.men / ($beneficiaries.men + $beneficiaries.women)) * 100;
 											var womensPerCent = ($beneficiaries.women / ($beneficiaries.men + $beneficiaries.women)) * 100;
 											var totalPerCent = ($beneficiaries.adultTotal / ($beneficiaries.elderTotal + $beneficiaries.adultTotal + $beneficiaries.childTotal)) * 100;
-										
+
 											// // assign data left
 											result.label.left.label.label = mensPerCent;
 											result.label.left.subLabel.label = $beneficiaries.men;
@@ -1843,7 +1849,7 @@ var ClusterDashboardController = {
 											// // highcharts men
 											result.data[1].y = mensPerCent;
 											result.data[1].label = $beneficiaries.adultTotal;
-											
+
 											return res.json(200, result);
 
 										}
@@ -1870,7 +1876,7 @@ var ClusterDashboardController = {
 											// // highcharts elderly_men
 											result.data[1].y = 0;
 											result.data[1].label = 0;
-											
+
 											return res.json(200, result);
 
 										} else {
@@ -1878,7 +1884,7 @@ var ClusterDashboardController = {
 											var elmensPerCent = ($beneficiaries.elderly_men / ($beneficiaries.elderly_men + $beneficiaries.elderly_women)) * 100;
 											var elwomensPerCent = ($beneficiaries.elderly_women / ($beneficiaries.elderly_men + $beneficiaries.elderly_women)) * 100;
 											var totalPerCent = ($beneficiaries.elderTotal / ($beneficiaries.elderTotal + $beneficiaries.adultTotal + $beneficiaries.childTotal)) * 100;
-											
+
 											// // assign data left
 											result.label.left.label.label = elmensPerCent;
 											result.label.left.subLabel.label = $beneficiaries.elderly_men;
@@ -1895,7 +1901,7 @@ var ClusterDashboardController = {
 											// // highcharts elderMen
 											result.data[1].y = elmensPerCent;
 											result.data[1].label = $beneficiaries.elderTotal;
-											
+
 											return res.json(200, result);
 
 										}
@@ -1906,14 +1912,14 @@ var ClusterDashboardController = {
 											break;
 									}
 
-			
+
 								})
-							})					
-						
-										
+							})
+
+
 				break;
-				
-				default: 
+
+				default:
 					return res.json( 200, { value:0 });
 					break;
 
