@@ -131,6 +131,10 @@ module.exports = {
 			type: 'array'
 		},
 
+		location_grouping_by:{
+			type: 'string'
+		},
+
 		// project
 		project_acbar_partner: {
 			type: 'boolean'
@@ -241,6 +245,13 @@ module.exports = {
 		// project_details
 		project_details:{
 			type: 'array'
+		},
+
+
+
+		private:{
+			type: 'boolean',
+			defaultsTo: false
 		},
 
 
