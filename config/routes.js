@@ -389,6 +389,55 @@ module.exports.routes = {
   'GET /wfp/livelihoods/getLivelihoodsDataset': 'Country/Cxb/Livelihoods/LivelihoodsTaskController.getLivelihoodsDataset',
   'POST /wfp/livelihoods/getLivelihoodsDataset': 'Country/Cxb/Livelihoods/LivelihoodsTaskController.getLivelihoodsDataset',
 
+
+
+  // -----CUSTOM REPORTING-----
+
+  // Cluster Lists
+  'GET /custom/list/activities': 'Custom/Lists/ListController.getActivities',
+  // 'GET /custom/list/indicators': 'Custom/Lists/ListController.getIndicators',
+
+  // CUSTOM PROJECT
+
+  'POST /custom/project/getProjectsList': 'Custom/CustomProjectController.getProjectsList',
+  'POST /custom/project/getProject': 'Custom/CustomProjectController.getProjectById',
+  // 'POST /custom/project/getProjects': 'Custom/CustomProjectController.getProjects',
+  'POST /custom/project/setProject': 'Custom/CustomProjectController.setProjectById',
+  // 'POST /custom/project/removeBeneficiary': 'Custom/CustomProjectController.removeBeneficiaryById',
+  // 'POST /custom/project/removeLocation': 'Custom/CustomProjectController.removeLocationById',
+  'POST /custom/project/delete': 'Custom/CustomProjectController.deleteProjectById',
+  'GET /custom/project/delete': 'Custom/CustomProjectController.deleteProjectById',
+
+  // CUSTOM REPORTS
+
+  'POST /custom/report/getReportsList': 'Custom/CustomReportController.getReportsList',
+  'POST /custom/report/getReportDetailsById': 'Custom/CustomReportController.getReportDetailsById',
+  'POST /custom/report/getReport': 'Custom/CustomReportController.getReport',
+  'POST /custom/report/setReport': 'Custom/CustomReportController.setReportById',
+	'POST /custom/report/updateReportStatus': 'Custom/CustomReportController.updateReportStatus',
+  'POST /custom/report/removeBeneficiary': 'Custom/CustomReportController.removeBeneficiary',
+  'POST /custom/report/delete': 'Custom/CustomReportController.deleteReportById',
+
+  // ACTIVITY REPORTS
+  'POST /custom/report/getReportCsv': 'Custom/CustomReportController.getReportCsv',
+  'POST /custom/project/getProjectCsv': 'Custom/CustomProjectController.getProjectCsv',
+
+  // CUSTOM ADMIN BENEFICIARY EDIT
+  'POST /custom/project/setBeneficiariesById': 'Custom/CustomProjectController.setBeneficiariesById',
+  'POST /custom/project/setBeneficiaryById': 'Custom/CustomProjectController.setBeneficiaryById',
+
+  // CUSTOM ADMIN DASHBOARD
+  'POST /custom/admin/indicator': 'Custom/Dashboards/CustomAdminDashboardController.getCustomAdminIndicator',
+
+  // CUSTOM DASHBOARD
+  'GET /custom/indicator': 'Custom/Dashboards/CustomDashboardController.getIndicator',
+  'POST /custom/indicator': 'Custom/Dashboards/CustomDashboardController.getIndicator',
+
+  // CUSTOM REPORTS TASKS
+  // 'GET /custom/report/setReportsToDo': 'Custom/Reports/CustomReportTasksController.setReportsToDo',
+  // 'GET /custom/report/setReportsOpen': 'Custom/Reports/CustomReportTasksController.setReportsOpen',
+  'GET /custom/report/setReportsReminder': 'Custom/Reports/CustomReportTasksController.setReportsReminder',
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
