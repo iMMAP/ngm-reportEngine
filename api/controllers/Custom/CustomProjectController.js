@@ -56,7 +56,7 @@ var CustomProjectController = {
     const QUARTERLY = 'quarterly';
     const SEMIYEARLY = 'semiyearly';
     const YEARLY = 'yearly';
-    const DEFAULT_PERIOD = 'monthly';
+    const DEFAULT_PERIOD = 'default';
 
     // const period_types = {
     //   'monthly': MONTHS,
@@ -118,14 +118,14 @@ var CustomProjectController = {
     if (period_spans[project.reporting_period_type]) {
       period_span = period_spans[project.reporting_period_type];
     } else {
-      period_span = parseInt(project.reporting_period_type.replace(/[^0-9]/g, "")) || period_spans['default'];
+      period_span = parseInt(project.reporting_period_type.replace(/[^0-9]/g, "")) || period_spans[DEFAULT_PERIOD];
     }
 
     var period_type = period_types['default'];
     if (period_types[project.reporting_period_type]) {
       period_type = period_types[project.reporting_period_type];
     } else {
-      period_type = period_types[project.reporting_period_type.replace(/[0-9]/g, "")] || period_types['default'];
+      period_type = period_types[project.reporting_period_type.replace(/[0-9]/g, "")] || period_types[DEFAULT_PERIOD];
     }
 
     // ---END---
@@ -155,12 +155,8 @@ var CustomProjectController = {
     reports_duration = reports_duration / period_span;
     reports_duration = Math.ceil(reports_duration)
 
-    console.log(reports_duration)
-
     // reports_duration array
     var reports_array = Array(parseInt( reports_duration )).fill().map((item, index) => 0 + index);
-
-    console.log(reports_array)
 
     // prepare project for cloning
     var p = JSON.parse( JSON.stringify( project ) );
@@ -171,7 +167,6 @@ var CustomProjectController = {
     async.each( reports_array, function ( m, next ) {
       m = m*period_span;
       // create report
-      console.log('d',m, '-',period_span, '-',m + period_span )
       var report = {
         project_id: project.id,
         report_status: 'todo',
