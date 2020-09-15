@@ -25,7 +25,7 @@ var CustomAdminDashboardController = {
   getCustomAdminIndicator: function( req, res ){
 
     // request input
-    if ( !req.param( 'report_type_id' ) || !req.param( 'indicator' ) || !req.param( 'cluster_id' ) || !req.param( 'organization_tag' ) || !req.param( 'activity_type_id' ) || !req.param( 'adminRpcode' )  || !req.param( 'admin0pcode' ) || !req.param( 'start_date' ) || !req.param( 'end_date' ) ) {
+    if ( !req.param( 'report_type_id' ) || !req.param( 'indicator' ) || !req.param( 'cluster_id' ) || !req.param( 'organization_tag' ) || !req.param( 'adminRpcode' )  || !req.param( 'admin0pcode' ) || !req.param( 'start_date' ) || !req.param( 'end_date' ) ) {
       return res.json( 401, { err: 'report_type_id, indicator, cluster_id, organization_tag, activity_type_id, adminRpcode, admin0pcode, start_date, end_date required!' });
     }
 
@@ -68,9 +68,9 @@ var CustomAdminDashboardController = {
 
     // stock/activity
     if ( params.report_type === 'stock' ) {
-      AdminDashboardController.getStockIndicator( $nin_organizations, params, json2csv, moment, fields, fieldNames, req, res );
+      CustomAdminDashboardController.getStockIndicator( $nin_organizations, params, json2csv, moment, fields, fieldNames, req, res );
     } else {
-      AdminDashboardController.getActivityIndicator( $nin_organizations, params, json2csv, moment, fields, fieldNames, req, res );
+      CustomAdminDashboardController.getActivityIndicator( $nin_organizations, params, json2csv, moment, fields, fieldNames, req, res );
     }
 
   },
@@ -585,6 +585,7 @@ var CustomAdminDashboardController = {
     switch( params.indicator ) {
 
       case 'latest':
+
 
         // get organizations by project
         CustomReport

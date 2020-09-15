@@ -84,7 +84,7 @@ var CustomDashboardController = {
 		// filters, for waterline and native mongo queries (_Native)
 		return {
       default: {  },
-      report_type_id: req.param('report_type_id'),
+			report_type_id: { report_type_id: params.report_type_id},//req.param('report_type_id'),
 			adminRpcode: params.adminRpcode === 'hq' ? {} : { adminRpcode: params.adminRpcode },
 			admin0pcode: params.admin0pcode === 'all' ? {} : { admin0pcode: params.admin0pcode },
 			admin0pcode_act: params.admin0pcode === 'all' ? {} : { admin0pcode: { contains: params.admin0pcode.toUpperCase()} },

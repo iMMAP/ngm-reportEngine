@@ -242,6 +242,11 @@ module.exports = {
     required: true
   },
 
+		version: {
+			type: 'string',
+			required: true
+		}
+
 	},
 
   // updateOrCreate

@@ -255,9 +255,9 @@ module.exports = {
 		},
 
 		// // dtm
-		// site_id: {
-		// 	type: 'string'
-		// },
+		site_id: {
+			type: 'string'
+		},
 		// site_class: {
 		// 	type: 'string'
 		// },
@@ -276,10 +276,10 @@ module.exports = {
 		// site_type_name: {
 		// 	type: 'string'
 		// },
-		// site_name: {
-		// 	type: 'string',
-		// 	required: true
-		// },
+		site_name: {
+			type: 'string',
+			required: true
+		},
 		// site_name_alternative: {
 		// 	type: 'string'
 		// },
@@ -365,14 +365,14 @@ module.exports = {
 		// 	type: 'integer',
 		// 	defaultsTo: 0
 		// },
-		// site_lng: {
-		// 	type: 'float',
-		// 	required: true
-		// },
-		// site_lat: {
-		// 	type: 'float',
-		// 	required: true
-		// },
+		site_lng: {
+			type: 'float',
+			required: true
+		},
+		site_lat: {
+			type: 'float',
+			required: true
+		},
 
 		// admin
 		admin1lng: {
