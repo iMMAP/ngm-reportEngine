@@ -261,7 +261,12 @@ module.exports = {
     report_type_name: {
       type: 'string',
       required: true
-    },
+	},
+	
+	version:{
+		type: 'string',
+		required: true
+	}
 
 
 
