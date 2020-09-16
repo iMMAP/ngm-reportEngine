@@ -75,6 +75,11 @@ var CustomDashboardController = {
 			beneficiaries: req.param('beneficiaries'),
 			start_date: req.param('start_date'),
       end_date: req.param('end_date'),
+
+      overwriteFields: req.param('overwriteFields') ? req.param('overwriteFields') : false,
+      fields: req.param('fields') ? req.param('fields') : false,
+      fieldNames: req.param('fieldNames') ? req.param('fieldNames') : false,
+
       calculate_indicator: req.param('calculate_indicator') ? req.param('calculate_indicator') : [ "total_beneficiaries" ],
 
 		}
@@ -503,7 +508,22 @@ var CustomDashboardController = {
 						collection.find(filterObject).toArray(function (err, beneficiaries) {
 							if (err) return res.serverError(err);
 
-              let { fields, fieldNames } = FieldsService.getBeneficiariesDownloadFields(params.admin0pcode, params.cluster_id);
+              let { fields, fieldNames } = FieldsService.getCustomBeneficiariesDownloadFields(params.admin0pcode, params.cluster_id);
+
+              // concat fields from config
+              if (params.overwriteFields){
+                fields = params.fields;
+                if (params.fieldNames) { fieldNames = params.fields; } else { fieldNames = params.fields; };
+              } else {
+                if (params.fields) {
+                  fields = fields.concat(params.fields);
+                  if (params.fieldNames) {
+                    fieldNames = fieldNames.concat(params.fieldNames)
+                  } else {
+                    fieldNames = fieldNames.concat(params.fields)
+                  }
+                }
+              }
 
 							var total = 0;
 
