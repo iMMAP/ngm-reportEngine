@@ -77,14 +77,15 @@ module.exports = {
 		// ods_objetivos_de_desarrollo_sostenible:{
 		// 	type:'array'
 		// },
-		// cluster_id: {
-		// 	type: 'string',
-		// 	required: true
-		// },
-		// cluster: {
-		// 	type: 'string',
-		// 	required: true
-		// },
+		cluster_id: {
+			type: 'string'
+		},
+		cluster: {
+			type: 'string'
+    },
+    cluster_ids: {
+			type: 'array'
+		},
 		name: {
 			type: 'string',
 			required: true
@@ -191,7 +192,7 @@ module.exports = {
 		},
 		project_description: {
 			type: 'string',
-			required: true
+      defaultsTo: ""
 		},
 		project_start_date: {
 			type: 'date',
@@ -262,7 +263,7 @@ module.exports = {
       type: 'string',
       required: true
 	},
-	
+
 	version:{
 		type: 'string',
 		required: true
