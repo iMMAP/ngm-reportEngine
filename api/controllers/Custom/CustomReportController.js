@@ -391,7 +391,7 @@ var CustomReportController = {
 							next();
 						}
 					}
-
+          location.version = report.version;
 					// update or create
 					CustomLocation.updateOrCreate( _under.extend( {}, findProject, findReport ), { id: location.id }, location ).exec(function( err, result ){
 
