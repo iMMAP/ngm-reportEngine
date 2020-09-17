@@ -85,6 +85,9 @@ module.exports = {
     },
     cluster_ids: {
 			type: 'array'
+    },
+    clusters: {
+			type: 'array'
 		},
 		name: {
 			type: 'string',
