@@ -433,6 +433,9 @@ module.exports.routes = {
   'GET /custom/indicator': 'Custom/Dashboards/CustomDashboardController.getIndicator',
   'POST /custom/indicator': 'Custom/Dashboards/CustomDashboardController.getIndicator',
 
+  // CUSTOM FILES
+  'GET /custom/listCustomFiles': 'Custom/CustomFileController.listCustomFiles',
+
   // CUSTOM REPORTS TASKS
   // 'GET /custom/report/setReportsToDo': 'Custom/Reports/CustomReportTasksController.setReportsToDo',
   // 'GET /custom/report/setReportsOpen': 'Custom/Reports/CustomReportTasksController.setReportsOpen',

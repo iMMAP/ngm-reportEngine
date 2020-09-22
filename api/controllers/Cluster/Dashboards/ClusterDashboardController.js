@@ -58,7 +58,8 @@ var ClusterDashboardController = {
       csv: req.param('csv') ? req.param('csv') : false,
       json: req.param('json') ? req.param('json') : false,
 			ocha: req.param('ocha') ? req.param('ocha') : false,
-			list: req.param('list') ? req.param('list') : false,
+      list: req.param('list') ? req.param('list') : false,
+      write: req.param('write') ? req.param('write') : false,
 			indicator: req.param('indicator'),
 			report: req.param('report'),
 			cluster_id: req.param('cluster_id'),
@@ -1028,6 +1029,73 @@ var ClusterDashboardController = {
 											theme: params.indicator,
 											url: req.url,
 										}, function (err) { return })
+                  } else if (params.write) {
+
+                    var template = {
+                      dir: '/home/ubuntu/nginx/www/ngm-reportPrint/pdf/',
+                      report: req.param('report') ? req.param('report') : 'beneficiaries-' + moment().format( 'YYYY-MM-DDTHHmm' )
+                    }
+
+                    var fs = require('fs');
+
+                    fs.writeFile(template.dir + template.report + '.csv', csv, function (err) {
+                      // err
+                      if (err) return res.json(400, { error: 'Write error!', message: err });
+
+                      fileDescriptor = {
+                        fileid_local : template.report + '.csv',
+                        filename_extension : '.csv',
+                        fileid_local_name : template.report + '.csv',
+                        mime_type : "application/vnd.ms-excel",
+                        filename : template.report + '.csv',
+                      }
+
+                      // set variable metadata TODO: refactor
+                      if (req.body.report_type_id){
+                        fileDescriptor.report_type_id = req.body.report_type_id;
+                      }
+                      if (req.body.report_type_name){
+                        fileDescriptor.report_type_name = req.body.report_type_name;
+                      }
+
+                      if (req.body.username){
+                        fileDescriptor.fileowner = req.body.username;
+                      }
+                      if (req.session.session_user && req.session.session_user.username){
+                        fileDescriptor.fileowner = req.session.session_user.username;
+                      }
+                      if (req.body.admin0pcode){
+                        fileDescriptor.admin0pcode = req.body.admin0pcode;
+                      }
+                      if (req.session.session_user && req.session.session_user.admin0pcode){
+                        fileDescriptor.admin0pcode = req.session.session_user.admin0pcode;
+                      }
+                      if (req.body.organization_tag){
+                        fileDescriptor.organization_tag = req.body.organization_tag;
+                      }
+                      if (req.session.session_user && req.session.session_user.organization_tag){
+                        fileDescriptor.organization_tag = req.session.session_user.organization_tag;
+                      }
+
+                      CustomFiles.create(fileDescriptor).exec(function(err, doc) {
+                        if (err) {
+                          res.json(err.status, {err: err});
+                          fs.unlink(template.dir + template.report + '.csv')
+                          return;
+                        }
+                        if (doc) {
+                          res.json({ status:200, file:doc });
+                        }
+                        MetricsController.setApiMetrics({
+                          dashboard: 'cluster_dashboard_generate',
+                          theme: params.indicator,
+                          url: req.url,
+                        }, function (err) { return });
+
+                      });
+                      // return res.json(200, { message: 'success' });
+                    });
+
 									} else {
 										return res.json(200, { data: csv });
 									}
