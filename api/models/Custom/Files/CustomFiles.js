@@ -40,6 +40,9 @@ module.exports = {
           organization_tag: {
               type: 'string',
           },
+          cluster_id: {
+            type: 'string',
+          },
           fileowner: {
               type: 'string',
           },

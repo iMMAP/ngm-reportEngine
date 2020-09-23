@@ -654,6 +654,9 @@ var CustomDashboardController = {
                       if (req.body.organization_tag){
                         fileDescriptor.organization_tag = req.body.organization_tag;
                       }
+                      if (req.body.cluster_id){
+                        fileDescriptor.cluster_id = req.body.cluster_id;
+                      }
                       if (req.session.session_user && req.session.session_user.organization_tag){
                         fileDescriptor.organization_tag = req.session.session_user.organization_tag;
                       }
