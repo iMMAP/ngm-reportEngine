@@ -237,7 +237,11 @@ module.exports = {
 		report_month: {
 			type: 'integer',
 			// required: true
-		},
+    },
+    report_quarter: {
+			type: 'integer',
+			// required: true
+    },
 		report_year: {
 			type: 'integer',
 			// required: true
