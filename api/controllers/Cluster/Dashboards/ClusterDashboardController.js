@@ -1064,6 +1064,9 @@ var ClusterDashboardController = {
                       if (req.session.session_user && req.session.session_user.username){
                         fileDescriptor.fileowner = req.session.session_user.username;
                       }
+                      if (req.body.adminRpcode){
+                        fileDescriptor.adminRpcode = req.body.adminRpcode;
+                      }
                       if (req.body.admin0pcode){
                         fileDescriptor.admin0pcode = req.body.admin0pcode;
                       }

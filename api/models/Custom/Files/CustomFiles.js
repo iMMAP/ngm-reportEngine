@@ -31,6 +31,9 @@ module.exports = {
           project_id: {
               type: 'string',
           },
+          adminRpcode: {
+            type: 'string',
+          },
           admin0pcode: {
               type: 'string',
           },
