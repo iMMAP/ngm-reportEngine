@@ -173,6 +173,7 @@ var CustomProjectController = {
         report_active: true,
         report_week: moment( s_date ).add( m, period_type ).week(),
         report_month: moment( s_date ).add( m, period_type ).month(),
+        report_quarter: moment( s_date ).add( m, period_type ).quarter(),
         report_year: moment( s_date ).add( m, period_type ).year(),
         reporting_period: moment( s_date ).add( m, period_type ).startOf(period_type).format(),
         reporting_period_end: moment( s_date ).add( m + period_span - 1, period_type ).endOf(period_type).format(),
