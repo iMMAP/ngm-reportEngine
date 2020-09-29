@@ -42,6 +42,17 @@ module.exports = {
 			type: 'array',
 		},
 
+		// contractor
+		contractor: {
+			type: 'string',
+		},
+
+		// contractor_rating
+		contractor_rating: {
+			type: 'float',
+			defaultsTo: 0
+		},
+
 		// activities
 		activity_start_date:{
 			type: 'date',
