@@ -900,10 +900,10 @@ var ProjectController = {
 
       // ASYNC REQUEST 1
       // async loop target_beneficiaries
-      async.each( project_budget_progress, function ( d, next ) {
+      async.eachOf( project_budget_progress, function ( d, ibp, next ) {
         var budget = _under.extend( {}, d, project_copy_no_cluster );
         BudgetProgress.updateOrCreate( findProject, { id: budget.id }, budget ).exec(function( err, result ){
-          project_update.project_budget_progress.push( ProjectController.set_result( result ) );
+          project_update.project_budget_progress[ibp] = ProjectController.set_result( result );
           next();
         });
       }, function ( err ) {
@@ -917,11 +917,10 @@ var ProjectController = {
         var t_beneficiary = _under.extend( {}, d, project_copy_no_cluster );
         TargetBeneficiaries.updateOrCreate( findProject, { id: t_beneficiary.id }, t_beneficiary ).exec(function( err, result ){
           project_update.target_beneficiaries[ib] = ProjectController.set_result( result );
-          next();
+          next(err);
         });
       }, function ( err ) {
-        if ( err ) return err;
-        returnProject();
+        returnProject(err);
       });
 
       // ASYNC REQUEST 3
@@ -936,20 +935,18 @@ var ProjectController = {
         } );
         TargetLocation.updateOrCreate( findProject, { id: t_location.id }, t_location ).exec(function( err, result ){
           project_update.target_locations[il] = ProjectController.set_result( result );
-          next();
+          next(err);
         });
       }, function ( err ) {
-        if ( err ) return err;
+        if ( err ) return returnProject(err);
         target_locations_counter++;
         returnProject();
       });
 
       // generate reports for duration of project_update
       ProjectController.getProjectReports( project_update, function( err, project_reports ){
-
         // err
-        if ( err ) return err;
-
+        if (err) return returnProject(err);
         // ASYNC REQUEST 4
         // async loop project_reports
         async.each( project_reports, function ( d, next ) {
@@ -961,11 +958,11 @@ var ProjectController = {
             // Report update or create
             Report.updateOrCreate( findProject, { id: report.id }, d ).exec(function( err, result ){
               reports.push( ProjectController.set_result( result ) );
-              next();
+              next(err);
             });
           });
         }, function ( err ) {
-          if ( err ) return err;
+          if ( err ) return returnProject(err);
           target_reports_counter++;
           returnProject();
         });
@@ -1020,7 +1017,7 @@ var ProjectController = {
         ProjectController.getProjectReportLocations( reports, project_update.target_locations, function( err, locations ){
 
           // err
-          if ( err ) return err;
+          if ( err ) return returnProject(err);
 
           // ASYNC REQUEST 5
           // async loop project_update locations
@@ -1035,7 +1032,7 @@ var ProjectController = {
               });
             });
           }, function ( err ) {
-            if ( err ) return err;
+            if ( err ) return returnProject(err);
             delete_reports_counter++;
             returnProject();
           });

@@ -204,6 +204,10 @@ module.exports = {
 			type: 'array'
 		},
 
+		location_grouping_by: {
+			type: 'string'
+		},
+
     notes: {
     	type: 'string'
     },
