@@ -110,6 +110,8 @@ module.exports.routes = {
   'GET /getProjectDocument/:fileid': 'ReportHub/FileController.getLocalProjectDocument',
   'DELETE /deleteLocalDocument/:fileid': 'ReportHub/FileController.deleteLocalDocument',
 
+  // Google Sheets API
+  'GET /getListGoogleSheet/:spreadsheetId/:sheetName': 'ReportHub/FileController.getGoogleSheetsJson',
 
   // -------- iMMAP --------
   // -------- Products --------
