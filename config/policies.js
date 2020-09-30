@@ -47,6 +47,7 @@ module.exports.policies = {
     'proxy': true,
     'export': true,
     'getBeneficiairiesCsv': true,
+    'getGoogleSheetsJson': true,
     'uploadList': ['isAuthorized', 'isAdmin']
   },
 

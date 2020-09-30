@@ -1145,7 +1145,102 @@ module.exports = {
 
       });
 
-  }
+  },
+
+  getGoogleSheetsJson: async function (req, res) {
+    try {
+      if (!req.param('spreadsheetId')){
+        return res.json(401, { error: 'spreadsheetId required!' });
+      }
+      if (!req.param('sheetName')){
+        return res.json(401, { error: 'sheetName required!' });
+      }
+
+      const spreadsheetId = req.param('spreadsheetId');
+      const sheetName = req.param('sheetName');
+
+      if (!sails.config.documents || !sails.config.documents.CREDENTIALS){
+        return res.json(401, { error: 'Google API Credentials Missing!' });
+      }
+
+      var privatkey = sails.config.documents.CREDENTIALS;
+
+      var jwtClient = new google.auth.JWT(
+        privatkey.client_email,
+        null,
+        privatkey.private_key,
+        ['https://www.googleapis.com/auth/spreadsheets']);
+
+        jwtClient.authorize(async (err, auth) => {
+          if (err) return res.json(401, { error: 'Google API not authorized!' });
+          try {
+            try {
+              var response = await google.sheets({ version: 'v4' }).spreadsheets.values.get({
+                auth: jwtClient,
+                spreadsheetId: spreadsheetId,
+                range: sheetName,
+                valueRenderOption: 'UNFORMATTED_VALUE',
+              });
+            } catch (e) {
+              if (e.code = 400) {
+                return res.json(400, { error: "Incorrect Sheet Range!", errors: e.errors });
+              } else if (e.code = 404) {
+                return res.json(400, { error: "Spreadsheet with such id not found!", errors: e.errors });
+              } else {
+                return res.json(400, { errors: e.errors, errors: e.errors });
+              }
+            }
+
+            const isJson = (item) => {
+              item = typeof item !== "string"
+                ? JSON.stringify(item)
+                : item;
+              try {
+                item = JSON.parse(item);
+              } catch (e) {
+                return false;
+              }
+              if (typeof item === "object" && item !== null) {
+                return true;
+              }
+              return false;
+            };
+
+            const isValidHeader = header => {
+              if (!header) return false;
+              if (!header.length) return false;
+              var headerCleaned = header.map(a => typeof a === 'number' ? a : a.trim()).filter(e => e && e !== 'undefined' && e !== 'null');
+              if (header.length !== headerCleaned.length) return false;
+              return true;
+            };
+
+            const arrayShapeHeaderDimension = data => {
+              return data.map(row => row.slice(0, data[0].length))
+                          .filter(row => row.map(e => typeof e === 'number' ? e : e.trim()).filter(e => e).length);
+            };
+
+            const arrayFormatJson = data => {
+              return data.map((row, i) => i ? row.map(el => isJson(el) ? JSON.parse(el) : el) : row);
+            };
+
+            const ArrayToJSON = data => {
+              const titles = data[0];
+              return data.slice(1)
+                .map(values => {
+                  return titles.reduce((obj, title, index) => ((obj[title] = values[index]), obj), {});
+                });
+            };
+
+            if (!isValidHeader(response.data.values[0])) return res.json(401, { error: "Incorrect google sheet header format!", header: response.data.values[0] });
+
+            var json = ArrayToJSON(arrayFormatJson(arrayShapeHeaderDimension(response.data.values)));
+
+            return res.json(200, { data: json } );
+
+          } catch (e) { err => res.negotiate(err); };
+        })
+    } catch (e) { err => res.negotiate(err) };
+  },
 
 };
 
