@@ -441,6 +441,23 @@ module.exports.routes = {
   // 'GET /custom/report/setReportsOpen': 'Custom/Reports/CustomReportTasksController.setReportsOpen',
   'GET /custom/report/setReportsReminder': 'Custom/Reports/CustomReportTasksController.setReportsReminder',
 
+  // CUSTOM LISTS
+  'GET /custom/config/getCustomList': 'Custom/Lists/CustomListController.getCustomList',
+  'GET /custom/config/getCustomLists': 'Custom/Lists/CustomListController.getCustomLists',
+  'POST /custom/config/saveCustomList': 'Custom/Lists/CustomListController.saveCustomList',
+  'DELETE /custom/config/deleteCustomList/:id': 'Custom/Lists/CustomListController.deleteCustomList',
+
+  'GET /custom/config/getCustomReportingType': 'Custom/Configurations/ReportingTypesController.getCustomReportingType',
+  'GET /custom/config/getCustomReportingTypes': 'Custom/Configurations/ReportingTypesController.getCustomReportingType',
+  'POST /custom/config/saveCustomReportingType': 'Custom/Configurations/ReportingTypesController.saveCustomReportingType',
+  'DELETE /custom/config/deleteCustomReportingType/:id': 'Custom/Configurations/ReportingTypesController.deleteCustomReportingType',
+
+  'GET /custom/config/getCustomBeneficiariesForm': 'Custom/Configurations/BeneficiariesFormController.getCustomBeneficiariesForm',
+  'GET /custom/config/getCustomBeneficiariesForms': 'Custom/Configurations/BeneficiariesFormController.getCustomBeneficiariesForms',
+  'POST /custom/config/saveCustomBeneficiariesForm': 'Custom/Configurations/BeneficiariesFormController.saveCustomBeneficiariesForm',
+  'DELETE /custom/config/deleteCustomBeneficiariesForm/:id': 'Custom/Configurations/BeneficiariesFormController.deleteCustomBeneficiariesForm',
+
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
