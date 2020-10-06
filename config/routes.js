@@ -457,6 +457,12 @@ module.exports.routes = {
   'POST /custom/config/saveCustomBeneficiariesForm': 'Custom/Configurations/BeneficiariesFormController.saveCustomBeneficiariesForm',
   'DELETE /custom/config/deleteCustomBeneficiariesForm/:id': 'Custom/Configurations/BeneficiariesFormController.deleteCustomBeneficiariesForm',
 
+  // CUSTOM JOBS
+  'POST /custom/config/job': 'Custom/CustomJobController.saveJob',
+  'DELETE /custom/config/job/:name': 'Custom/CustomJobController.deleteJob',
+  'GET /custom/config/jobs': 'Custom/CustomJobController.getJobs',
+
+
 
   /***************************************************************************
   *                                                                          *
