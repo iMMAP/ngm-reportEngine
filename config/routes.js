@@ -143,6 +143,13 @@ module.exports.routes = {
   'GET /list/getDutyStations': 'ReportHub/ListController.getDutyStations',
   'GET /list/getAdminSites': 'ReportHub/ListController.getAdminSites',
 
+  'GET /admin/cluster/adminlist/:id': 'ReportHub/ListController.getList',
+  'POST /admin/cluster/adminlist/:id': 'ReportHub/ListController.getList',
+  'DELETE /admin/cluster/adminlist/:id': 'ReportHub/ListController.getList',
+
+  'POST /admin/cluster/adminlist/:id/upload': 'ReportHub/ListController.uploadList',
+
+
   'POST /list/setOrganization': 'ReportHub/ListController.setOrganization',
   'POST /list/deleteOrganization': 'ReportHub/ListController.deleteOrganization',
   'POST /list/resetOrganizations': 'ReportHub/ListController.resetOrganizations',
@@ -152,6 +159,12 @@ module.exports.routes = {
   'GET /cluster/list/donors': 'Cluster/Lists/ListController.getDonors',
   'GET /cluster/list/indicators': 'Cluster/Lists/ListController.getIndicators',
   'GET /cluster/list/stockitems': 'Cluster/Lists/ListController.getStockItems',
+
+  'GET /admin/cluster/list/:id': 'Cluster/Lists/ListController.getList',
+  'POST /admin/cluster/list/:id': 'Cluster/Lists/ListController.getList',
+  'DELETE /admin/cluster/list/:id': 'Cluster/Lists/ListController.getList',
+
+  'POST /admin/cluster/list/:id/upload': 'Cluster/Lists/ListController.uploadList',
 
   // ADMIN DASHBOARD
   'POST /cluster/admin/indicator': 'Cluster/Dashboards/AdminDashboardController.getClusterAdminIndicator',
@@ -448,7 +461,7 @@ module.exports.routes = {
   'DELETE /custom/config/deleteCustomList/:id': 'Custom/Lists/CustomListController.deleteCustomList',
 
   'GET /custom/config/getCustomReportingType': 'Custom/Configurations/ReportingTypesController.getCustomReportingType',
-  'GET /custom/config/getCustomReportingTypes': 'Custom/Configurations/ReportingTypesController.getCustomReportingType',
+  'GET /custom/config/getCustomReportingTypes': 'Custom/Configurations/ReportingTypesController.getCustomReportingTypes',
   'POST /custom/config/saveCustomReportingType': 'Custom/Configurations/ReportingTypesController.saveCustomReportingType',
   'DELETE /custom/config/deleteCustomReportingType/:id': 'Custom/Configurations/ReportingTypesController.deleteCustomReportingType',
 
@@ -456,6 +469,12 @@ module.exports.routes = {
   'GET /custom/config/getCustomBeneficiariesForms': 'Custom/Configurations/BeneficiariesFormController.getCustomBeneficiariesForms',
   'POST /custom/config/saveCustomBeneficiariesForm': 'Custom/Configurations/BeneficiariesFormController.saveCustomBeneficiariesForm',
   'DELETE /custom/config/deleteCustomBeneficiariesForm/:id': 'Custom/Configurations/BeneficiariesFormController.deleteCustomBeneficiariesForm',
+
+  // CUSTOM FLAT LISTS
+  'GET /admin/custom/list/:id': 'Custom/Lists/CustomListController.getList',
+  'POST /admin/custom/list/:id': 'Custom/Lists/CustomListController.getList',
+  'DELETE /admin/custom/list/:id': 'Custom/Lists/CustomListController.getList',
+  'POST /admin/custom/list/:id/upload': 'Custom/Lists/CustomListController.uploadList',
 
   // CUSTOM JOBS
   'POST /custom/config/job': 'Custom/CustomJobController.saveJob',

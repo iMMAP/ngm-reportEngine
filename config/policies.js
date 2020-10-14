@@ -133,7 +133,9 @@ module.exports.policies = {
 
   // public
   'Cluster/Lists/ListController': {
-    '*': true
+    '*': true,
+    // 'getList': ['isAuthorized', 'isAdmin'],
+    'uploadList': ['isAuthorized', 'isAdmin']
   },
 
   // public

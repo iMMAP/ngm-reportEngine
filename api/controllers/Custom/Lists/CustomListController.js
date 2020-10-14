@@ -234,5 +234,135 @@ module.exports = {
 
   },
 
+
+  getList: async function (req, res) {
+
+    var lists = ['customflatlist'];
+
+    var GET = 'GET';
+    var POST = 'POST';
+    var DELETE = 'DELETE';
+
+    var MODELS = {
+      'customflatlist': CustomFlatList,
+    };
+    var ITEM_NAMES = {
+      'customflatlist': 'List'
+    };
+
+
+    if ( !req.param( 'id' ) || !lists.includes(req.param( 'id' )) ) {
+      return res.json( 400, { err: 'valid id required!' } );
+    }
+
+    // if ( !req.param( 'admin0pcode' ) ) {
+    //   return res.json( 400, { err: 'admin0pcode required!' } );
+    // }
+
+    if ( req.method !== GET && !req.param( 'data' ) || typeof req.param( 'data' ) !== 'object' && req.param( 'data' ) === null  ) {
+      return res.json( 400, { err: 'data required!' } );
+    }
+
+    if ( req.method === DELETE && !req.param( 'data' ).id ) {
+      return res.json( 400, { err: 'record id required!' } );
+    }
+
+    if ( !req.param( 'list_id' ) ) {
+      return res.json( 400, { err: 'valid list_id required!' } );
+    }
+    if ( req.param('list_id') !== req.param('data').list_id ) {
+      return res.json( 400, { err: 'list_id should match required!' } );
+    }
+
+    var id = req.param( 'id' );
+    var data = req.param( 'data' );
+    var list_id = req.param('list_id');
+    data.list_id = list_id;
+    var MODEL = MODELS[id];
+
+    var ITEM_NAME = ITEM_NAMES[id];
+    if (MODEL){
+      if (req.method === POST) {
+        MODEL.updateOrCreate({ id: data.id }, data).exec(function (err, result) {
+          if (err) return res.negotiate(err);
+          var result = Utils.set_result(result);
+          if (!result) return res.json(400, { error: `${ITEM_NAME} ${data.id} not found` });
+          return res.json(200, result);
+        });
+      } else if (req.method === DELETE) {
+        MODEL.destroy( { id: data.id } ).exec( function( err, result ) {
+          if (err) return res.negotiate( err );
+            var result = Utils.set_result(result);
+            if (!result) return res.json(400, { error: `${ITEM_NAME} ${data.id} not found` });
+            return res.json(200, { message: `${ITEM_NAME} ${data.id} has been deleted!` });
+          });
+      } else {
+
+        // default GET
+        var admin0pcodeFilter = req.param( 'admin0pcode' ) ? { admin0pcode: req.param( 'admin0pcode' ) } : {};
+        var clusterFilter = req.param( 'cluster_id' ) ? { cluster_id: req.param( 'cluster_id' ) } : {};
+        var listFilter = req.param( 'list_id' ) ? { list_id: req.param( 'list_id' ) } : {};
+        var filter = Object.assign({}, admin0pcodeFilter, clusterFilter, listFilter);
+        MODEL
+        .find(filter)
+        .exec( function( err, list ){
+          // return error
+          if ( err ) return res.negotiate( err );
+          // return project
+          return res.json( 200, list );
+        })
+      }
+    } else {
+      return res.json(400, { error: `No such list!` });
+    }
+  },
+
+  uploadList: async function (req, res) {
+    try {
+      var lists = ['customflatlist' ];
+
+      var MODELS = {
+        'customflatlist': CustomFlatList
+      };
+      if ( !req.param( 'id' ) || !lists.includes(req.param( 'id' )) ) {
+        return res.json( 400, { err: 'id required!' } );
+      }
+      if ( !req.param( 'list_id' ) ) {
+        return res.json( 400, { err: 'list_id required!' } );
+      }
+      if ( !req.param( 'admin0pcode' ) ) {
+        return res.json( 400, { err: 'admin0pcode required!' } );
+      }
+      if ( !req.param( 'data' ) || !Array.isArray(req.param( 'data' ))  ) {
+        return res.json( 400, { err: 'data required!' } );
+      }
+
+      var admin0pcodeFilter = req.param( 'admin0pcode' ) ? { admin0pcode: req.param( 'admin0pcode' ) } : {};
+      var clusterFilter = req.param( 'cluster_id' ) ? { cluster_id: req.param( 'cluster_id' ) } : {};
+      var listFilter = req.param( 'list_id' ) ? { list_id: req.param( 'list_id' ) } : {};
+      var filter = Object.assign({}, admin0pcodeFilter, clusterFilter, listFilter);
+
+      var id = req.param( 'id' );
+      var data = req.param( 'data' );
+      var list_id = req.param( 'list_id' );
+      data = data.map(e => { e.list_id = list_id; e });
+      var MODEL = MODELS[id];
+
+      if (MODEL){
+
+        var destroyed = await MODEL.destroy(filter);
+        var result = await MODEL.create(data);
+
+        return res.json(200, result);
+
+      } else {
+          return res.json(400, { error: `No such list!` });
+        }
+
+    } catch (err) {
+      return res.negotiate(err);
+    }
+  }
+
 };
 

@@ -19,7 +19,7 @@ module.exports = {
 		// default
 		boys:{
 			type: 'integer',
-			defaultsTo: 0			
+			defaultsTo: 0
 		},
 		girls:{
 			type: 'integer',
@@ -52,14 +52,14 @@ module.exports = {
 		penta3_vacc_female_under1:{
 			type: 'integer',
 			defaultsTo: 0
-		},	
+		},
 		skilled_birth_attendant:{
 			type: 'integer',
 			defaultsTo: 0
 		},
 		education_topic: {
 			type: 'string'
-		},		
+		},
 		education_sessions:{
 			type: 'integer',
 			defaultsTo: 0
@@ -74,7 +74,7 @@ module.exports = {
 		},
 		training_topic: {
 			type: 'string'
-		},		
+		},
 		training_sessions:{
 			type: 'integer',
 			defaultsTo: 0
@@ -87,8 +87,17 @@ module.exports = {
 			type: 'integer',
 			defaultsTo: 0
 		}
-		
-	}
+
+  },
+
+  updateOrCreate: function (criteria, values) {
+    var self = this;
+    if (values.id) {
+      return self.update(criteria, values);
+    } else {
+      return self.create(values);
+    }
+  },
 
 };
 
