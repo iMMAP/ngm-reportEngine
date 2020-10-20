@@ -259,7 +259,7 @@ module.exports = {
     //   return res.json( 400, { err: 'admin0pcode required!' } );
     // }
 
-    if (req.method !== GET && !req.param('data') || typeof req.param('data') !== 'object' && req.param('data') !== null || Array.isArray(req.param('data'))) {
+    if (req.method !== GET && (!req.param('data') || typeof req.param('data') !== 'object' || req.param('data') === null || Array.isArray(req.param('data')))) {
       return res.json( 400, { err: 'data required!' } );
     }
 
