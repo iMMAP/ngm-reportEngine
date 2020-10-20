@@ -8,7 +8,17 @@
 module.exports = {
 
 	// connection
-	connection: 'ngmReportHubServer'
+  connection: 'ngmReportHubServer',
+  schema: false,
+
+  updateOrCreate: function (criteria, values) {
+    var self = this;
+    if (values.id) {
+      return self.update(criteria, values);
+    } else {
+      return self.create(values);
+    }
+  },
 
 };
 
