@@ -12,7 +12,7 @@ module.exports = {
 	connection: 'ngmHealthClusterServer',
 
 	// strict schema
-	schema: true,
+	schema: false,
 
 	// attributes
 	attributes: {

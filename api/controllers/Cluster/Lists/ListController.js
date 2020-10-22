@@ -130,7 +130,7 @@ module.exports = {
 
   getList: async function (req, res) {
 
-    var lists = ['clusters', 'activities', 'stockitems', 'stocktargetedgroups', 'stockstatuses', 'donors', 'indicators', 'organizations', 'beneficiarytypes', 'hrpbeneficiarytypes', 'beneficiarycategories', 'sitetypes', 'siteimplementations', 'mpctypes', 'units', 'currencies', 'projectdetails', 'deliverytypes' ];
+    var lists = ['clusters', 'activities', 'stockitems', 'stocktargetedgroups', 'stockstatuses', 'donors', 'indicators', 'organizations', 'beneficiarytypes', 'hrpbeneficiarytypes', 'beneficiarycategories', 'sitetypes', 'siteimplementations', 'mpctypes', 'units', 'currencies', 'projectdetails', 'deliverytypes', 'indicators' ];
 
     var GET = 'GET';
     var POST = 'POST';
@@ -153,7 +153,8 @@ module.exports = {
       'currencies': Currencies,
       'projectdetails': ProjectDetails,
       'deliverytypes': DeliveryTypes,
-      'organizations': Organizations
+      'organizations': Organizations,
+      'indicators': Indicators,
 
     };
     var ITEM_NAMES = {
@@ -173,7 +174,8 @@ module.exports = {
       'currencies': 'Currencies',
       'projectdetails': 'Project Detail',
       'deliverytypes': 'Delivery Type',
-      'organizations': 'Organizations'
+      'organizations': 'Organizations',
+      'indicators': 'Indicators',
 
     }
 
@@ -241,7 +243,7 @@ module.exports = {
 
   uploadList: async function (req, res) {
     try {
-      var lists = ['clusters', 'activities', 'stockitems', 'stockstatuses', 'stocktargetedgroups', 'donors', 'indicators', 'organizations', 'beneficiarytypes', 'hrpbeneficiarytypes', 'beneficiarycategories', 'sitetypes', 'siteimplementations', 'mpctypes', 'units', 'currencies', 'projectdetails', 'deliverytypes' ];
+      var lists = ['clusters', 'activities', 'stockitems', 'stockstatuses', 'stocktargetedgroups', 'donors', 'indicators', 'organizations', 'beneficiarytypes', 'hrpbeneficiarytypes', 'beneficiarycategories', 'sitetypes', 'siteimplementations', 'mpctypes', 'units', 'currencies', 'projectdetails', 'deliverytypes', 'indicators' ];
 
       var MODELS = {
         'activities': Activities,
@@ -260,9 +262,8 @@ module.exports = {
         'currencies': Currencies,
         'projectdetails': ProjectDetails,
         'deliverytypes': DeliveryTypes,
-        'organizations': Organizations
-
-
+        'organizations': Organizations,
+        'indicators': Indicators,
       };
       if ( !req.param( 'id' ) || !lists.includes(req.param( 'id' )) ) {
         return res.json( 400, { err: 'id required!' } );
