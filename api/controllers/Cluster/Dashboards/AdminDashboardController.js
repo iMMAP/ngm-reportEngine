@@ -1327,15 +1327,17 @@ var AdminDashboardController = {
 										organization_tag: { $first: '$organization_tag' },
 										organization_id: { $first: '$organization_id' },
 										organization: { $first: '$organization' },
-										report_total: { $sum: { $add: ["$men", "$women", "$boys", "$girls", "$elderly_men", "$elderly_women"] } }
+                    // report_total: { $sum: { $add: ["$men", "$women", "$boys", "$girls", "$elderly_men", "$elderly_women"] } },
+                    report_total: { $sum:"$total_beneficiaries"},
+                    new_beneficiaries_total: {$sum:{$cond:{if:{$eq:["$delivery_type_id","population"]},then:"$total_beneficiaries",else:0}}}
 									}
 								}
 							]).toArray(function (err, report_beneficairies) {
-
 								for(var i=0 ;i<report_beneficairies.length;i++){
 									for(var j=0;j<target_beneficiaries.length;j++){
 										if (target_beneficiaries[j]._id === report_beneficairies[i]._id){
-											target_beneficiaries[j].report_total = report_beneficairies[i].report_total;
+                      target_beneficiaries[j].report_total = report_beneficairies[i].report_total;
+                      target_beneficiaries[j].new_beneficiaries_total = report_beneficairies[i].new_beneficiaries_total;
 										}
 									}
 								}
@@ -1361,14 +1363,30 @@ var AdminDashboardController = {
 											el.target_total_format = nFormatter(el.target_total);
 										}
 										el.report_total_format = nFormatter(el.report_total);
-									}
+                  }
+                  
+                  if (!el.new_beneficiaries_total){
+                    el.new_beneficiaries_total =0;
+                    if (el.target_total < 1) {
+                      el.new_benefeciaries_progress_percentage = "N/A";
+                    } else {
+                      el.new_benefeciaries_progress_percentage = 0;
+                    }
+                  }else{
+                    if (el.target_total < 1) {
+                      el.new_benefeciaries_progress_percentage = "N/A";
+                    } else {
+                      el.new_benefeciaries_progress_percentage = (el.new_beneficiaries_total / el.target_total) * 100;
+                    }
+                  }
+                  el.new_beneficiaries_total_format = nFormatter(el.new_beneficiaries_total);
                   if (el.implementing_partners && Array.isArray(el.implementing_partners)) {
                     el.implementing_partners = el.implementing_partners.map(x => x.organization ? x.organization : x.organization_tag).join(", ");
                   }
                   if (el.programme_partners && Array.isArray(el.programme_partners)) {
                     el.programme_partners = el.programme_partners.map(x => x.organization ? x.organization : x.organization_tag).join(", ");
                   }
-								});
+                });
 								return res.json(200, target_beneficiaries);
 							})
 						})
