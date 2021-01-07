@@ -147,54 +147,17 @@ var ProjectController = {
     if ( !req.param('filter') ) {
       return res.json(401, { err: 'filter required!' });
     }
-    
-    if (req.param('filter').year && req.param('filter').year !=='all' ){
+
+    if (req.param('filter').year && req.param('filter').year !== 'all') {
       var year = req.param('filter').year;
       var start = new Date(moment([year]));
-      var end = new Date (moment([year]).endOf('year'));
-      
-      // filter project start AND end  in specified year
-      // req.param('filter').project_start_date = {
-      //   $gte: start,
-      //   $lte: end, 
-      // }
-      // req.param('filter').project_end_date =  {
-      //   $gte: start,
-      //   $lte: end,
-      // }
-      // req.param('filter').$and = [
-      //   {
-      //     project_start_date:
-      //     {
-      //       '$gte': start,
-      //       '$lte': end
-      //     }
-      //   },
-      //   {
-      //     project_end_date:
-      //     {
-      //       '$gte': start,
-      //       '$lte': end
-      //     }
-      //   }];
-      // filter project that start OR end in  specified year
-      req.param('filter').$or = [
-        {
-          project_start_date:
-          {
-            '$gte': start,
-            '$lte': end
-          }
-        },
-        {
-          project_end_date:
-          {
-            '$gte': start,
-            '$lte': end
-          }
-        }];
+      var end = new Date(moment([year]).endOf('year'));
+
+      // filter projects that contain the year
+      req.param('filter').project_start_date = { $lte: end };
+      req.param('filter').project_end_date = { $gte: start };
     }
-    delete req.param('filter').year
+    delete req.param('filter').year;
 
     // get project by organization_id & status
     Project
