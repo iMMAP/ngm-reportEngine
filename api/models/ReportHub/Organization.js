@@ -55,7 +55,16 @@ module.exports = {
 		// },
 		project_acbar_partner: {
 			type: 'boolean'
-    },
+	},
+		description: {
+			type: 'string'
+		},
+		contact: {
+			type: 'array'
+		},
+		clusters: {
+			type: 'array'
+		},
 
     closed_registration: {
 			type: 'boolean'

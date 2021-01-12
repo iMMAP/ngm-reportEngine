@@ -1395,7 +1395,92 @@ var AdminDashboardController = {
 
 				})
 
-				break;
+        break;
+        
+      case 'organization_cluster_contact':
+        function filter() {
+          return {
+            adminRpcode_Native: req.param('adminRpcode') === 'hq' ? {} : { adminRpcode: req.param('adminRpcode').toUpperCase() },
+            admin0pcode_Native: req.param('admin0pcode') === 'all' ? {} : { admin0pcode: req.param('admin0pcode').toUpperCase() },
+            cluster_id_Native: (req.param('cluster_id') === 'all') ? {} : { $or: [{ cluster_id: req.param('cluster_id') }, { "activity_type.cluster_id": req.param('cluster_id') }] },
+            organization_tag_Native: req.param('organization_tag') === 'all' ? { organization_tag: { $nin: $nin_organizations } } : { $or: [{ organization_tag: req.param('organization_tag') }, { "implementing_partners.organization_tag": req.param('organization_tag') }, { "programme_partners.organization_tag": req.param('organization_tag') }] },
+            project_startDateNative: { project_start_date: { $lte: new Date(req.param('end_date')) } },
+            project_endDateNative: { project_end_date: { $gte: new Date(req.param('start_date')) } },
+            default_native: { project_id: { $ne: null } },
+            activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') }
+          }
+        }
+
+        var filters = filter(params);
+        var filterObject = _.extend({},
+          filters.default_native,
+          filters.adminRpcode_Native,
+          filters.admin0pcode_Native,
+          { $and: [filters.cluster_id_Native, filters.organization_tag_Native] },
+          filters.activity_typeNative,
+          filters.project_startDateNative,
+          filters.project_endDateNative)
+
+        Beneficiaries.native(function (err, results_report_benefciaries) {
+          if (err) return res.serverError(err);
+          results_report_benefciaries.aggregate([
+            { $match: filterObject }, {
+              $group: {
+                _id: '$project_id',
+                cluster_id: { $first: '$cluster_id' },
+                cluster: { $first: '$cluster' },
+                organization_tag: { $first: '$organization_tag' },
+                organization_id: { $first: '$organization_id' },
+                organization: { $first: '$organization' },
+                username:{$first:'$username'},
+                name:{$first:'$name'},
+                email:{$first:'$email'},
+                phone:{$first:'$phone'}
+              }
+            }
+          ]).toArray(function (err, report_beneficairies) {
+            // uniq cluster_id
+            var distinct_sectors = _.uniq(report_beneficairies, function (x) {
+              return x.cluster_id;
+            });
+            distinct_sectors = distinct_sectors.map((x)=>{return {cluster_id:x.cluster_id,cluster:x.cluster}});
+            report_beneficairies.forEach((c)=>{
+              index = distinct_sectors.findIndex(x=>x.cluster_id === c.cluster_id);
+              if (! distinct_sectors[index]['organization']){
+                distinct_sectors[index]['organization'] =[]
+              }
+              distinct_sectors[index]['organization'].push({
+                organization_tag:  c.organization_tag,
+                organization_id:  c.organization_id,
+                organization:  c.organization,
+                fullname: c.name,
+                username:  c.username,
+                email:  c.email,
+                phone:  c.phone,
+                cluster_id: c.cluster,
+                cluster:c.cluster_id
+              })
+            })
+            distinct_sectors.forEach((z)=>{
+              if(z.organization && z.organization.length){
+                z.organization = z.organization.filter(function (a) {
+                  var key = a.organization_id + '|' + a.email + '|' + a.phone;
+                  if (!this[key]) {
+                    this[key] = true;
+                    return true;
+                  }
+                }, Object.create(null));
+              }
+              z.sum_org = z.organization && z.organization.length ? z.organization.length :0
+            })
+
+            
+            
+
+            return res.json(200, distinct_sectors);
+          })
+        })
+        break;
     }
 
   }
