@@ -1404,8 +1404,9 @@ var AdminDashboardController = {
             admin0pcode_Native: req.param('admin0pcode') === 'all' ? {} : { admin0pcode: req.param('admin0pcode').toUpperCase() },
             cluster_id_Native: (req.param('cluster_id') === 'all') ? {} : { $or: [{ cluster_id: req.param('cluster_id') }, { "activity_type.cluster_id": req.param('cluster_id') }] },
             organization_tag_Native: req.param('organization_tag') === 'all' ? { organization_tag: { $nin: $nin_organizations } } : { $or: [{ organization_tag: req.param('organization_tag') }, { "implementing_partners.organization_tag": req.param('organization_tag') }, { "programme_partners.organization_tag": req.param('organization_tag') }] },
-            project_startDateNative: { project_start_date: { $lte: new Date(req.param('end_date')) } },
-            project_endDateNative: { project_end_date: { $gte: new Date(req.param('start_date')) } },
+            // project_startDateNative: { project_start_date: { $lte: new Date(req.param('end_date')) } },
+            // project_endDateNative: { project_end_date: { $gte: new Date(req.param('start_date')) } },
+            reporting_periodDateNative: { reporting_period: { $gte: new Date(req.param('start_date')), $lte: new Date(req.param('end_date'))}},
             default_native: { project_id: { $ne: null } },
             activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') }
           }
@@ -1418,8 +1419,9 @@ var AdminDashboardController = {
           filters.admin0pcode_Native,
           { $and: [filters.cluster_id_Native, filters.organization_tag_Native] },
           filters.activity_typeNative,
-          filters.project_startDateNative,
-          filters.project_endDateNative)
+          // filters.project_startDateNative,
+          // filters.project_endDateNative,
+          filters.reporting_periodDateNative)
 
         Beneficiaries.native(function (err, results_report_benefciaries) {
           if (err) return res.serverError(err);
