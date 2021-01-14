@@ -497,7 +497,7 @@ module.exports = {
 
   },
   getUsersForOrgPage: function (req, res) {
-    if ( !req.param('organization')) {
+    if (!req.param('organization') && !req.param('admin0pcode')) {
       return res.json(401, { msg: 'organization required' });
     };
     User
@@ -535,8 +535,8 @@ module.exports = {
             ))
           )
 
-          var user_active = users.filter(x => x.status === 'active')
-          var user_inactive = users.filter(x => x.status !== 'active')
+          var user_active = users.filter(x => (x.status === 'active') && (x.admin0pcode === req.param('admin0pcode')))
+          var user_inactive = users.filter(x => (x.status !== 'active') && (x.admin0pcode === req.param('admin0pcode')))
 
           organization_user = {
             users: users,
