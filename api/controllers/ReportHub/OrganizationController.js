@@ -496,6 +496,62 @@ module.exports = {
       });
 
   },
+  getUsersForOrgPage: function (req, res) {
+    if (!req.param('organization') && !req.param('admin0pcode')) {
+      return res.json(401, { msg: 'organization required' });
+    };
+    User
+    .find()
+      .where({organization:req.param('organization')})
+      .exec(function (err,users) {
+        // return error
+        if (err) return res.negotiate(err);
+        
+        if (req.param('statistic') === 'false'){
+          return res.json(200, users);
+        }else{
+          var country = users.map((x) => {
+            return {
+              adminRpcode: x.adminRpcode,
+              adminRname: x.adminRname,
+              admin0pcode: x.admin0pcode,
+              admin0name: x.admin0name
+            }
+          })
+          cluster = users.map((x) => {
+            return {
+              cluster_id:x.cluster_id,
+              cluster: x.cluster
+            }
+          })
+          country_distinct = country.filter((c, index, self) =>
+            index === self.findIndex((t) => (
+              t.admin0pcode === c.admin0pcode && t.admin0name === c.admin0name
+            ))
+          )
+          cluster_distinct = cluster.filter((c, index, self) =>
+            index === self.findIndex((t) => (
+              t.cluster_id === c.cluster_id
+            ))
+          )
+
+          var user_active = users.filter(x => (x.status === 'active') && (x.admin0pcode === req.param('admin0pcode')))
+          var user_inactive = users.filter(x => (x.status !== 'active') && (x.admin0pcode === req.param('admin0pcode')))
+
+          organization_user = {
+            users: users,
+            country: country_distinct,
+            cluster: cluster_distinct,
+            user_active: user_active.length,
+            user_inactive: user_inactive.length
+          }
+          // return updated user
+          return res.json(200, organization_user);
+        }
+
+        
+      })
+  },
 
   // set organizaiton partner
   setOrganizationPartner: function( req, res ){
