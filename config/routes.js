@@ -70,6 +70,7 @@ module.exports.routes = {
 	'POST /getOrganizationsByFilter': 'ReportHub/OrganizationController.getOrganizationsByFilter',
   'POST /getTeamOrganizationsByFilter': 'ReportHub/OrganizationController.getTeamOrganizationsByFilter',
   'GET /getUsersForOrgPage':'ReportHub/OrganizationController.getUsersForOrgPage',
+  'POST /getOrganizationlastReport':'ReportHub/OrganizationController.getOrganizationlastReport',
 
   // Metrics
   'POST /metrics/set': 'ReportHub/MetricsController.set',
