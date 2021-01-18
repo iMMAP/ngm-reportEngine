@@ -6,6 +6,8 @@
  */
 var util = require('util');
 var _ = require('lodash');
+const moment = require('moment');
+var json2csv = require('json2csv');
 
 // parse results from sails
 var set_result = function (result) {
@@ -663,6 +665,117 @@ module.exports = {
     } catch (err) {
       return res.negotiate(err);
     }
+  },
+  getOrganizationlastReport: function(req,res){
+    // try{
+    //   // check params
+      if (!req.param('admin0pcode') || !req.param('organization_type') || !req.param('cluster_id')) {
+        return res.json(401, { msg: 'required' });
+      }
+      var admin0pcode = req.param('admin0pcode') === 'all' ? {} : { admin0pcode: req.param('admin0pcode')} ,
+        organization_type = req.param('organization_type') === 'ALL' ? {} : { organization_type: req.param('organization_type')},
+        cluster_id = req.param('cluster_id') === 'all' ? {} : { clusters: {$elemMatch: { cluster_id: req.param('cluster_id') }}};
+    // fields
+    var fields = ['organization_name',
+                  'organization',
+                  'organization_type',
+                  'createdAt',
+                  'clusters_string',
+                  'focal_point_name',
+                  'email',
+                  'phone'
+                ]
+        fieldNames = ['Organization',
+                      'Abbreviation',
+                      'Type',
+                      'Join',
+                      'Clusters',
+                      'Focal Point Name',
+                      'Email',
+                      'Phone'];
+    Organization
+      .find()
+      .where(admin0pcode)
+      .where(organization_type)
+      .where(cluster_id)
+      .exec(function(err,organizations){
+        // return error
+        if (err) return res.negotiate(err);
+        var counter = 0;
+        var length = organizations.length;
+
+        // if no reports
+        if (length === 0) {
+
+          // return empty
+          return res.json(200, []);
+
+        } else {
+          organizations.forEach(function(o,i){
+            
+            if (organizations[i]['clusters']){
+              organizations[i]['clusters_string'] = organizations[i]['clusters'].map(x=>x.cluster).join(', ');
+            }else{
+              organizations[i]['clusters_string'] ='Not Set';
+            }
+            organizations[i]['focal_point_name'] = organizations[i]['contact']?organizations[i]['contact'][0]['name'] : 'Not Set';
+            organizations[i]['phone'] = organizations[i]['contact']? organizations[i]['contact'][0]['phone'] : 'Not Set';
+            organizations[i]['email'] = organizations[i]['contact']? organizations[i]['contact'][0]['email'] : 'Not Set';
+            
+            // Report
+            //   .find({organization_tag:o.organization_tag})
+            //   .where(admin0pcode)
+            //   .where(cluster_id)
+            //   .where({report_status:'complete'})
+            //   .exec(function(err,report){
+            //     // return error
+            //     if (err) return res.negotiate(err);
+            //     if(report.length){
+            //       var last_report = _.max(report, function (b) {
+            //         return moment(b.updatedAt).unix();
+            //       });
+            //       organizations[i]['last_report'] = last_report.updatedAt
+            //     }else{
+            //       organizations[i]['last_report'] = 'No Report Submitted'
+            //     }
+            //     counter++;
+            //     if(counter === length){
+            //       if (req.param('csv')) {
+            //         // return csv
+            //         json2csv({ data: organizations, fields: fields, fieldNames: fieldNames }, function (err, csv) {
+
+            //           // error
+            //           if (err) return res.negotiate(err);
+
+            //           // success
+            //           return res.json(200, { data: csv });
+
+            //         });
+            //       }else{
+            //         return res.json(200, organizations);
+            //       }
+
+            //     }
+            //   })
+
+          })
+          if (req.param('csv')) {
+            // return csv
+            json2csv({ data: organizations, fields: fields, fieldNames: fieldNames }, function (err, csv) {
+
+              // error
+              if (err) return res.negotiate(err);
+
+              // success
+              return res.json(200, { data: csv });
+
+            });
+          } else {
+            return res.json(200, organizations);
+          }
+        }
+      });
+    
   }
 
 };
