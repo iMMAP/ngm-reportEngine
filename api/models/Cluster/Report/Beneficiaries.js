@@ -389,6 +389,9 @@ module.exports = {
 			type: 'integer',
 			defaultsTo: 0
 		},
+		total_pwd:{
+			type: 'integer'
+		},
 
 		// indicator
 			// sessions -> training
