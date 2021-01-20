@@ -51,6 +51,7 @@ module.exports.routes = {
   'POST /notifyInactiveUsers': 'ReportHub/UserController.notifyInactiveUsers',
   'GET /deactivateInactiveUsers': 'ReportHub/UserController.deactivateInactiveUsers',
   'POST /deactivateInactiveUsers': 'ReportHub/UserController.deactivateInactiveUsers',
+  'POST /getUserByCluster': 'ReportHub/UserController.getUserByCluster',
 
   // org
   'GET /getOrganization': 'ReportHub/OrganizationController.getOrganization',
