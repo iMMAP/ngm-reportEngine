@@ -897,7 +897,7 @@ var UserController = {
     }
   },
   // get by user by cluster
-  getUserByCluster: function (req, res) {
+  getClusterContactUsers: function (req, res) {
 
     // check params
     if (!req.param('cluster_id')) {
@@ -907,6 +907,7 @@ var UserController = {
     // new profile
     var filterClusterId = req.param('cluster_id') === 'all' ? {} : { cluster_id: req.param('cluster_id') };
     var filterAdmin0pcode = req.param('admin0pcode') === 'all' ? {} : { admin0pcode: req.param('admin0pcode')};
+    var filterClusterContact = { cluster_contact: req.param('cluster_contact')};
     var fields = ['cluster','name','email','position'];
     var fieldNames = ['Cluster','Name','Email','Position'];
     
@@ -915,16 +916,11 @@ var UserController = {
       .find()
       .where(filterAdmin0pcode)
       .where(filterClusterId)
+      .where(filterClusterContact)
       .exec(function (err, user) {
 
         // return error
         if (err) return res.negotiate(err);
-        
-        if (user && user.length){
-          user = _.filter(user,function(u){
-            return u.cluster_contact;
-          })
-        };
         if (req.param('csv')) {
           // return csv
           json2csv({ data: user, fields: fields, fieldNames: fieldNames }, function (err, csv) {
