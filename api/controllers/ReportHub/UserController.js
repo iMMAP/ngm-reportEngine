@@ -7,6 +7,8 @@
 const PENDING_STATUS = 'deactivated';
 const DEACTIVATED_STATUS = 'deactivated';
 const ACTIVE_STATUS = 'active';
+const _ = require('underscore');
+var json2csv = require('json2csv');
 
 var UserController = {
 
@@ -893,7 +895,52 @@ var UserController = {
     } catch (err) {
       return res.negotiate(err);
     }
-  }
+  },
+  // get by user by cluster
+  getClusterContactUsers: function (req, res) {
+
+    // check params
+    if (!req.param('cluster_id')) {
+      return res.json(401, { msg: 'cluster_id' });
+    }
+
+    // new profile
+    var filterClusterId = req.param('cluster_id') === 'all' ? {} : { cluster_id: req.param('cluster_id') };
+    var filterAdmin0pcode = req.param('admin0pcode') === 'all' ? {} : { admin0pcode: req.param('admin0pcode')};
+    var filterClusterContact = { cluster_contact: req.param('cluster_contact')};
+    var fields = ['cluster','name','email','position'];
+    var fieldNames = ['Cluster','Name','Email','Position'];
+    
+    // users
+    User
+      .find()
+      .where(filterAdmin0pcode)
+      .where(filterClusterId)
+      .where(filterClusterContact)
+      .exec(function (err, user) {
+
+        // return error
+        if (err) return res.negotiate(err);
+        if (req.param('csv')) {
+          // return csv
+          json2csv({ data: user, fields: fields, fieldNames: fieldNames }, function (err, csv) {
+
+            // error
+            if (err) return res.negotiate(err);
+
+            // success
+            return res.json(200, { data: csv });
+
+          });
+        }else{
+          // return updated user
+          return res.json(200, user);
+        };
+
+
+      });
+
+  },
 
 };
 

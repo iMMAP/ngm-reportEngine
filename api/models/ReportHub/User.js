@@ -194,6 +194,9 @@ module.exports = {
 		},
 		site_lat: {
 			type: 'float'
+		},
+		cluster_contact:{
+			type: 'boolean'
 		}
 
 	},
