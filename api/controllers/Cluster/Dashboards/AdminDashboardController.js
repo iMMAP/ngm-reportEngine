@@ -569,7 +569,10 @@ var AdminDashboardController = {
 						break;
 			case 'progress_beneficiaries':
 				return res.json(200, {})
-				break;
+        break;
+      case 'organization_cluster_contact':
+        return res.json(200,{});
+        break;
 
     }
 
