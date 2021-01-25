@@ -62,6 +62,7 @@ module.exports =  {
       'elderly_men',
       'elderly_women',
       'total_beneficiaries',
+      'total_pwd',
       'createdAt',
       'updatedAt'
     ],
@@ -122,6 +123,7 @@ module.exports =  {
       'Elderly Men',
       'Elderly Women',
       'Total',
+      'Total Persons With Disabilities',
       'Created',
       'Last Update'
     ];
