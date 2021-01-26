@@ -98,7 +98,7 @@ module.exports = {
 		plan_component: {
 			type: 'array'
 		},
-		
+
 		project_code: {
 			type: 'string'
 		},
@@ -218,7 +218,7 @@ module.exports = {
 
 		// FORM
 
-		// capture filter / display levels from activities.csv and store to avoid 
+		// capture filter / display levels from activities.csv and store to avoid
 			// filtering and retrieving the wrong form details (i.e. has indicator_id which is not unique
 			// and retrieves wrong form configuration as it should in fact know to filter on activity_details_id )
 		display_activity_detail: {
@@ -272,7 +272,7 @@ module.exports = {
 		mpc_delivery_type_name: {
 			type: 'string'
 		},
-		
+
 		//mpc mechanism
 		mpc_mechanism_type_id: {
 			type: 'string'
@@ -288,7 +288,7 @@ module.exports = {
 		package_type_name:{
 			type: 'string'
 		},
-		
+
 		// delivery (population, service)
 		delivery_type_id: {
 			type: 'string',
@@ -322,7 +322,7 @@ module.exports = {
 			type: 'string'
 		},
 		total_amount:{
-			type:'integer', 
+			type:'integer',
 			defaultsTo:0
 		},
 
@@ -417,6 +417,9 @@ module.exports = {
 		total_beneficiaries:{
 			type: 'integer',
 			defaultsTo: 0
+    },
+		total_pwd:{
+			type: 'integer'
 		},
     injury_treatment_same_province:{
       type: 'boolean'
@@ -507,7 +510,7 @@ module.exports = {
 			// set relation
 			for ( key in parent ){ values[ key ] = parent[ key ]; }
       return self.create( values );
-    }    
+    }
 
   }
 
