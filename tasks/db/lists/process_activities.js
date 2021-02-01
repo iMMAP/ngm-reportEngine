@@ -9,6 +9,7 @@ try {
   db.getCollection('activities').find({}).forEach(function (d) { if( d.mpc_mechanism_type_id && d.mpc_mechanism_type_id.length && !Array.isArray(d.mpc_mechanism_type_id) ) { d.mpc_mechanism_type_id = JSON.parse(d.mpc_mechanism_type_id); db.getCollection('activities').save(d); } });
   db.getCollection('activities').find({}).forEach(function (d) { if( d.mpc_transfer_category_id && d.mpc_transfer_category_id.length && !Array.isArray(d.mpc_transfer_category_id)) { d.mpc_transfer_category_id = JSON.parse(d.mpc_transfer_category_id); db.getCollection('activities').save(d); } });
   db.getCollection('activities').find({}).forEach(function (d) { if( d.mpc_grant_type_id && d.mpc_grant_type_id.length && !Array.isArray(d.mpc_grant_type_id) ) { d.mpc_grant_type_id = JSON.parse(d.mpc_grant_type_id); db.getCollection('activities').save(d); } });
+  db.getCollection('activities').find({}).forEach(function (d) { if( d.beneficiary_type_id && d.beneficiary_type_id.length && !Array.isArray(d.beneficiary_type_id) ) { d.beneficiary_type_id = JSON.parse(d.beneficiary_type_id); db.getCollection('activities').save(d); } });
 } catch (err){
   print(err);
   throw err;
