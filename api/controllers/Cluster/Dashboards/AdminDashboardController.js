@@ -200,6 +200,54 @@ var AdminDashboardController = {
 
         break;
 
+      case 'target_locations':
+
+        // get organizations by project
+        StockWarehouse
+          .find()
+          .where(params.organization_and_cluster_filter_Native)
+          .where(params.acbar_partners_filter)
+          .where(params.adminRpcode_filter)
+          .where(params.admin0pcode_filter)
+          .where({ createdAt: { '>=': new Date(params.start_date) } })
+          .where({ createdAt: { '<=': new Date(params.end_date) } })
+          .sort('createdAt DESC')
+          .exec(function (err, locations) {
+
+            // return error
+            if (err) return res.negotiate(err);
+
+            // csv
+            if (params.csv) {
+
+              locations = locations.map(l => {
+                return {
+                  ...l,
+                  updatedAt: moment(l.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+                  createdAt: moment(l.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                }
+              });
+              // return csv
+              json2csv({ data: locations }, function (err, csv) {
+
+                // error
+                if (err) return res.negotiate(err);
+
+                // success
+                return res.json(200, { data: csv });
+
+              });
+            } else if (params.list) {
+              return res.json(200, locations);
+            } else {
+              return res.json(200, { 'value': locations.length });
+            }
+
+          });
+
+
+        break;
+
       case 'reports_total':
 
         // reports total
@@ -683,6 +731,56 @@ var AdminDashboardController = {
             });
 
           break;
+
+      case 'target_locations':
+
+        TargetLocation
+          .find()
+          .where(params.organization_and_cluster_filter_Native)
+          .where(params.acbar_partners_filter)
+          .where(params.adminRpcode_filter)
+          .where(params.admin0pcode_filter)
+          .where(params.activity_type_id)
+          .where({ project_end_date: { '>=': new Date(params.start_date) } })
+          .where({ project_start_date: { '<=': new Date(params.end_date) } })
+          .sort('createdAt DESC')
+          .exec(function (err, locations) {
+
+            // return error
+            if (err) return res.negotiate(err);
+
+            // csv
+            if (params.csv) {
+
+              locations = locations.map(l => {
+                return {
+                  ...l,
+                  project_start_date: moment(l.project_start_date).format('YYYY-MM-DD'),
+                  project_end_date: moment(l.project_end_date).format('YYYY-MM-DD'),
+                  updatedAt: moment(l.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+                  createdAt: moment(l.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                }
+              });
+
+              // return csv
+              json2csv({ data: locations }, function (err, csv) {
+
+                // error
+                if (err) return res.negotiate(err);
+
+                // success
+                return res.json(200, { data: csv });
+
+              });
+            } else if (params.list) {
+              return res.json(200, locations);
+            } else {
+              return res.json(200, { 'value': locations.length });
+            }
+
+          });
+
+        break;
 
       case 'projects_total':
 
