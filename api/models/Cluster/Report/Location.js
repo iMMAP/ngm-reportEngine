@@ -274,7 +274,8 @@ module.exports = {
 		},
 		site_name: {
 			type: 'string',
-			required: true
+			defaultsTo: ''
+			// required: true
 		},
 		site_name_alternative: {
 			type: 'string'
