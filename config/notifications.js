@@ -11,7 +11,8 @@ const REPORTING_DUE_DATE_NOTIFICATIONS_CONFIG = [
     soon: [8],
     pending: [12],
     today: [10],
-    reporting_due_date: 10
+    reporting_due_date: 10,
+    disabled: ['health']
   }, {
     admin0pcode: "ET",
     soon: [5],

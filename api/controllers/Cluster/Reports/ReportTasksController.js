@@ -503,8 +503,9 @@ var ReportTasksController = {
             // for each report, group by username
             locations.forEach( function( location, i ) {
 
-              // if username dosnt exist
-              if ( !nStore[ location.email ] ) {
+              if ( NotificationService.shouldNotify( location.admin0pcode, location.cluster_id ) ) {
+                // if username dosnt exist
+                if ( !nStore[ location.email ] ) {
 
                 // add for notification email template
                 nStore[ location.email ] = {
@@ -524,18 +525,20 @@ var ReportTasksController = {
                   cluster: location.cluster,
                   username: location.username,
                   project_title: location.project_title,
-                  report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
-                };
+                    report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
+                  };
+                }
               }
-
             });
 
             // catching up with project focal points who are not in locations
             // for each report, group by username
             reports.forEach( function( location, i ) {
-              location.report_id = location.id;
-              // if username dosnt exist
-              if ( !nStore[ location.email ] ) {
+
+              if (  NotificationService.shouldNotify( location.admin0pcode, location.cluster_id ) ) {
+                location.report_id = location.id;
+                // if username dosnt exist
+                if ( !nStore[ location.email ] ) {
 
                 // add for notification email template
                 nStore[ location.email ] = {
@@ -555,10 +558,10 @@ var ReportTasksController = {
                   cluster: location.cluster,
                   username: location.username,
                   project_title: location.project_title,
-                  report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
-                };
+                    report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
+                  };
+                }
               }
-
             });
 
             // each user, send only one email!
@@ -827,23 +830,20 @@ var ReportTasksController = {
           // for each report, group by username
           reports.forEach( function( location, i ) {
 
-            const admin0pcode = location.admin0pcode;
+            let config = NotificationService.getConfig( location.admin0pcode, location.cluster_id );
 
-            let config = REPORTING_DUE_DATE_NOTIFICATIONS_CONFIG.find(obj => obj.admin0pcode === admin0pcode);
-            if (!config) config = REPORTING_DUE_DATE_NOTIFICATIONS_CONFIG.find(obj => obj.admin0pcode === "ALL");
-
-            if (config.soon.includes(moment().date()) || config.pending.includes(moment().date()) || config.today.includes(moment().date())) {
+            if ( config.notify && ( config.soon || config.pending || config.today ) ) {
 
               location.report_id = location.id;
               // if username dosnt exist
               if ( !nStore[ location.email ] ) {
                 var due_message = 'due SOON';
                 // set due message TODAY
-                if ( config.today.includes(moment().date()) ) {
+                if ( config.today ) {
                   due_message = 'due TODAY';
                 }
                 // set due message PENDING
-                if ( config.pending.includes(moment().date()) ) {
+                if ( config.pending ) {
                   due_message = 'PENDING';
                 }
 
