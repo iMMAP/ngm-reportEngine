@@ -71,6 +71,21 @@ module.exports = {
       })
 
   },
+  // migrate list of donors to DB
+  getDonorsNew: function (req, res) {
+    var admin0pcode_filter_native = req.param('admin0pcode') !== 'ALL' ? { $or: [{ admin0pcode: req.param('admin0pcode') }, { admin0pcode: 'ALL'} ]} : {};
+
+    // using native
+    Donors.native(function (err, collection) {
+      if (err) return res.serverError(err);
+
+      // collection.find( filterObjectNative).toArray(function (err, donors) {
+      collection.find(admin0pcode_filter_native).toArray(function (err, donors) {
+        if (err) return res.serverError(err);
+        return res.json(200,donors);
+      });
+    });
+  },
 
   // get indicators
   getIndicators: function( req, res ) {
