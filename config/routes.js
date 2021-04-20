@@ -155,6 +155,7 @@ module.exports.routes = {
   // Cluster Lists
   'GET /cluster/list/activities': 'Cluster/Lists/ListController.getActivities',
   'GET /cluster/list/donors': 'Cluster/Lists/ListController.getDonors',
+  'GET /cluster/list/donorsnew':'Cluster/Lists/ListController.getDonorsNew',
   'GET /cluster/list/indicators': 'Cluster/Lists/ListController.getIndicators',
   'GET /cluster/list/stockitems': 'Cluster/Lists/ListController.getStockItems',
 
