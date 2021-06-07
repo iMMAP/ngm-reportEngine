@@ -2206,13 +2206,16 @@ var ClusterDashboardController = {
 					.find()
 					.where(filterObjectact)
 					.exec(function (err, activities) {
-						var distinct_activities = _.uniq(activities, function (x) {
-							return x.activity_type_name;
+						// var distinct_activities = _.uniq(activities, function (x) {
+						// 	return x.activity_type_name;
+						// });
+						var distinct_act_description = _.uniq(activities, function (x) {
+							return x.activity_description_name;
 						});
 						// return error
 						if (err) return res.negotiate(err);
 						// return project
-						return res.json(200, distinct_activities);
+						return res.json(200, distinct_act_description);
 					})
 				break;
 				default:
