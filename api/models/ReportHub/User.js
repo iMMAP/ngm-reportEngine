@@ -197,6 +197,9 @@ module.exports = {
 		},
 		cluster_contact:{
 			type: 'boolean'
+		},
+		last_logged_in:{
+			type: 'date'
 		}
 
 	},
