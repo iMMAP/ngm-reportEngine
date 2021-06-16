@@ -783,6 +783,18 @@ var ReportController = {
 				// return error
 				if ( err ) return res.json({ err: true, error: err });
 
+				// update location and beneficiaries report_status attribute too
+				if (req.param('update') && req.param('update').report_status){
+
+					Location.update({ report_id: req.param('report_id') }, req.param('update')).exec(function (err, locations){
+						if (err) return res.json({ err: true, error: err });
+					})
+					Beneficiaries
+						.update({ report_id: req.param('report_id')}, req.param('update')).exec(function(err,beneficiaries){
+						// return error
+						if (err) return res.json({ err: true, error: err });
+					});
+				}
 				// return reports
 				return res.json( 200, report );
 
