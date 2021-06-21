@@ -142,5 +142,21 @@ module.exports = {
 
   },
 
+  // get Beneficiary Types
+  getBeneficiaryTypes: function ( req, res ){
+    var admin0pcode_filter = req.param('admin0pcode') ? { $or: [{ admin0pcode: 'ALL' }, { admin0pcode: req.param('admin0pcode') }] } : {};
+    
+    BeneficiaryTypes
+      .find()
+      .where(admin0pcode_filter)
+      .exec( function(err, beneficiarytypes){
+          // return error
+          if(err) return res.negotiate(err);
+
+          // return beneficiary types
+          return res.json(200, beneficiarytypes)
+      });
+  }
+
 };
 
