@@ -9,11 +9,14 @@ const DEACTIVATED_STATUS = 'deactivated';
 const ACTIVE_STATUS = 'active';
 const _ = require('underscore');
 var json2csv = require('json2csv');
+var moment = require('moment');
 
 var UserController = {
 
   // create user
   create: function(req, res) {
+
+    
 
     // check params
     if (!req.param( 'user' )) {
@@ -44,6 +47,9 @@ var UserController = {
 
           // set token
           user.token = jwtToken.issueToken({ sid: user.id, roles: user.roles });
+
+          // add last_logged_id attribute
+          user.last_logged_in = moment().format();
 
           // save
           user.save( function(err){
@@ -98,6 +104,9 @@ var UserController = {
   // Check provided email address and password
   login: function (req, res) {
 
+
+    
+
     // check params
     if (!req.param( 'user' )) {
       return res.json(401, { msg: 'user required' });
@@ -149,6 +158,9 @@ var UserController = {
 
           // add token
           user.token = jwtToken.issueToken({ sid: user.id, roles: user.roles });
+          
+          // add last_logged_id attribute
+          user.last_logged_in = moment().format();
 
           // save user data on session
           req.session.session_user = user;
@@ -269,6 +281,8 @@ var UserController = {
   // metrics
   updateLogin: function(req, res){
 
+    
+
     // check params
     if ( !req.param( 'user' ) ) {
       return res.json(401, { msg: 'user required' });
@@ -287,6 +301,9 @@ var UserController = {
 
         // update visit information
         user.visits++;
+
+        // add last_logged_id attribute
+        user.last_logged_in = moment().format()
 
         // save updates
         user.save(function(err) {
@@ -667,6 +684,8 @@ var UserController = {
   // password reset
   passwordReset: function(req, res){
 
+    
+
     // check params
     if ( !req.param( 'reset' ) || !req.param( 'token' ) ) {
       return res.json(401, { msg: 'user, token required' });
@@ -705,6 +724,9 @@ var UserController = {
             // update visit information
             user.visits = user.visits + 1;
 
+            // add last_logged_id attribute
+            user.last_logged_in = moment().format()
+
             // save updates
             user.save( function( err ) {
 
@@ -736,7 +758,7 @@ var UserController = {
 
   notifyInactiveUsers: async function (req, res) {
 
-    var moment = require('moment');
+    
     var fs = require('fs');
 
     try {
@@ -806,7 +828,7 @@ var UserController = {
 
   deactivateInactiveUsers: async function (req, res) {
 
-    var moment = require('moment');
+    
     var fs = require('fs');
 
     try {

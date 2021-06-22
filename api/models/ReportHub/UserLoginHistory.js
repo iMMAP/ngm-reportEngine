@@ -157,6 +157,9 @@ module.exports = {
         },
         site_lat: {
             type: 'float'
+        },
+        last_logged_in: {
+            type: 'date'
         }
 
 	},
