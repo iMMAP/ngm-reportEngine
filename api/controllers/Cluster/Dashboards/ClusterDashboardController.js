@@ -81,7 +81,7 @@ var ClusterDashboardController = {
 	// return filters
 	getFilters: function( params ){
 		// filters, for waterline and native mongo queries (_Native)
-		console.log(params)
+		
 		return {
 			default: { report_year: { '>=': 2017 }, location_id: { '!': null } },
 			adminRpcode: params.adminRpcode === 'hq' ? {} : { adminRpcode: params.adminRpcode },
