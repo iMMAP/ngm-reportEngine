@@ -72,7 +72,8 @@ var ClusterDashboardController = {
 			admin2pcode: req.param('admin2pcode'),
 			beneficiaries: req.param('beneficiaries'),
 			start_date: req.param('start_date'),
-			end_date: req.param('end_date')
+			end_date: req.param('end_date'),
+			hrp: req.param('hrp') === 'true' ? true :false
 		}
 
 	},
@@ -80,6 +81,7 @@ var ClusterDashboardController = {
 	// return filters
 	getFilters: function( params ){
 		// filters, for waterline and native mongo queries (_Native)
+		
 		return {
 			default: { report_year: { '>=': 2017 }, location_id: { '!': null } },
 			adminRpcode: params.adminRpcode === 'hq' ? {} : { adminRpcode: params.adminRpcode },
@@ -117,7 +119,10 @@ var ClusterDashboardController = {
 									: { cluster_id: { $in: params.cluster_ids } },
 			is_cluster_ids_array: params.cluster_ids ? true : false,
 			organization_tag_Native: params.organization_tag === 'all' ? { organization_tag: { $nin: $nin_organizations } } : { organization_tag: params.organization_tag },
-			date_Native: { reporting_period: { $gte: new Date( params.start_date ), $lte: new Date( params.end_date )} },
+			// date_Native: { reporting_period: { $gte: new Date( params.start_date ), $lte: new Date( params.end_date )} },
+			// timestamp
+			// date_Native: { createdAt: { $gte: new Date(params.start_date), $lte: new Date(params.end_date) } },
+			date_Native: params.hrp ? { reporting_period: { $gte: new Date(params.start_date), $lte: new Date(params.end_date) } } :{ createdAt: { $gte: new Date(params.start_date), $lte: new Date(params.end_date) } },
 			delivery_type_id: function() {
 				var filter = {}
 				if ( params.indicator === 'households_population' ) {
