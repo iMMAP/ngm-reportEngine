@@ -40,11 +40,13 @@ var ReportController = {
 
 		var json2csv = require( 'json2csv' ),
 			moment = require( 'moment' );
+		let project_cluster_id = req.param('project_cluster_id');
+		let project_admin0pcode = req.param('project_admin0pcode');
 
 		// activity
 		if ( req.param( 'report_type' ) === 'activity' ) {
 
-      let { fields, fieldNames } = FieldsService.getReportCsvFields();
+      		let { fields, fieldNames } = FieldsService.getReportCsvFields(project_admin0pcode, project_cluster_id);
 
 			// beneficiaries
 			Beneficiaries
@@ -349,6 +351,10 @@ var ReportController = {
         { header: 'Programme Partners', key: 'programme_partners', width: 30 },
         { header: 'Implementing Partners', key: 'implementing_partners', width: 30 },
       ];
+
+		if (project.admin0pcode === 'ET' && project.cluster_id === 'esnfi'){
+			worksheetProject.columns[9].headers = 'Program Coordinating Organization';
+		}
 
       // add rows
       worksheetActivities.addRows(activities);
