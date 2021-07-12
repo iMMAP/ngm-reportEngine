@@ -1571,7 +1571,10 @@ var ProjectController = {
       return res.json( 401, { err: 'project_id required!' });
     }
 
-    let { fields, fieldNames } = FieldsService.getReportCsvFields();
+    let project_cluster_id = req.param('project_cluster_id');
+    let project_admin0pcode = req.param('project_admin0pcode');
+
+    let { fields, fieldNames } = FieldsService.getReportCsvFields(project_admin0pcode, project_cluster_id);
 
     // beneficiaries
     Beneficiaries
