@@ -1719,7 +1719,7 @@ var ProjectController = {
         project_title = req.param('project_title');
         url_profile_user = req.param('url_user')
         username = req.param('username');
-        list_emails =['ngmreporthub@gmail.com']
+        list_emails =[{email:'ngmreporthub@gmail.com', recipient:'Admin'}]
 
 
     User
@@ -1731,7 +1731,7 @@ var ProjectController = {
         // push admin email to list_email array 
         if(admins.length){
           admins.forEach(function (a, i) {
-            list_emails.push(a.email)
+            list_emails.push({ email: a.email, recipient: a.name})
           });
         };
 
@@ -1742,11 +1742,12 @@ var ProjectController = {
             senderName: 'ReportHub',
             title: project_title,
             user: username,
+            recipient: email.recipient,
             url_profile_user: url_profile_user,
             project_url: project_url,
             reasons: reasons_string
           }, {
-            to: email,
+            to: email.email,
             subject: 'ReportHub - Request Delete Project ' + project_title
           }, function (err) {
 
