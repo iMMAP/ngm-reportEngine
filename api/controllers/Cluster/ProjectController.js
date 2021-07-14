@@ -1730,9 +1730,9 @@ var ProjectController = {
 
         // push admin email to list_email array 
         if(admins.length){
-          admins.forEach(function (a, i) {
-            list_emails.push(a.email)
-          });
+          // admins.forEach(function (a, i) {
+          //   list_emails.push(a.email)
+          // });
         };
 
         list_emails.forEach(email => {
