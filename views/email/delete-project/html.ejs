@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!-- Default home page -->
+<html>
+
+<head>
+    <style>
+        p {font-family: Roboto, sans-serif;}
+    </style>
+</head>
+
+<body>
+
+    <p>Hi Admin,</p>
+    
+    <p>User <a title="User" href="<%=url_profile_user%>"><b><%=user%></b></a>  is requesting to delete project <b><%=title%></b>,</p>
+    <p>Reason: <b><%=reasons%>.</b></p>
+        
+    <p>If you feel this information is correct, kindly delete this project through <a title="Project"
+        href="<%=project_url%>">this link</a>
+    </p>
+    
+    <p style="font-weight:600;color:red;margin: 0;">WARNING!</p>
+    <p style="font-weight:600;margin: 0;">Deleting a project will permanently removing all the project data including the
+        submitted
+        monthly report. The
+        ReportHub Team CANNOT UNDO this action.</p>
+    
+    <p>
+    <p>
+        <br />
+        <%=senderName%>
+    </p>
+
+</body>
+
+</html>

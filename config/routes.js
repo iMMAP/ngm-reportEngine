@@ -184,6 +184,7 @@ module.exports.routes = {
 
   'POST /cluster/project/setBeneficiariesById': 'Cluster/ProjectController.setBeneficiariesById',
   'POST /cluster/project/setBeneficiaryById': 'Cluster/ProjectController.setBeneficiaryById',
+  'POST /send-request-to-delete-project':'Cluster/ProjectController.sendRequestToDeleteProject',
 
   // STOCK REPORTS
   'POST /cluster/stock/getReportsList': 'Cluster/Stocks/StockReportController.getReportsList',
