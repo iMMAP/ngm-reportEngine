@@ -1702,6 +1702,65 @@ var ProjectController = {
     }
 
   },
+  // send email to delete project
+  sendRequestToDeleteProject: function (req, res) {
+
+    // check params
+    if (!req.param('organization_tag') && !req.param('reasons') && !req.param('url') && !req.param('admin0pcode')) {
+      return res.json(401, { msg: 'organization_tag, url, reason required' });
+    }
+    // file system
+    var fs = require('fs');
+
+    let organization_tag = req.param('organization_tag');
+        reasons_string = req.param('reasons');
+        admin0pcode = req.param('admin0pcode');
+        project_url = req.param('url');
+        project_title = req.param('project_title');
+        url_profile_user = req.param('url_user')
+        username = req.param('username');
+        list_emails =[{email:'ngmreporthub@gmail.com', recipient:'Admin'}]
+
+
+    User
+      .find({ organization_tag: organization_tag, admin0pcode: admin0pcode, roles: { $in: ['ORG']}})
+      .exec(function (err, admins) {
+        // if no config file, return, else send email ( PROD )
+        if (!fs.existsSync('/home/ubuntu/nginx/www/ngm-reportEngine/config/email.js')) return res.json(200, { 'data': 'No email config' });
+
+        // push admin email to list_email array 
+        if(admins.length){
+          admins.forEach(function (a, i) {
+            list_emails.push({ email: a.email, recipient: a.name})
+          });
+        };
+
+        list_emails.forEach(email => {
+          // send email
+          sails.hooks.email.send('delete-project', {
+            type: 'Delete Project',
+            senderName: 'ReportHub',
+            title: project_title,
+            user: username,
+            recipient: email.recipient,
+            url_profile_user: url_profile_user,
+            project_url: project_url,
+            reasons: reasons_string
+          }, {
+            to: email.email,
+            subject: 'ReportHub - Request Delete Project ' + project_title
+          }, function (err) {
+
+            // return error
+            if (err) return res.negotiate(err);
+
+          });
+        });
+      })
+    
+    return res.json(200,{msg:'Success!'});
+
+  },
 
 };
 
