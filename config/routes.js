@@ -52,6 +52,7 @@ module.exports.routes = {
   'GET /deactivateInactiveUsers': 'ReportHub/UserController.deactivateInactiveUsers',
   'POST /deactivateInactiveUsers': 'ReportHub/UserController.deactivateInactiveUsers',
   'GET /getClusterContactUsers': 'ReportHub/UserController.getClusterContactUsers',
+  'POST /sendEmailForReportPending': 'ReportHub/UserController.sendEmailforPendingReportById',
 
   // org
   'GET /getOrganization': 'ReportHub/OrganizationController.getOrganization',

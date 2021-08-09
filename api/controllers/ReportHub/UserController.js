@@ -964,6 +964,47 @@ var UserController = {
 
   },
 
+  // send email for reportPending
+  sendEmailforPendingReportById: function (req, res) {
+
+    // check params
+    if (!req.param('url') && !req.param('project_title') && !req.param('username') ) {
+      return res.json(401, { msg: 'url, project_title, username, month required' });
+    }
+    // file system
+    var fs = require('fs');
+    url = req.param('url');
+    project_title = req.param('project_title');
+    username = req.param('username');
+    name_user = req.param('name');
+    email = req.param('email');
+    month = req.param('month');
+
+
+
+        // if no config file, return, else send email ( PROD )
+        if (!fs.existsSync('/home/ubuntu/nginx/www/ngm-reportEngine/config/email.js')) return res.json(200, { 'data': 'No email config' });
+
+          // send email
+          sails.hooks.email.send('cluster-email-for-pending-report', {
+            type: 'Pending Report',
+            senderName: 'ReportHub',
+            title: project_title,
+            recipient: name_user,
+            url:url,
+            month:month
+          }, {
+            to: email,
+            subject: 'ReportHub - Pending Report ' +month +' for Project '+ project_title
+          }, function (err) {
+
+            // return error
+            if (err) return res.negotiate(err);
+            return res.json(200, { msg: 'Success!' });
+          });
+
+  },
+
 };
 
 module.exports = UserController;
