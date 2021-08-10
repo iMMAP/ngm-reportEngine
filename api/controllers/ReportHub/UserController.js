@@ -979,6 +979,8 @@ var UserController = {
     name_user = req.param('name');
     email = req.param('email');
     month = req.param('month');
+    requester = req.param('requester');
+    requester_email = req.param('requester_contact');
 
 
 
@@ -992,7 +994,10 @@ var UserController = {
             title: project_title,
             recipient: name_user,
             url:url,
-            month:month
+            month:month,
+            requster:requester,
+            requster_email:requester_email
+
           }, {
             to: email,
             subject: 'ReportHub - Pending Report ' +month +' for Project '+ project_title
