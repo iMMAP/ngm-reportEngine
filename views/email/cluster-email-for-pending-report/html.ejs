@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -39,15 +39,19 @@
                                 <tr>
                                     <td style="padding:0 0 20px 0;color:#153643;">
                                         <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Hi, <%=recipient%></h1>
-                                        <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">
-                                            Please complete report <%=month%> for Project <%=title%>, 
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempus
+                                        <p style="margin:0 0 12px 0;font-size:15px;line-height:24px;font-family:Arial,sans-serif;">
+                                            Please complete report <b><%=month%></b>  for Project <b><%=title%>,</b> 
+                                            requested by <b><%=requster%></b>
+                                            <!-- Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempus
                                             adipiscing felis, sit amet blandit ipsum volutpat sed. Morbi porttitor, eget
-                                            accumsan et dictum, nisi libero ultricies ipsum, posuere neque at erat.
+                                            accumsan et dictum, nisi libero ultricies ipsum, posuere neque at erat. -->
+                                        </p>
+                                        <p style="font-size:15px;line-height:24px;font-family:Arial,sans-serif;">
+                                            For further information please contact him/her via this email address ( <%=requster_email%> )
                                         </p>
 
                                         <p style="margin:20px 0 0 0;text-align:center"><a href="<%=url%>"
-                                                style="background: #26a69a; text-decoration: none; padding: 10px 25px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884"><span
+                                                style="font-size: 16px;background: #26a69a; text-decoration: none; padding: 10px 25px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884"><span
                                                     style="mso-text-raise:10pt;font-weight:bold;">Go to
                                                     Report</span></a></p>
                                     </td>
