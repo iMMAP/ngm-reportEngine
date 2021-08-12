@@ -1719,7 +1719,8 @@ var ProjectController = {
         project_title = req.param('project_title');
         url_profile_user = req.param('url_user')
         username = req.param('username');
-        full_name = req.param('name');
+        fullname = req.param('name');
+        country = req.param('admin0name');
         list_emails =[{email:'ngmreporthub@gmail.com', recipient:'Admin'}]
 
 
@@ -1743,7 +1744,9 @@ var ProjectController = {
             senderName: 'ReportHub',
             title: project_title,
             user: username,
+            fullname: fullname,
             recipient: email.recipient,
+            country: country,
             url_profile_user: url_profile_user,
             project_url: project_url,
             reasons: reasons_string,

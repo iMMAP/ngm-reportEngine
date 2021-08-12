@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html> -->
 <!-- Default home page -->
-<html>
+<!-- <html>
 
 <head>
     <style>
@@ -30,6 +30,147 @@
         <%=senderName%>
     </p>
 
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="x-apple-disable-message-reformatting">
+    <title></title>
+    <style>
+        table,
+        td,
+        div,
+        h1,
+        p {
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+
+<body style="margin:0;padding:0;">
+    <table role="presentation"
+        style="width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;">
+        <tr>
+            <td align="center" style="padding:0;">
+                <table role="presentation"
+                    style="width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;">
+                    <tr>
+                        <td align="center" style="padding:40px 0 30px 0;background:#2196F3;">
+                            <img src="https://reporthub.org/imgs/toolbox-z1.png" alt="" width="120"
+                                style="height:auto;display:block;" />
+                            <h1
+                                style="font-size:36px;margin:0 0 20px 0; color:#fff;font-family:Arial,sans-serif;font-weight: 200;">
+                                ReportHub</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:36px 30px 42px 30px;">
+                            <table role="presentation"
+                                style="width:100%;border-collapse:collapse;border:0;border-spacing:0;">
+                                <tr>
+                                    <td style="padding:0 0 20px 0;color:#153643;">
+                                        <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Hi
+                                            <%=recipient%>,
+                                        </h1>
+                                        <!-- <p style="margin-top: 20px;font-size:16px;line-height:24px;">User <a
+                                                title="User" href="<%=url_profile_user%>"><b>
+                                                    <%=user%>
+                                                </b></a> is requesting to delete project <b>
+                                                <%=title%>
+                                            </b>,<br>Reason: <b>
+                                                <%=reasons%>.
+                                            </b></p> -->
+                                        <p style="margin-top: 20px;font-size:16px;line-height:24px;">User <a title="User" href="<%=url_profile_user%>"><b>
+                                                    <%=user%>
+                                                </b></a> ( <%=fullname%> ) is requesting to delete a project. <br>
+                                            Kindly find the details below.
+                                        <ul style="font-size: 15px;line-height: 24px;">
+                                            <li><b>Country: </b>
+                                                <%=country%>
+                                            </li>
+                                            <li><b>Project Title: </b>
+                                                <%=title%>
+                                            </li>
+                                            <li><b>Reason: </b>
+                                                <%=reasons%>.
+                                            </li>
+                                        </ul>
+                                        </p>
+                                        <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;">If you feel this
+                                            information is correct, kindly delete this project through <a
+                                                title="Project" href="<%=project_url%>">this link</a> or you can click
+                                            the button below
+                                        </p>
+
+                                        <p style="margin:20px 0 25px 0;text-align:center"><a title="Project"
+                                                href="<%=project_url%>"
+                                                style="background: #26a69a; text-decoration: none; padding: 10px 25px; color: #ffffff; border-radius: 2px; font-size: 16px;display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884"><span
+                                                    style="mso-text-raise:10pt;font-weight:bold;">Go to
+                                                    Project</span></a></p>
+                                        <p style="font-weight:600;color:red;margin: 25px 0 5px 0; text-align:center;font-size: 16px;">
+                                            WARNING!</p>
+                                        <p style="font-weight:600;margin: 0;font-size:14px;line-height:24px;text-align: center;">Deleting a
+                                            project will permanently removing all the project data including the
+                                            submitted
+                                            monthly report.<br> The
+                                            ReportHub Team CANNOT UNDO this action.</p>
+
+                                        <p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:0;">
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:30px;background:#2196F3;">
+                            <table role="presentation"
+                                style="width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;">
+                                <tr>
+                                    <td style="padding:0;width:50%;" align="left">
+                                        <p
+                                            style="margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
+                                            ReportHub<br />
+                                            Supported by iMMAP
+                                        </p>
+                                    </td>
+                                    <td style="padding:0;width:50%;" align="right">
+                                        <table role="presentation"
+                                            style="border-collapse:collapse;border:0;border-spacing:0;">
+                                            <tr>
+                                                <!-- <td style="padding:0 0 0 10px;width:38px;">
+                                                    <a href="http://www.twitter.com/" style="color:#ffffff;"><img
+                                                            src="https://assets.codepen.io/210284/tw_1.png"
+                                                            alt="Twitter" width="38"
+                                                            style="height:auto;display:block;border:0;" /></a>
+                                                </td> -->
+                                                <td style="padding:0 0 0 10px;width:38px;">
+													<a href="https://immap.org/" style="color:#ffffff;"><img
+															src="https://reporthub.org/desk/images/immap_white.png" alt="Facebook" width="50"
+															style="height:auto;display:block;border:0;" /></a>
+												</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 
 </html>
