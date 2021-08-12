@@ -1719,6 +1719,7 @@ var ProjectController = {
         project_title = req.param('project_title');
         url_profile_user = req.param('url_user')
         username = req.param('username');
+        full_name = req.param('name');
         list_emails =[{email:'ngmreporthub@gmail.com', recipient:'Admin'}]
 
 
@@ -1745,10 +1746,11 @@ var ProjectController = {
             recipient: email.recipient,
             url_profile_user: url_profile_user,
             project_url: project_url,
-            reasons: reasons_string
+            reasons: reasons_string,
+            full_name: full_name
           }, {
             to: email.email,
-            subject: 'ReportHub - Request Delete Project ' + project_title
+            subject: 'ReportHub - Request Delete Project'
           }, function (err) {
 
             // return error
