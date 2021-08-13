@@ -357,7 +357,7 @@ module.exports = {
 			// 		  	// next
             //   next();
             // });
-			var count_contact =0
+			var count_contact =0;
 			admin_contacts.forEach(function(contact,i){
 				sails.hooks.email.send('new-user-pending', {
 					org_names: 'org',
@@ -368,6 +368,8 @@ module.exports = {
 					position: user.position,
 					phone: user.phone,
 					email: user.email,
+					user_org: user.organization_name,
+					country: user.admin0name,
 					url: 'https://reporthub.org/desk/#/profile/' + user.username,
 					sendername: 'ReportHub'
 				}, {
@@ -408,7 +410,7 @@ module.exports = {
 
             //   });
 
-			var count_contact =0
+			var count_contact =0;
 			admin_contacts.forEach(function(contact,i){
 				sails.hooks.email.send('new-user', {
 					org_names:'org',
@@ -419,6 +421,8 @@ module.exports = {
 					position: user.position,
 					phone: user.phone,
 					email: user.email,
+					user_org: user.organization_name,
+					country: user.admin0name,
 					url: 'https://reporthub.org/desk/#/profile/' + user.username,
 					sendername: 'ReportHub'
 				}, {
@@ -496,7 +500,7 @@ module.exports = {
                 //   next();
 
                 // });
-				var count_contact =0
+				var count_contact =0;
 				admin_contacts.forEach(function(contact){
 					sails.hooks.email.send(template, {
 						// org_names: admin_names,
@@ -509,6 +513,8 @@ module.exports = {
 						position: user.position,
 						phone: user.phone,
 						email: user.email,
+						user_org: user.organization_name,
+						country: user.admin0name,
 						url: 'https://reporthub.org/desk/#/profile/' + user.username,
 						sendername: 'ReportHub'
 					}, {
