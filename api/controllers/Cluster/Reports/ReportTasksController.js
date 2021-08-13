@@ -837,10 +837,10 @@ var ReportTasksController = {
               location.report_id = location.id;
               // if username dosnt exist
               if ( !nStore[ location.email ] ) {
-                var due_message = 'due SOON';
+                var due_message = 'DUE SOON';
                 // set due message TODAY
                 if ( config.today ) {
-                  due_message = 'due TODAY';
+                  due_message = 'DUE TODAY';
                 }
                 // set due message PENDING
                 if ( config.pending ) {
@@ -912,6 +912,7 @@ var ReportTasksController = {
               length = notifications.length;
 
           // for each
+          notifications = [notifications[0]]
           notifications.forEach( function( notification, i ){
 
             User
