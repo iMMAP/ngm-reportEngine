@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html> -->
 <!-- Default home page -->
-<html>
+<!-- <html>
 	<head>
 	<style>
 	</style>
@@ -20,4 +20,167 @@
 		<p><br/><%=senderName%></p>
 
 	</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="x-apple-disable-message-reformatting">
+	<title></title>
+	<style>
+		table,
+		td,
+		div,
+		h1,
+		p {
+			font-family: Arial, sans-serif;
+		}
+
+		#rh-email-table td,
+		#rh-email-table th {
+			border: 1px solid #ddd;
+			padding: 8px;
+			font-weight: 600;
+		}
+
+		#rh-email-table {
+			border-collapse: collapse;
+			width: 540px;
+		}
+
+		#rh-email-table tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#rh-email-table tr:hover {
+			background-color: #ebf5f3;
+		}
+
+		#rh-email-table th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: center;
+			background-color: #26a69a;
+			color: white;
+			font-size: 14px;
+		}
+	</style>
+</head>
+
+<body style="margin:0;padding:0;">
+	<table role="presentation"
+		style="width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;">
+		<tr>
+			<td align="center" style="padding:0;">
+				<table role="presentation"
+					style="width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;">
+					<tr>
+						<td align="center" style="padding:40px 0 30px 0;background:#2196F3;">
+							<img src="https://reporthub.org/imgs/toolbox-z1.png" alt="" width="120"
+								style="height:auto;display:block;" />
+							<h1 style="font-size:36px;margin:0 0 20px 0; color:#fff;font-family:Arial,sans-serif;">
+								ReportHub</h1>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding:36px 30px 42px 30px;">
+							<table role="presentation"
+								style="width:100%;border-collapse:collapse;border:0;border-spacing:0;">
+								<tr>
+									<td style="padding:0 0 20px 0;color:#153643;">
+										<h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Hi
+										<%=recipientName%>,
+										</h1>
+										<p style="line-height:24px;font-size: 16px;">
+											You are receiving this email because we received a password reset request for your ReportHub Account. No changes have
+											been made to your account yet. <br>Click one of the links below to reset your password.
+										</p>
+										<table id="rh-email-table">
+											<tr>
+												<th>Country</th>
+												<th>Cluster</th>
+												<th>Username</th>
+												<th>Link</th>
+											</tr>
+										<% for(var i=0; i < resets.length; i++) { %>
+											<tr>
+												<td  style="font-size: 14px;">
+													<%= resets[i].admin0name %>
+												</td>
+												<td style="font-size: 14px;">
+													<%= resets[i].cluster.toUpperCase() %>
+												</td>
+												<td style="font-size: 14px;">
+													<%=resets[i].username%>
+												</td>
+										
+												<td style="text-align: center;">
+													<a title="Reset your ReportHub password for <%=resets[i].cluster%>" href="<%=url%><%=resets[i].token%>"
+														href="<%= url %>"
+														style="font-size: 14px;background: #26a69a; text-decoration: none; padding: 3px 12px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884;"><span
+															style="mso-text-raise:10pt;font-weight:bold;">Reset
+															Password</span></a>
+												</td>
+											</tr>
+											<% } %>
+
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding:0;">
+										<p
+											style="text-align:center;margin:0 0 12px 0;font-size:14px;line-height:24px;font-family:Arial,sans-serif;font-weight: lighter;color: #a7a1a1;">
+											If you did not request a password reset, you can safely ignore this email. Only a person with access to your
+											email
+											can
+											reset your password account.
+										</p>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding:30px;background:#2196F3;">
+							<table role="presentation"
+								style="width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;">
+								<tr>
+									<td style="padding:0;width:50%;" align="left">
+										<p
+											style="margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
+											ReportHub<br />
+											Supported by iMMAP
+										</p>
+									</td>
+									<td style="padding:0;width:50%;" align="right">
+										<table role="presentation"
+											style="border-collapse:collapse;border:0;border-spacing:0;">
+											<tr>
+												<td style="padding:0 0 0 10px;width:38px;">
+
+												</td>
+												<td style="padding:0 0 0 10px;width:38px;">
+													<a href="https://immap.org/" style="color:#ffffff;"><img
+															src="https://reporthub.org/desk/images/immap_white.png"
+															alt="Facebook" width="50"
+															style="height:auto;display:block;border:0;" />
+													</a>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+
 </html>

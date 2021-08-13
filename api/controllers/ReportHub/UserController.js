@@ -622,7 +622,9 @@ var UserController = {
             // reset user
             var userReset = {
               adminRpcode: user[i].adminRpcode,
+              adminRname:user[i].adminRname,
               admin0pcode: user[i].admin0pcode,
+              admin0name:user[i].admin0name,
               organization_id: user[i].organization_id,
               organization_tag: user[i].organization_tag,
               organization: user[i].organization,
