@@ -369,6 +369,13 @@ var UserController = {
                 sails.hooks.email.send( 'new-user-activated', {
                     name: result[0].name,
                     username: result[0].username,
+                    sector: result[0].cluster,
+					          name: result[0].name,
+					          position: result[0].position,
+					          phone: result[0].phone,
+					          email: result[0].email,
+					          user_org: result[0].organization_name,
+					          country: result[0].admin0name,
                     sendername: 'ReportHub',
                     url: 'https://reporthub.org/desk/#/profile/' + result[0].username,
                   }, {
