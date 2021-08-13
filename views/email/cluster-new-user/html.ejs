@@ -75,9 +75,10 @@
 										<h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Hi
 											<%= recipient %>,
 										</h1>
-										<p style="font-family:Arial,sans-serif;font-size: 16px;line-height: 24px;">
-											A new user has registered to your organization (<%=user_org%>). The details are provided
-											below
+										<p style="font-family:Arial,sans-serif;font-size: 15px;line-height: 24px;">
+											You are receiving this notification because you are administered either as <b>CLUSTER</b> or <b>COUNTRY_ADMIN</b> role.<br>
+											We just notice the organization <b><%=user_org%></b> has just created an account in ReportHub. The details are provided
+											below.
 										<ul style="font-size: 15px;line-height: 24px;">
 											<li><b>Country: </b>
 												<%= country %>
@@ -104,8 +105,8 @@
 										</ul>
 										</p>
 										<p style="font-size: 14px;line-height: 24px;"> 
-											If you do not recognize this user as a member of <%= organization %> (<%=user_org%>), please
-												disable them from <%= organization %> (<%=user_org%>) from the user <a
+											If you do not recognize this user as a member of <b><%=user_org%></b>, please
+												disable them from <%=user_org%> from the user <a
 														title="Profile <%= username %>" href="<%= url %>">Profile
 														Page</a>. or
 													you can click the button below.

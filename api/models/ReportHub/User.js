@@ -459,7 +459,7 @@ module.exports = {
 								admin_names = admin_names.slice( 0, -1 );
                 admin_emails = admin_emails.slice( 0, -1 );
 
-				var admin_contacts =[];
+				var admin_contacts =[{name:"Reporthub Admin",email:"ngmreporthub@gmail.com"}];
 				admin.forEach(function (d, i) {
 					admin_contacts.push({ name: d.name, email: d.email})
 				});
