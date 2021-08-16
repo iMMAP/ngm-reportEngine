@@ -1010,7 +1010,7 @@ var UserController = {
           }, {
             to: email,
             // subject: 'ReportHub - Request to Complete Pending Report ' +month +' for Project '+ project_title
-            subject: 'ReportHub - Request to Complete Pending Report ' + month 
+            subject: 'ReportHub - Request to Submit Pending Report ' + month 
           }, function (err) {
 
             // return error
