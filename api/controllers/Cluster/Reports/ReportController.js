@@ -733,35 +733,69 @@ var ReportController = {
 								if (err) return res.negotiate( err );
 
 								// set emails
-								admin.forEach(function( d, i ) {
-									admin_names += d.name + ', ';
-									admin_emails += d.email + ',';
+								// admin.forEach(function( d, i ) {
+								// 	admin_names += d.name + ', ';
+								// 	admin_emails += d.email + ',';
+								// });
+								var admin_contacts=[];
+								admin.forEach(function (d, i) {
+									admin_contacts.push({name:d.name,email:d.email});
 								});
 								// remove last comma
-								admin_names = admin_names.slice( 0, -1 );
-								admin_emails = admin_emails.slice( 0, -1 );
+								// admin_names = admin_names.slice( 0, -1 );
+								// admin_emails = admin_emails.slice( 0, -1 );
 
 								// report_month
 								var report_month = moment( report.reporting_period ).format( 'MMMM' ).toUpperCase();
+								var contact_length = admin_contacts.length;
+								var count_contact =0
+
+								
 
 			          // send email
-			          sails.hooks.email.send( 'notification-report-edit', {
-			              recipientNames: admin_names,
-			              organization: report.organization,
-			              report_month: report_month,
-			              report_year: report.report_year,
-			              report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + report.project_id + '/' + report.id,
-			              senderName: 'ReportHub',
-			            }, {
-			              to: admin_emails,
-			              subject: 'ReportHub Notificaitons: Edit of ' + report_month + ', '  + report.report_year +' Report by ' + report.organization
-			            }, function(err) {
-			              // return error
-			              if (err) return res.negotiate( err );
-						        // return report
-										return res.json( 200, report );
+			        //   sails.hooks.email.send( 'notification-report-edit', {
+			        //       recipientNames: admin_names,
+			        //       organization: report.organization,
+			        //       report_month: report_month,
+			        //       report_year: report.report_year,
+			        //       report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + report.project_id + '/' + report.id,
+			        //       senderName: 'ReportHub',
+			        //     }, {
+			        //       to: admin_emails,
+			        //       subject: 'ReportHub Notificaitons: Edit of ' + report_month + ', '  + report.report_year +' Report by ' + report.organization
+			        //     }, function(err) {
+			        //       // return error
+			        //       if (err) return res.negotiate( err );
+					// 	        // return report
+					// 					return res.json( 200, report );
 
-			          	});
+			        //   	});
+					admin_contacts =  [admin_contacts[0]];
+								admin_contacts.forEach(function(contact){
+									sails.hooks.email.send('notification-report-edit', {
+										recipientNames: 'AdminNames',
+										recipientName: contact.name,
+										organization: report.organization,
+										project_title: report.project_title,
+										country: report.admin0name,
+										report_month: report_month,
+										report_year: report.report_year,
+										report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + report.project_id + '/' + report.id,
+										senderName: 'ReportHub',
+									}, {
+										to: contact.email,
+										subject: 'ReportHub Notificaitons: Edit of ' + report_month + ', ' + report.report_year + ' Report by ' + report.organization
+									}, function (err) {
+										count_contact = count_contact +1;
+										// return error
+										if (err) return res.negotiate(err);
+										if (count_contact === contact_length){
+											// return report
+											return res.json(200, report);
+										}
+
+									});
+								});
 
 							});
 						});
