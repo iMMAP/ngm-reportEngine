@@ -498,7 +498,7 @@ var ReportTasksController = {
             if ( err ) return res.negotiate( err );
 
             // no reports return
-            if ( !locations.length ) return res.json( 200, { msg: 'No reports pending for ' + moment().format( 'MMMM' ) + '!' } );
+            if ( !locations.length ) return res.json( 200, { msg: 'No reports pending for ' + moment().format( 'MMMM, YYYY' ) + '!' } );
 
             // for each report, group by username
             locations.forEach( function( location, i ) {
@@ -512,6 +512,7 @@ var ReportTasksController = {
                   email: location.email,
                   username: location.username,
                   report_month: moment().format( 'MMMM' ),
+                  report_month_year: moment().format('MMMM, YYYY'),
                   reportsStore: []
                 };
 
@@ -545,6 +546,7 @@ var ReportTasksController = {
                   email: location.email,
                   username: location.username,
                   report_month: moment().format( 'MMMM' ),
+                  report_month_year: moment().format('MMMM, YYYY'),
                   reportsStore: []
                 };
 
@@ -615,7 +617,8 @@ var ReportTasksController = {
                       type: 'Monthly Activity',
                       name: result.name,
                       email: notifications[i].email,
-                      report_month: notifications[i].report_month.toUpperCase(),
+                      report_month: notifications[i].report_month,
+                      report_month_year: notifications[i].report_month_year,
                       reports: notifications[i].reports,
                       sendername: 'ReportHub'
                     }, {
@@ -770,7 +773,7 @@ var ReportTasksController = {
                     type: 'Monthly Activity',
                     name: result.name,
                     email: notifications[i].email,
-                    report_month: notifications[i].report_month.toUpperCase(),
+                    report_month: notifications[i].report_month,
                     reporting_due_date: notifications[i].reporting_due_date,
                     reporting_due_message: notifications[i].reporting_due_message,
                     projects: notifications[i].projects,
@@ -825,7 +828,7 @@ var ReportTasksController = {
 
           if ( err ) return res.negotiate( err );
           // no reports return
-          if ( !reports.length ) return res.json( 200, { msg: 'No reports pending for ' + moment().subtract( 1, 'M' ).format( 'MMMM' ) + '!' } );
+          if ( !reports.length ) return res.json( 200, { msg: 'No reports pending for ' + moment().subtract( 1, 'M' ).format( 'MMMM, YYYY' ) + '!' } );
 
           // for each report, group by username
           reports.forEach( function( location, i ) {
@@ -852,6 +855,7 @@ var ReportTasksController = {
                   email: location.email,
                   username: location.username,
                   report_month: moment().subtract( 1, 'M' ).format( 'MMMM' ),
+                  report_month_year: moment().subtract(1, 'M').format('MMMM, YYYY'),
                   reporting_due_date: moment( location.reporting_due_date ).format( 'DD MMMM, YYYY' ),
                   reporting_due_message: due_message,
                   projectsStore: []
@@ -876,6 +880,7 @@ var ReportTasksController = {
                 nStore[ location.email ].projectsStore[ location.project_id ].reports.push({
                   report_value: location.report_month,
                   report_month: moment( location.reporting_period ).format( 'MMMM' ),
+                  report_month_year: moment().subtract(1, 'M').format('MMMM, YYYY'),
                   report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
                 });
                 // avoids report row per location
@@ -912,7 +917,6 @@ var ReportTasksController = {
               length = notifications.length;
 
           // for each
-          notifications = [notifications[0]]
           notifications.forEach( function( notification, i ){
 
             User
@@ -935,7 +939,8 @@ var ReportTasksController = {
                     type: 'Monthly Activity',
                     name: result.name,
                     email: notifications[i].email,
-                    report_month: notifications[i].report_month.toUpperCase(),
+                    report_month: notifications[i].report_month,
+                    report_month_year: notifications[i].report_month_year,
                     reporting_due_date: notifications[i].reporting_due_date,
                     reporting_due_message: notifications[i].reporting_due_message,
                     projects: notifications[i].projects,
