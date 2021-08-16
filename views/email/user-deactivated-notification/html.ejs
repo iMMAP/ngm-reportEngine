@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html> -->
 <!-- Default home page -->
-<html>
+<!-- <html>
 	<head>
 		<style>
 		</style>
@@ -18,4 +18,119 @@
 		</p>
 		<p><%= sendername %></p>
 	</body>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="x-apple-disable-message-reformatting">
+	<title></title>
+	<style>
+		table,
+		td,
+		div,
+		h1,
+		p {
+			font-family: Arial, sans-serif;
+		}
+	</style>
+</head>
+
+<body style="margin:0;padding:0;">
+	<table role="presentation"
+		style="width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;">
+		<tr>
+			<td align="center" style="padding:0;">
+				<table role="presentation"
+					style="width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;">
+					<tr>
+						<td align="center" style="padding:40px 0 30px 0;background:#2196F3;">
+							<img src="https://reporthub.org/imgs/toolbox-z1.png" alt="" width="120"
+								style="height:auto;display:block;" />
+							<h1
+								style="font-size:36px;margin:0 0 20px 0; color:#fff;font-family:Arial,sans-serif;font-weight: 200;">
+								ReportHub</h1>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding:36px 30px 42px 30px;">
+							<table role="presentation"
+								style="width:100%;border-collapse:collapse;border:0;border-spacing:0;">
+								<tr>
+									<td style="padding:0 0 20px 0;color:#153643;">
+										<h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Hi
+											<%= name %>,
+										</h1>
+										<p
+											style="margin:0 0 12px 0;font-size:15px;line-height:24px;font-family:Arial,sans-serif;">
+											The following ReportHub users <%= reason %>:
+										</p>
+										<p
+											style="margin:0 0 12px 0;font-size:15px;line-height:24px;font-family:Arial,sans-serif;">
+										<ul>
+											<li style="font-weight: 600; font-size: 15px;">
+												Username: <%= usernamesString %>
+											</li>
+										</ul>
+										</p>
+
+										<p style="font-size:14px;line-height:24px;">
+											To activate, please contact your organization or cluster admin.
+										</p>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding:0;">
+
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding:30px;background:#2196F3;">
+							<table role="presentation"
+								style="width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;">
+								<tr>
+									<td style="padding:0;width:50%;" align="left">
+										<p
+											style="margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
+											ReportHub<br />
+											Supported by iMMAP
+										</p>
+									</td>
+									<td style="padding:0;width:50%;" align="right">
+                                        <table role="presentation"
+                                            style="border-collapse:collapse;border:0;border-spacing:0;">
+                                            <tr>
+                                                <!-- <td style="padding:0 0 0 10px;width:38px;">
+                                                    <a href="http://www.twitter.com/" style="color:#ffffff;"><img
+                                                            src="https://assets.codepen.io/210284/tw_1.png"
+                                                            alt="Twitter" width="38"
+                                                            style="height:auto;display:block;border:0;" /></a>
+                                                </td> -->
+                                                <td style="padding:0 0 0 10px;width:38px;">
+													<a href="https://immap.org/" style="color:#ffffff;"><img
+															src="https://reporthub.org/desk/images/immap_white.png" alt="Facebook" width="50"
+															style="height:auto;display:block;border:0;" /></a>
+												</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+
 </html>
