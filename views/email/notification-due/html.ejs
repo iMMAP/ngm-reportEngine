@@ -100,8 +100,7 @@
 											<%= name %>,
 										</h1>
 										<p style="line-height:24px;font-size: 15px;">
-											The reporting period for <b>
-												<%= report_month_year %>
+											The reporting period for <b> <%=report_month%> <%=report_year%>
 											</b> is  <b><%= reporting_due_message %>!</b>
 										</p>
 										<p style="line-height:24px;font-size: 15px;">
@@ -112,14 +111,14 @@
 												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Country</th>
 												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Cluster</th>
 												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Project Title</th>
-												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
+												<th style="width:140px;border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
 											</tr>
 											<% for(var i=0; i < projects.length; i++) { %>
 												<% for(var j=0; j < projects[i].reports.length; j++) { %>
 											<tr>
-												<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;"><%= projects[i].country %></td>
-												<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;"><%= projects[i].cluster %></td>
-												<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;"><%= projects[i].project_title %></td>
+												<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;"><%= projects[i].country %></td>
+												<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;"><%= projects[i].cluster %></td>
+												<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;"><%= projects[i].project_title %></td>
 												
 												<td style="text-align: center;border: 1px solid #ddd;"><a title="<%= projects[i].reports[j].report_month %> <%= type %> Report"
 																	href="<%= projects[i].reports[j].report_url %>"

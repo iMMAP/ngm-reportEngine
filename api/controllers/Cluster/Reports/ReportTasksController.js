@@ -855,6 +855,7 @@ var ReportTasksController = {
                   email: location.email,
                   username: location.username,
                   report_month: moment().subtract( 1, 'M' ).format( 'MMMM' ),
+                  report_year: moment(location.reporting_period).format('YYYY'),
                   report_month_year: moment().subtract(1, 'M').format('MMMM, YYYY'),
                   reporting_due_date: moment( location.reporting_due_date ).format( 'DD MMMM, YYYY' ),
                   reporting_due_message: due_message,
@@ -880,6 +881,7 @@ var ReportTasksController = {
                 nStore[ location.email ].projectsStore[ location.project_id ].reports.push({
                   report_value: location.report_month,
                   report_month: moment( location.reporting_period ).format( 'MMMM' ),
+                  report_year: moment(location.reporting_period).format('YYYY'),
                   report_month_year: moment().subtract(1, 'M').format('MMMM, YYYY'),
                   report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
                 });
@@ -940,6 +942,7 @@ var ReportTasksController = {
                     name: result.name,
                     email: notifications[i].email,
                     report_month: notifications[i].report_month,
+                    report_year: notifications[i].report_year,
                     report_month_year: notifications[i].report_month_year,
                     reporting_due_date: notifications[i].reporting_due_date,
                     reporting_due_message: notifications[i].reporting_due_message,
