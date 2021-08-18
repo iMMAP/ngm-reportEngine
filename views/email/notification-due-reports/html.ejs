@@ -120,27 +120,30 @@
 												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Country</th>
 												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Cluster</th>
 												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Project Title</th>
-												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Period</th>
+												<th style="width:100px;border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
 											</tr>
 											<% for(var i=0; i < projects.length; i++) { %>
 												<% for(var j=0; j < projects[i].reports.length; j++) { %>
 												<tr>
-													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;">
+													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
 														<%= projects[i].country %>
 													</td>
-													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;">
+													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
 														<%= projects[i].cluster %>
 													</td>
-													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;">
+													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
 														<%= projects[i].project_title %>
+													</td>
+													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
+														<%= projects[i].reports[j].report_month %> <%= projects[i].reports[j].report_year %>
 													</td>
 													
 														<td style="text-align: center;border: 1px solid #ddd;"><a title="<%= projects[i].reports[j].report_month %> <%= type %> Report"
 																href="<%= projects[i].reports[j].report_url %>"
 																style="background: #26a69a; text-decoration: none; padding: 5px 12px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884;font-size:12px;text-align: center;"><span
 																	style="mso-text-raise:10pt;font-weight:bold;">
-																	<%= projects[i].reports[j].report_month %>
-																		<%= type %> Report
+																	Go to Report
 																</span></a></td>
 														<% } %>
 												</tr>
