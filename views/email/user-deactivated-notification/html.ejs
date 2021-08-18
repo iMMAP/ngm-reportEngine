@@ -39,6 +39,34 @@
 		p {
 			font-family: Arial, sans-serif;
 		}
+		#rh-email-table td,
+		#rh-email-table th {
+			border: 1px solid #ddd;
+			padding: 8px;
+			font-weight: 600;
+		}
+
+		#rh-email-table {
+			border-collapse: collapse;
+			width: 540px;
+		}
+
+		#rh-email-table tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#rh-email-table tr:hover {
+			background-color: #ebf5f3;
+		}
+
+		#rh-email-table th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: center;
+			background-color: #26a69a;
+			color: white;
+			font-size: 14px;
+		}
 	</style>
 </head>
 
@@ -69,25 +97,52 @@
 										</h1>
 										<p
 											style="margin:0 0 12px 0;font-size:15px;line-height:24px;font-family:Arial,sans-serif;">
-											The following ReportHub users <%= reason %>:
+											The following ReportHub users <%= reason %> have been <b>DEACTIVATED</b>:
 										</p>
-										<p
-											style="margin:0 0 12px 0;font-size:15px;line-height:24px;font-family:Arial,sans-serif;">
-										<ul>
-											<li style="font-weight: 600; font-size: 15px;">
-												Username: <%= usernamesString %>
-											</li>
-										</ul>
-										</p>
+										
+										<table id="rh-email-table" style="border-collapse: collapse;width: 540px;">
+											<tr>
+												<th
+													style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">
+													Country</th>
+												<th
+													style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">
+													Cluster</th>
+												<th
+													style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">
+													Organization</th>
+												<th
+													style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">
+													Username</th>
+											</tr>
+											
+												<tr>
+													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
+														<%= country %>
+													</td>
+													<td style="font-size: 14px; border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
+														<%= cluster %>
+													</td>
+													<td style="font-size: 14px; border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
+														<%= org %>
+													</td>
+													<td style="font-size: 14px; border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
+														<%= usernamesString %>
+													</td>
+										
+													
+												</tr>
+										
+										</table>
 
-										<p style="font-size:14px;line-height:24px;">
-											To activate, please contact your organization or cluster admin.
-										</p>
 									</td>
 								</tr>
 								<tr>
 									<td style="padding:0;">
-
+										<p style="font-size:14px;line-height:24px;">
+											To re-activate your ReportHub Account, please contact your organization or cluster admin.
+											Alternatively, please feel free to respond to this email to inform the ReportHub Team.
+										</p>
 									</td>
 								</tr>
 							</table>

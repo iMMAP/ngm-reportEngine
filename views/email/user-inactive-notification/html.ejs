@@ -92,20 +92,32 @@
                     <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Hi <%= name %>,
                     </h1>
                     <p style="font-family:Arial,sans-serif;line-height:24px;font-size:15px">
-                      The following ReportHub users have been inactive for more than <%= period %> :
+                      The following ReportHub users have been <b>INACTIVE</b> for more than <%= period %> :
                     </p>
                     <table id="rh-email-table" style="border-collapse: collapse;width: 540px;">
                       <tr>
+                        <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Country</th>
+                        <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Sector</th>
+                        <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Organization</th>
                         <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Username</th>
                         <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
                       </tr>
                       <% for(var i=0; i < usernameStore.length; i++) { %>
                         <tr>
-                          <td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;">
-                            <%= usernameStore[i] %>
+                          <td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
+                            <%= usernameStore[i].country %>
+                          </td>
+                          <td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
+                            <%= usernameStore[i].cluster %>
+                          </td>
+                          <td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
+                            <%= usernameStore[i].org %>
+                          </td>
+                          <td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
+                            <%= usernameStore[i].username %>
                           </td>
                           <td style="text-align: center;border: 1px solid #ddd;">
-                            <a title="Profile <%= usernameStore[i] %>" href="<%= profileBaseUrl + usernameStore[i] %>"
+                            <a title="Profile <%= usernameStore[i] %>" href="<%= profileBaseUrl + usernameStore[i].username %>"
                               style="background: #26a69a; text-decoration: none; padding: 5px 12px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884;font-size:12px;text-align: center;">
                               <span style="mso-text-raise:10pt;font-weight:bold;">
                                 Go to Profile 
@@ -118,8 +130,7 @@
                     
                     </table>
                     <p style="line-height:24px; font-size: 14px;">
-                      Please login to ReportHub to confirm the users. You can review the user profiles by the above
-                      links.
+                      Please login to ReportHub to avoid being <b>DEACTIVATED</b>. You can review the user profiles using the above links.
                     </p>
 
                   </td>

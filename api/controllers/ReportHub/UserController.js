@@ -788,11 +788,20 @@ var UserController = {
           nStore[ user.email ] = {
             email: user.email,
             name: user.name,
-            usernameStore: [user.username],
+            usernameStore: [{
+              org: user.organization,
+              cluster: user.cluster,
+              country: user.admin0name,
+              username:user.username}],
             usernamesString: user.username
           };
         } else {
-          nStore[ user.email ].usernameStore.push(user.username);
+          nStore[user.email].usernameStore.push({
+            org: user.organization,
+            cluster: user.cluster,
+            country: user.admin0name,
+            username: user.username
+          });
           nStore[ user.email ].usernamesString += ', ';
           nStore[ user.email ].usernamesString += user.username;
         }
@@ -875,6 +884,9 @@ var UserController = {
             nStore[ user.email ] = {
               email: user.email,
               name: user.name,
+              org: user.organization,
+              cluster: user.cluster,
+              country: user.admin0name,
               usernameStore: [user.username],
               usernamesString: user.username
             };
@@ -897,8 +909,11 @@ var UserController = {
             email: email,
             usernameStore: nStore[email].usernameStore,
             usernamesString: nStore[email].usernamesString,
+            cluster: nStore[email].cluster,
+            country: nStore[email].country,
+            org: nStore[email].org,
             profileBaseUrl: 'https://reporthub.org/desk/#/profile/',
-            reason: 'have been inactive for more than ' + months + ' months and have been deactivated',
+            reason: 'have been inactive for more than ' + months + ' months and',
             sendername: 'ReportHub'
           },{
             to: email,
