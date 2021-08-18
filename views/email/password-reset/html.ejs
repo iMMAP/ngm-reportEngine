@@ -99,26 +99,26 @@
 											<br>No changes have
 											been made to your account yet. Click one of the links below to reset your password.
 										</p>
-										<table id="rh-email-table">
+										<table id="rh-email-table" style="border-collapse: collapse;width: 540px;">
 											<tr>
-												<th>Country</th>
-												<th>Cluster</th>
-												<th>Username</th>
-												<th>Link</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Country</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Cluster</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Username</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
 											</tr>
 										<% for(var i=0; i < resets.length; i++) { %>
 											<tr>
-												<td  style="font-size: 14px;">
+												<td  style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;">
 													<%= resets[i].admin0name %>
 												</td>
-												<td style="font-size: 14px;">
+												<td style="font-size: 14px; border: 1px solid #ddd;padding: 8px;font-weight: 600;">
 													<%= resets[i].cluster.toUpperCase() %>
 												</td>
-												<td style="font-size: 14px;">
+												<td style="font-size: 14px; border: 1px solid #ddd;padding: 8px;font-weight: 600;">
 													<%=resets[i].username%>
 												</td>
 										
-												<td style="text-align: center;">
+												<td style="text-align: center;border: 1px solid #ddd;">
 													<a title="Reset your ReportHub password for <%=resets[i].cluster%>" href="<%=url%><%=resets[i].token%>"
 														href="<%= url %>"
 														style="font-size: 14px;background: #26a69a; text-decoration: none; padding: 3px 12px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884;"><span

@@ -746,7 +746,7 @@ var ReportController = {
 								// admin_emails = admin_emails.slice( 0, -1 );
 
 								// report_month
-								var report_month = moment( report.reporting_period ).format( 'MMMM' ).toUpperCase();
+								var report_month = moment( report.reporting_period ).format( 'MMMM' );
 								var contact_length = admin_contacts.length;
 								var count_contact =0
 
@@ -770,7 +770,7 @@ var ReportController = {
 					// 					return res.json( 200, report );
 
 			        //   	});
-					admin_contacts =  [admin_contacts[0]];
+					
 								admin_contacts.forEach(function(contact){
 									sails.hooks.email.send('notification-report-edit', {
 										recipientNames: 'AdminNames',
@@ -784,7 +784,7 @@ var ReportController = {
 										senderName: 'ReportHub',
 									}, {
 										to: contact.email,
-										subject: 'ReportHub Notificaitons: Edit of ' + report_month + ', ' + report.report_year + ' Report by ' + report.organization
+										subject: 'ReportHub Notifications: Edit of ' + report_month + ', ' + report.report_year + ' Report by ' + report.organization
 									}, function (err) {
 										count_contact = count_contact +1;
 										// return error

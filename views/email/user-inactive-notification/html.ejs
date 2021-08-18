@@ -94,17 +94,17 @@
                     <p style="font-family:Arial,sans-serif;line-height:24px;font-size:15px">
                       The following ReportHub users have been inactive for more than <%= period %> :
                     </p>
-                    <table id="rh-email-table">
+                    <table id="rh-email-table" style="border-collapse: collapse;width: 540px;">
                       <tr>
-                        <th>Username</th>
-                        <th>Link</th>
+                        <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Username</th>
+                        <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
                       </tr>
                       <% for(var i=0; i < usernameStore.length; i++) { %>
                         <tr>
-                          <td style="font-size: 14px;text-align: center;">
+                          <td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;">
                             <%= usernameStore[i] %>
                           </td>
-                          <td style="text-align: center;">
+                          <td style="text-align: center;border: 1px solid #ddd;">
                             <a title="Profile <%= usernameStore[i] %>" href="<%= profileBaseUrl + usernameStore[i] %>"
                               style="background: #26a69a; text-decoration: none; padding: 5px 12px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884;font-size:12px;text-align: center;">
                               <span style="mso-text-raise:10pt;font-weight:bold;">

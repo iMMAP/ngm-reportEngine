@@ -107,21 +107,21 @@
 										<p style="line-height:24px;font-size: 15px;">
 											Follow the links below to complete and submit your <b>PENDING</b> <%= type %> reports.
 										</p>
-										<table id="rh-email-table">
+										<table id="rh-email-table" style="border-collapse: collapse;width: 540px;">
 											<tr>
-												<th>Country</th>
-												<th>Cluster</th>
-												<th>Project Title</th>
-												<th>Link</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Country</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Cluster</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Project Title</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
 											</tr>
 											<% for(var i=0; i < projects.length; i++) { %>
 												<% for(var j=0; j < projects[i].reports.length; j++) { %>
 											<tr>
-												<td style="font-size: 14px;"><%= projects[i].country %></td>
-												<td style="font-size: 14px;"><%= projects[i].cluster %></td>
-												<td style="font-size: 14px;"><%= projects[i].project_title %></td>
+												<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;"><%= projects[i].country %></td>
+												<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;"><%= projects[i].cluster %></td>
+												<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;"><%= projects[i].project_title %></td>
 												
-												<td><a title="<%= projects[i].reports[j].report_month %> <%= type %> Report"
+												<td style="text-align: center;border: 1px solid #ddd;"><a title="<%= projects[i].reports[j].report_month %> <%= type %> Report"
 																	href="<%= projects[i].reports[j].report_url %>"
 													style="background: #26a69a; text-decoration: none; padding: 5px 12px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884;font-size:12px;text-align: center;"><span
 														style="mso-text-raise:10pt;font-weight:bold;">

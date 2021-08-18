@@ -95,29 +95,29 @@
 										</h1>
 										<p style="font-family:Arial,sans-serif;line-height:24px;font-size:15px">
 											Please note that <%= organization %> have updated the following report for
-												<%= report_month %>, <%= report_year %>.
+												<%= report_month %> <%= report_year %>.
 												<br>
-											To view the edits by <b><%=organization %></b> for <b><%= report_month %>, <%=report_year %></b> Please click the Link button below.
+											To <b> view the edits </b> by <b><%=organization %></b> for <b><%= report_month %> <%=report_year %></b> please click the  button below.
 										</p>
 
-										<table id="rh-email-table">
+										<table id="rh-email-table" style="border-collapse: collapse;width: 540px;">
 											<tr>
-												<th>Country</th>
-												<th>Project Title</th>
-												<th>Report</th>
-												<th>Link</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Country</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Project Title</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Report</th>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
 											</tr>
 											<tr>
-													<td style="font-size: 14px;">
+													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
 														<%=country%>
 													</td>
-													<td style="font-size: 14px;">
+													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
 														<%=project_title%>
 													</td>
-													<td style="font-size: 14px;">
-														<%= report_month %>, <%= report_year %>
+													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
+														<%= report_month %> <%= report_year %>
 													</td>
-													<td style="text-align: center;">
+													<td style="text-align: center;border: 1px solid #ddd;">
 														<a title="<%= organization %>, <%= report_month %> <%= report_year %> edit"
 															href="<%= report_url %>"
 															style="font-size: 12px;text-align: center;background: #26a69a; text-decoration: none; padding: 3px 12px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884;"><span
@@ -132,7 +132,10 @@
 								</tr>
 								<tr>
 									<td style="padding:0;">
-
+										<p
+											style="text-align:center;margin:0 0 12px 0;font-size:13px;line-height:24px;font-family:Arial,sans-serif;font-weight: lighter;color: #a7a1a1;">
+											You are receiving this notification because you are administered as a CLUSTER admin role.
+										</p>
 									</td>
 								</tr>
 							</table>
