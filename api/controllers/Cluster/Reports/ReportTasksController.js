@@ -512,6 +512,7 @@ var ReportTasksController = {
                   email: location.email,
                   username: location.username,
                   report_month: moment().format( 'MMMM' ),
+                  report_year: moment().format('YYYY'),
                   report_month_year: moment().format('MMMM, YYYY'),
                   reportsStore: []
                 };
@@ -546,6 +547,7 @@ var ReportTasksController = {
                   email: location.email,
                   username: location.username,
                   report_month: moment().format( 'MMMM' ),
+                  report_year: moment().format('YYYY'),
                   report_month_year: moment().format('MMMM, YYYY'),
                   reportsStore: []
                 };
@@ -618,6 +620,7 @@ var ReportTasksController = {
                       name: result.name,
                       email: notifications[i].email,
                       report_month: notifications[i].report_month,
+                      report_year: notifications[i].report_year,
                       report_month_year: notifications[i].report_month_year,
                       reports: notifications[i].reports,
                       sendername: 'ReportHub'
