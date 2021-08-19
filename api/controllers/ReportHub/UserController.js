@@ -884,16 +884,30 @@ var UserController = {
             nStore[ user.email ] = {
               email: user.email,
               name: user.name,
-              org: user.organization,
-              cluster: user.cluster,
-              country: user.admin0name,
-              usernameStore: [user.username],
+              // org: user.organization,
+              // cluster: user.cluster,
+              // country: user.admin0name,
+              usernameStore: [{
+                username: user.username, 
+                email: user.email,
+                name: user.name,
+                org: user.organization,
+                cluster: user.cluster,
+                country: user.admin0name,}],
               usernamesString: user.username
             };
           } else {
-            nStore[ user.email ].usernameStore.push(user.username);
-            nStore[ user.email ].usernamesString += ', ';
-            nStore[ user.email ].usernamesString += user.username;
+            // nStore[ user.email ].usernameStore.push(user.username);
+            // nStore[ user.email ].usernamesString += ', ';
+            // nStore[ user.email ].usernamesString += user.username;
+            nStore[user.email].usernameStore.push({
+              username: user.username,
+              email: user.email,
+              name: user.name,
+              org: user.organization,
+              cluster: user.cluster,
+              country: user.admin0name,
+            })
           }
         }
 
@@ -909,9 +923,9 @@ var UserController = {
             email: email,
             usernameStore: nStore[email].usernameStore,
             usernamesString: nStore[email].usernamesString,
-            cluster: nStore[email].cluster,
-            country: nStore[email].country,
-            org: nStore[email].org,
+            // cluster: nStore[email].cluster,
+            // country: nStore[email].country,
+            // org: nStore[email].org,
             profileBaseUrl: 'https://reporthub.org/desk/#/profile/',
             reason: 'have been inactive for more than ' + months + ' months and',
             sendername: 'ReportHub'

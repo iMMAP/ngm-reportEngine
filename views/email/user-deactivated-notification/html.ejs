@@ -115,23 +115,24 @@
 													style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">
 													Username</th>
 											</tr>
-											
+												<% for(var i=0; i < usernameStore.length; i++) { %>
 												<tr>
 													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
-														<%= country %>
+														<%= usernameStore[i].country %>
 													</td>
 													<td style="font-size: 14px; border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
-														<%= cluster %>
+														<%= usernameStore[i].cluster %>
 													</td>
 													<td style="font-size: 14px; border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
-														<%= org %>
+														<%= usernameStore[i].org %>
 													</td>
 													<td style="font-size: 14px; border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
-														<%= usernamesString %>
+														<%= usernameStore[i].username %>
 													</td>
 										
 													
 												</tr>
+												<% } %>
 										
 										</table>
 
