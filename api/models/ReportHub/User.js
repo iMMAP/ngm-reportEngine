@@ -423,6 +423,7 @@ module.exports = {
 					phone: user.phone,
 					email: user.email,
 					user_org: user.organization_name,
+					org_abbr: user.organization,
 					country: user.admin0name,
 					url: 'https://reporthub.org/desk/#/profile/' + user.username,
 					sendername: 'ReportHub'
@@ -515,6 +516,7 @@ module.exports = {
 						phone: user.phone,
 						email: user.email,
 						user_org: user.organization_name,
+						org_abbr: user.organization,
 						country: user.admin0name,
 						url: 'https://reporthub.org/desk/#/profile/' + user.username,
 						sendername: 'ReportHub'
