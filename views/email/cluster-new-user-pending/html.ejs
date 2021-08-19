@@ -76,7 +76,6 @@
 											<%= recipient %>,
 										</h1>
 										<p style="font-family:Arial,sans-serif;font-size:15px">
-											You are receiving this notification because you are administered either as <b>CLUSTER</b> or <b>COUNTRY_ADMIN</b> role.<br>
 											We just notice the organization <b>
 												<%=user_org%> </b> has just created an account in ReportHub. The details are provided
 													below.
@@ -105,30 +104,32 @@
 											<br />
 										</ul>
 										</p>
-										<p style="font-size: 14px;line-height: 24px;">
-											If you recognize this user as a member of <b><%=user_org%></b>, please enable
+										<p style="font-size: 15px;line-height: 24px;">
+											If you <b>recognize</b> this user as a member of <b><%=user_org%></b>, please <b>enable</b>
 												them from <%=user_org%> from the user <a
 														title="Profile <%= username %>" href="<%= url %>">Profile
-														Page</a>. or
+														Page</a> or
 													you can click the button below.
 										</p>
 
-										<p style="margin:20px 0 25px 0;text-align:center"><a
+										<p style="margin:40px 0 25px 0;text-align:center"><a
 												title="Profile <%= username %>" href="<%= url %>"
 												style="font-size: 16px;background: #26a69a; text-decoration: none; padding: 10px 25px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884"><span
 													style="mso-text-raise:10pt;font-weight:bold;">Go to
 													Profile</span></a></p>
-										<p style="font-size: 14px;line-height: 24px;">
-											Alternatively, please feel free to respond to this email to inform the
-											ReportHub team.
-										</p>
+										
 
 
 									</td>
 								</tr>
 								<tr>
 									<td style="padding:0;">
-
+										<p style="margin: 0;font-size:13px;line-height:20px;text-align: center; color:#a7a1a1">
+											Alternatively, please feel free to respond to this email to inform the
+											ReportHub team.<br>
+											You are receiving this notification because you are administered either as <b>CLUSTER</b> or <b>COUNTRY_ADMIN</b>
+											role.
+										</p>
 									</td>
 								</tr>
 							</table>
