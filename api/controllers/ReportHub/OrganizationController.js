@@ -302,9 +302,10 @@ module.exports = {
                   });
 
                   // sort
-                  list.sort(function( a, b ) {
-                    return a.cluster.localeCompare( b.cluster );
-                  });
+                  // list.sort(function( a, b ) {
+                  //   return a.cluster.localeCompare( b.cluster );
+                  // });
+                  list = _.sortBy(list, 'cluster');
 
                   // add all
                   list.unshift({ cluster: 'All', cluster_id: 'all', admin0pcode: 'all', admin0name: 'All', organization_tag: 'all', organization: 'All' });
@@ -355,6 +356,7 @@ module.exports = {
         project_filter = !req.param( 'project' ) || req.param( 'project' ) === 'all' ? {} : { programme_id: req.param( 'project' ) },
         cluster_id_filter = !req.param( 'cluster_id' ) || req.param( 'cluster_id' ) === 'all' ? {} : { cluster_id: req.param( 'cluster_id' ) },
         status_filter = !req.param( 'status' ) || req.param( 'status' ) === 'all' ? {} : { status: req.param( 'status' ) };
+
 
     // users
     User
