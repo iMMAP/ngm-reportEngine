@@ -73,7 +73,8 @@ var ClusterDashboardController = {
 			beneficiaries: req.param('beneficiaries'),
 			start_date: req.param('start_date'),
 			end_date: req.param('end_date'),
-			hrp: req.param('hrp') === 'true' ? true :false
+			hrp: req.param('hrp') === 'true' ? true : false,
+			hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false
 		}
 
 	},
@@ -343,6 +344,10 @@ var ClusterDashboardController = {
 							'Email',
 							'Joined ReportHub'
 						];
+				if (params.hide_contact) {
+					fields = fields.filter(t => (t !== 'phone') && (t !== 'email') && (t !== 'name'))
+					fieldNames = fieldNames.filter(t => (t !== 'Phone') && (t !== 'Email') && (t !== 'Name'))
+				}
 
 
 				// get organizations by project
@@ -517,7 +522,9 @@ var ClusterDashboardController = {
 
 							// implementing partners
 							if ( data[ d.admin1pcode + d.category_type_id + d.beneficiary_type_id ].implementing_partners.indexOf( d.implementing_partners ) === -1 ){
-								data[ d.admin1pcode + d.category_type_id + d.beneficiary_type_id ].implementing_partners.push( d.implementing_partners );
+								var temp_implementing_partners = d.implementing_partners=d.implementing_partners.map(x=>x.organization);
+								// data[ d.admin1pcode + d.category_type_id + d.beneficiary_type_id ].implementing_partners.push( d.implementing_partners );
+								data[d.admin1pcode + d.category_type_id + d.beneficiary_type_id].implementing_partners.push(...temp_implementing_partners);
 							}
 
 							// data
@@ -539,6 +546,7 @@ var ClusterDashboardController = {
 						report.forEach( function( d, i ) {
 							report[i].cluster = report[i].cluster.join(', ');
 							report[i].organization = report[i].organization.join(', ');
+							report[i].implementing_partners = report[i].implementing_partners.filter((item, index) => report[i].implementing_partners.indexOf(item) === index);
 							report[i].implementing_partners = report[i].implementing_partners.join(', ');
 						});
 
@@ -671,7 +679,12 @@ var ClusterDashboardController = {
 							'createdAt',
 							'Comments'
 						];
-					};
+				};
+
+				if (params.hide_contact) {
+					fields = fields.filter(f => f !== 'email');
+					fieldNames = fieldNames.filter(f => f !== 'Email');
+				}
 
 					//fiter donor from projects plan or 4wplus activities dasbhoards
 
@@ -945,8 +958,12 @@ var ClusterDashboardController = {
 						collection.find(filterObject).toArray(function (err, beneficiaries) {
 							if (err) return res.serverError(err);
 
-              let { fields, fieldNames } = FieldsService.getBeneficiariesDownloadFields(params.admin0pcode, params.cluster_id);
-
+              				let { fields, fieldNames } = FieldsService.getBeneficiariesDownloadFields(params.admin0pcode, params.cluster_id);
+							
+							if (params.hide_contact) {
+								fields = fields.filter(f => (f !== 'phone') && (f !== 'email') && (f !== 'name'));
+								fieldNames = fieldNames.filter(f => (f !== 'focal_point_phone') && (f !== 'focal_point_email') && (f !== 'focal_point_name'));
+							}
 							var total = 0;
 
 							// format beneficiaries
@@ -1355,6 +1372,10 @@ var ClusterDashboardController = {
                 ix = fieldNames.indexOf('beneficiaries_covered');
                 ix && fieldNames.splice(ix, 1, 'households_covered');
               }
+				if (params.hide_contact) {
+					fields = fields.filter(f => (f !== 'username') && (f !== 'email') );
+					fieldNames = fieldNames.filter(f => (f !== 'username') && (f !== 'email'));
+				}
 
 						// return csv
 						json2csv({ data: stocks, fields: fields, fieldNames: fieldNames }, function( err, csv ) {
@@ -1866,14 +1887,16 @@ var ClusterDashboardController = {
 															if ( d._id.site_type_name ){
 																message += '<div style="text-align:center">' + d._id.site_type_name + '</div>'
 															}
-															message += '<div style="text-align:center">' + d._id.site_name + '</div>'
-															+ '<h5 style="text-align:center; font-size:1.5rem; font-weight:100;">CONTACT</h5>'
-															+ '<div style="text-align:center">' + d._id.organization + '</div>'
-															+ '<div style="text-align:center">' + d._id.name + '</div>'
-															+ '<div style="text-align:center">' + d._id.position + '</div>'
-															+ '<div style="text-align:center">' + d._id.phone + '</div>'
-															+ '<div style="text-align:center">' + d._id.email + '</div>'
-															+ '<div align="center" style="margin-top:10px;"><a style="color:#fff;height: 30px;line-height: 30px;" class="btn" href="#/cluster/projects/summary/' + d._id.project_id +'" target="_blank">'+'Go to Project</a></div>';
+															if(d._id.admin0name !== 'Afghanistan' ||(!params.hide_contact && d._id.admin0name === 'Afghanistan')){
+																message += '<div style="text-align:center">' + d._id.site_name + '</div>'
+																+ '<h5 style="text-align:center; font-size:1.5rem; font-weight:100;">CONTACT</h5>'
+																+ '<div style="text-align:center">' + d._id.organization + '</div>'
+																+ '<div style="text-align:center">' + d._id.name + '</div>'
+																+ '<div style="text-align:center">' + d._id.position + '</div>'
+																+ '<div style="text-align:center">' + d._id.phone + '</div>'
+																+ '<div style="text-align:center">' + d._id.email + '</div>';
+															}
+															message += '<div align="center" style="margin-top:10px;"><a style="color:#fff;height: 30px;line-height: 30px;" class="btn" href="#/cluster/projects/summary/' + d._id.project_id +'" target="_blank">'+'Go to Project</a></div>';
 
 									// create markers
 									markers[ 'marker' + counter ] = {
