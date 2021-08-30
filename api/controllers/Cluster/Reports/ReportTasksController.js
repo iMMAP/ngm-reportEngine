@@ -616,7 +616,7 @@ var ReportTasksController = {
 
                   // send email
                   sails.hooks.email.send( 'notification-open', {
-                      type: 'Monthly Activity',
+                      type: 'monthly activity',
                       name: result.name,
                       email: notifications[i].email,
                       report_month: notifications[i].report_month,
@@ -626,7 +626,7 @@ var ReportTasksController = {
                       sendername: 'ReportHub'
                     }, {
                       to: notifications[i].email,
-                      subject: 'ReportHub - Project Reporting Period for ' + moment().format( 'MMMM' ).toUpperCase() + ' Now Open!'
+                      subject: 'ReportHub - Project Reporting Period for ' + moment().format( 'MMMM' ).toUpperCase() + ' Now Open.'
                     }, function(err) {
 
                       // return error
@@ -775,7 +775,7 @@ var ReportTasksController = {
 
                 // send email
                 sails.hooks.email.send( 'notification-due-reports', {
-                    type: 'Monthly Activity',
+                    type: 'monthly activity',
                     name: result.name,
                     email: notifications[i].email,
                     report_month: notifications[i].report_month,
@@ -785,7 +785,7 @@ var ReportTasksController = {
                     sendername: 'ReportHub'
                   }, {
                     to: notifications[i].email,
-                    subject: 'ReportHub - Project Reports ' + notifications[i].reporting_due_message + '!'
+                    subject: 'ReportHub - Project Reports ' + notifications[i].reporting_due_message + '.'
                   }, function(err) {
 
                     // return error
@@ -943,7 +943,7 @@ var ReportTasksController = {
 
                 // send email
                 sails.hooks.email.send( 'notification-due', {
-                    type: 'Monthly Activity',
+                    type: 'monthly activity',
                     name: result.name,
                     email: notifications[i].email,
                     report_month: notifications[i].report_month,
@@ -955,7 +955,7 @@ var ReportTasksController = {
                     sendername: 'ReportHub'
                   }, {
                     to: notifications[i].email,
-                    subject: 'ReportHub - Project Reporting Period for ' + moment().subtract( 1, 'M' ).format( 'MMMM' ).toUpperCase() + ' is ' + notifications[i].reporting_due_message + ' !'
+                    subject: 'ReportHub - Project Reporting Period for ' + moment().subtract( 1, 'M' ).format( 'MMMM' ).toUpperCase() + ' is ' + notifications[i].reporting_due_message + '.'
                   }, function(err) {
 
                     // return error
