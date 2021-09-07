@@ -90,6 +90,16 @@ var ReportController = {
               d.implementing_partners = ips.join(', ');
             }
 
+			// activity response
+			if (Array.isArray(d.response)) {
+              var resps = [];
+              d.response.forEach(function (resp, i) {
+                if (resp) resps.push(resp.response_name);
+              });
+              resps.sort();
+              d.response = resps.join(', ');
+            }
+
             response[i].report_month = moment( response[i].reporting_period ).format( 'MMMM' );
 
             d.updatedAt = moment(d.updatedAt).format('YYYY-MM-DD HH:mm:ss');
