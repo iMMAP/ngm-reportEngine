@@ -127,10 +127,11 @@ module.exports = MetricsController = {
 
       const hrp = params.hrp === 'true' ? true : false;
 
-      let date = { $gte: moment(params.start_date).toDate(), $lt: moment(params.end_date).endOf('day').toDate() };
+      let date = { $gte: moment(params.start_date).toDate(), $lte: moment(params.end_date).endOf('day').toDate() };
       let dateUpdated = { updatedAt: date };
       let dateCreated = { createdAt: date };
       let datePeriod  = { reporting_period: date };
+      let dateLastLoggedIn = {last_logged_in: date};
 
       let admin0pcode =  params.admin0pcode.toLowerCase() === 'all' ? {} : { admin0pcode: params.admin0pcode.toUpperCase() };
       let admin0pcodeURL = params.admin0pcode.toLowerCase() === 'all' ? {} : { "url" :  { contains : "/" + params.admin0pcode.toLowerCase() + "/" }  };
@@ -138,15 +139,19 @@ module.exports = MetricsController = {
 
       const $nin_organizations = [ 'immap', 'arcs' ];
       const $nin_organizations_metrics = [ 'iMMAP' ];
+      const $nin_username = ["Naqi100"]
 
       let organization_tag =  { organization_tag: { $nin: $nin_organizations } };
       let organization =  { organization: { $nin: $nin_organizations_metrics } };
+      let exclude_username = { username: { $nin: $nin_username } };
 
       let filterObject = _.extend({}, admin0pcode, organization_tag, hrp ? datePeriod : dateCreated);
       let filterObjectByDateCreated = _.extend({}, admin0pcode, organization_tag, dateCreated);
       let filterObjectByDateUpdated = _.extend({}, admin0pcode, organization_tag, dateUpdated);
       let filterObjectMetrics = _.extend({}, admin0pcodeURL, organization, dateCreated);
       let filterObjectMetricsNative = _.extend({}, admin0pcodeURL_Native, organization, dateCreated);
+
+      let filterObjectByLastLoggedIn = _.extend({}, admin0pcode, organization_tag, dateLastLoggedIn,exclude_username);
 
       // get value from calc
       const getResult = (array, prop) => array[0] ? array[0][prop] : 0;
@@ -329,7 +334,7 @@ module.exports = MetricsController = {
         UserLoginHistory.native(function(err, collection) {
               if (err) reject(err)
               collection.aggregate([
-                { $match : filterObjectByDateUpdated },
+                { $match : filterObjectByLastLoggedIn },
                 { $group: { _id:  { user_id: "$user_id", cluster : "$cluster" } } },
                 { $group: { _id:  "$_id.cluster",  count: { $sum: 1 } } },
                 { $project: { cluster: "$_id", count: "$count", _id: 0 } }
@@ -343,7 +348,7 @@ module.exports = MetricsController = {
       let users = new Promise((resolve, reject) => {
         UserLoginHistory.native(async function(err, collection) {
           if (err) reject(err)
-          let results = await collection.distinct( "user_id", filterObjectByDateUpdated );
+          let results = await collection.distinct( "user_id", filterObjectByLastLoggedIn );
             resolve(results.length);
           });
       });
