@@ -1721,6 +1721,9 @@ var ProjectController = {
         username = req.param('username');
         fullname = req.param('name');
         country = req.param('admin0name');
+        focal_point = req.param('focal_point');
+        focal_point_username = req.param('focal_point_username');
+        focal_point_email = req.param('focal_point_email');
         list_emails =[{email:'ngmreporthub@gmail.com', recipient:'Admin'}]
 
 
@@ -1750,7 +1753,9 @@ var ProjectController = {
             url_profile_user: url_profile_user,
             project_url: project_url,
             reasons: reasons_string,
-            full_name: full_name
+            focal_point:focal_point,
+            focal_point_username: focal_point_username,
+            focal_point_email:focal_point_email
           }, {
             to: email.email,
             subject: 'ReportHub - Request Delete Project'
