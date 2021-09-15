@@ -1748,6 +1748,7 @@ var ProjectController = {
             title: project_title,
             user: username,
             fullname: fullname,
+            full_name: fullname,
             recipient: email.recipient,
             country: country,
             url_profile_user: url_profile_user,
