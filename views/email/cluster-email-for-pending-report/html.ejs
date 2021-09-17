@@ -1,39 +1,3 @@
-<!-- <!DOCTYPE html> -->
-<!-- Default home page -->
-<!-- <html>
-
-<head>
-    <style>
-        p {font-family: Roboto, sans-serif;}
-    </style>
-</head>
-
-<body>
-
-    <p>Hi <%=recipient%>,</p>
-    
-    <p style="margin-top: 20px;">User <a title="User" href="<%=url_profile_user%>"><b><%=user%></b></a> ( <%=full_name%> )  is requesting to delete project <b><%=title%></b>,<br>Reason: <b><%=reasons%>.</b></p>
-        
-    <p>If you feel this information is correct, kindly delete this project through <a title="Project"
-        href="<%=project_url%>">this link</a>
-    </p>
-    
-    <p style="font-weight:600;color:red;margin: 0;">WARNING!</p>
-    <p style="font-weight:600;margin: 0;">Deleting a project will permanently removing all the project data including the
-        submitted
-        monthly report. The
-        ReportHub Team CANNOT UNDO this action.</p>
-    
-    <p>
-    <p>
-        <br />
-        <%=senderName%>
-    </p>
-
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
 <html>
 
@@ -43,13 +7,12 @@
     <meta name="x-apple-disable-message-reformatting">
     <title></title>
     <style>
-        @import url(http://fonts.googleapis.com/css?family=Roboto);
         table,
         td,
         div,
         h1,
         p {
-            font-family: Roboto,  sans-serif;
+            font-family: Arial, sans-serif;
         }
     </style>
 </head>
@@ -65,8 +28,7 @@
                         <td align="center" style="padding:40px 0 40px 0;background:#2196F3;">
                             <img src="https://reporthub.org/imgs/toolbox-z1.png" alt="" width="120"
                                 style="height:auto;display:block;" />
-                            <h1
-                                style="font-size:36px;margin:0 0 0 0; color:#fff;font-family:Roboto,  sans-serif;font-weight: 200;">
+                            <h1 style="font-size:36px;margin:0 0 0 0; color:#fff;font-family:Arial,sans-serif;font-weight: 200;">
                                 ReportHub</h1>
                             <h3 style="color:#fff;font-family:Roboto,  sans-serif;font-weight:100;margin-top: 0px;"> Humanitarian Decision Support in Real-Time </h3>
                         </td>
@@ -77,58 +39,18 @@
                                 style="width:100%!important;border-collapse:collapse;border:0;border-spacing:0;">
                                 <tr>
                                     <td style="min-width:540px;padding:0 0 20px 0;color:#153643;">
-                                        <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Roboto,  sans-serif;">Hi
-                                            <%=recipient%>,
-                                        </h1>
-                                        <!-- <p style="margin-top: 20px;font-size:16px;line-height:24px;">User <a
-                                                title="User" href="<%=url_profile_user%>"><b>
-                                                    <%=user%>
-                                                </b></a> is requesting to delete project <b>
-                                                <%=title%>
-                                            </b>,<br>Reason: <b>
-                                                <%=reasons%>.
-                                            </b></p> -->
-                                        <p style="margin-top: 20px;font-size:16px;line-height:24px;">User <a title="User" href="<%=url_profile_user%>"><b>
-                                                    <%=user%>
-                                                </b></a> (<%=fullname%>) is requesting to delete a project. Kindly find the details below.
-                                        <ul style="font-size: 15px;line-height: 24px;">
-                                            <li><b>Country: </b>
-                                                <%=country%>
-                                            </li>
-                                            <li><b>Project Title: </b>
-                                                <%=title%>
-                                            </li>
-                                            <li><b>Focal Point: </b>
-                                                <%=focal_point%> (<%=focal_point_username%>)
-                                            </li>
-                                            <li><b>Focal Point Email: </b>
-                                                <%=focal_point_email%>
-                                            </li>
-                                            <li><b>Reason: </b>
-                                                <%=reasons%>.
-                                            </li>
-                                        </ul>
+                                        <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Hi <%=recipient%>,</h1>
+                                        <p style="margin:0 0 12px 0;font-size:15px;line-height:24px;font-family:Arial,sans-serif;">
+                                            Please submit the <b><%=month%></b> report for Project <b><%=title%></b> as requested by <b><%=requster%></b>.
                                         </p>
-                                        <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;">If this information is correct, you can delete the project through <a
-                                                title="Project" href="<%=project_url%>">this link</a> or you can click
-                                            the button below.
+                                        <p style="font-size:15px;line-height:24px;font-family:Arial,sans-serif;">
+                                            For further information please contact them at the following email address: <%=requster_email%>.
                                         </p>
 
-                                        <p style="margin:20px 0 25px 0;text-align:center"><a title="Project"
-                                                href="<%=project_url%>"
-                                                style="background: #26a69a; text-decoration: none; padding: 10px 25px; color: #ffffff; border-radius: 2px; font-size: 16px;display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884"><span
+                                        <p style="margin:20px 0 0 0;text-align:center"><a href="<%=url%>"
+                                                style="font-size: 16px;background: #26a69a; text-decoration: none; padding: 10px 25px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884"><span
                                                     style="mso-text-raise:10pt;font-weight:bold;">Go to
-                                                    Project</span></a></p>
-                                        <p style="font-weight:600;color:red;margin: 40px 0 5px 0; text-align:center;font-size: 15px;">
-                                            WARNING!</p>
-                                        <p style="margin: 0;font-size:13px;line-height:20px;text-align: center; color:#a7a1a1">Deleting a
-                                            project will <b style="color:  #585353;">permanently removing</b> all the project data including the
-                                            submitted
-                                            monthly report. The
-                                            ReportHub team <b style="color:  #585353;">CANNOT UNDO</b> this action.</p>
-
-                                        <p>
-
+                                                    Report</span></a></p>
                                     </td>
                                 </tr>
                                 <tr>

@@ -369,6 +369,13 @@ var UserController = {
                 sails.hooks.email.send( 'new-user-activated', {
                     name: result[0].name,
                     username: result[0].username,
+                    sector: result[0].cluster,
+					          name: result[0].name,
+					          position: result[0].position,
+					          phone: result[0].phone,
+					          email: result[0].email,
+					          user_org: result[0].organization_name,
+					          country: result[0].admin0name,
                     sendername: 'ReportHub',
                     url: 'https://reporthub.org/desk/#/profile/' + result[0].username,
                   }, {
@@ -622,7 +629,9 @@ var UserController = {
             // reset user
             var userReset = {
               adminRpcode: user[i].adminRpcode,
+              adminRname:user[i].adminRname,
               admin0pcode: user[i].admin0pcode,
+              admin0name:user[i].admin0name,
               organization_id: user[i].organization_id,
               organization_tag: user[i].organization_tag,
               organization: user[i].organization,
@@ -779,11 +788,20 @@ var UserController = {
           nStore[ user.email ] = {
             email: user.email,
             name: user.name,
-            usernameStore: [user.username],
+            usernameStore: [{
+              org: user.organization,
+              cluster: user.cluster,
+              country: user.admin0name,
+              username:user.username}],
             usernamesString: user.username
           };
         } else {
-          nStore[ user.email ].usernameStore.push(user.username);
+          nStore[user.email].usernameStore.push({
+            org: user.organization,
+            cluster: user.cluster,
+            country: user.admin0name,
+            username: user.username
+          });
           nStore[ user.email ].usernamesString += ', ';
           nStore[ user.email ].usernamesString += user.username;
         }
@@ -866,13 +884,30 @@ var UserController = {
             nStore[ user.email ] = {
               email: user.email,
               name: user.name,
-              usernameStore: [user.username],
+              // org: user.organization,
+              // cluster: user.cluster,
+              // country: user.admin0name,
+              usernameStore: [{
+                username: user.username, 
+                email: user.email,
+                name: user.name,
+                org: user.organization,
+                cluster: user.cluster,
+                country: user.admin0name,}],
               usernamesString: user.username
             };
           } else {
-            nStore[ user.email ].usernameStore.push(user.username);
-            nStore[ user.email ].usernamesString += ', ';
-            nStore[ user.email ].usernamesString += user.username;
+            // nStore[ user.email ].usernameStore.push(user.username);
+            // nStore[ user.email ].usernamesString += ', ';
+            // nStore[ user.email ].usernamesString += user.username;
+            nStore[user.email].usernameStore.push({
+              username: user.username,
+              email: user.email,
+              name: user.name,
+              org: user.organization,
+              cluster: user.cluster,
+              country: user.admin0name,
+            })
           }
         }
 
@@ -888,8 +923,11 @@ var UserController = {
             email: email,
             usernameStore: nStore[email].usernameStore,
             usernamesString: nStore[email].usernamesString,
+            // cluster: nStore[email].cluster,
+            // country: nStore[email].country,
+            // org: nStore[email].org,
             profileBaseUrl: 'https://reporthub.org/desk/#/profile/',
-            reason: 'have been inactive for more than ' + months + ' months and have been deactivated',
+            reason: 'have been inactive for more than ' + months + ' months and',
             sendername: 'ReportHub'
           },{
             to: email,
@@ -961,6 +999,53 @@ var UserController = {
 
 
       });
+
+  },
+
+  // send email for reportPending
+  sendEmailforPendingReportById: function (req, res) {
+
+    // check params
+    if (!req.param('url') && !req.param('project_title') && !req.param('username') ) {
+      return res.json(401, { msg: 'url, project_title, username, month required' });
+    }
+    // file system
+    var fs = require('fs');
+    url = req.param('url');
+    project_title = req.param('project_title');
+    username = req.param('username');
+    name_user = req.param('name');
+    email = req.param('email');
+    month = req.param('month');
+    requester = req.param('requester');
+    requester_email = req.param('requester_contact');
+
+
+
+        // if no config file, return, else send email ( PROD )
+        if (!fs.existsSync('/home/ubuntu/nginx/www/ngm-reportEngine/config/email.js')) return res.json(200, { 'data': 'No email config' });
+
+          // send email
+          sails.hooks.email.send('cluster-email-for-pending-report', {
+            type: 'Pending Report',
+            senderName: 'ReportHub',
+            title: project_title,
+            recipient: name_user,
+            url:url,
+            month:month,
+            requster:requester,
+            requster_email:requester_email
+
+          }, {
+            to: email,
+            // subject: 'ReportHub - Request to Complete Pending Report ' +month +' for Project '+ project_title
+            subject: 'ReportHub - Request to Submit Pending Report ' + month 
+          }, function (err) {
+
+            // return error
+            if (err) return res.negotiate(err);
+            return res.json(200, { msg: 'Success!' });
+          });
 
   },
 

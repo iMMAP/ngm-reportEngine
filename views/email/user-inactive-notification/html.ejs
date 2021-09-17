@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html> -->
 <!-- Default home page -->
-<html>
+<!-- <html>
 	<head>
 		<style>
 		</style>
@@ -21,4 +21,198 @@
 		<p><%= sendername %></p>
 
 	</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
+  <title></title>
+  <style>
+    @import url(http://fonts.googleapis.com/css?family=Roboto);
+    table,
+    td,
+    div,
+    h1,
+    p {
+      font-family: Roboto,  sans-serif;
+    }
+    #rh-email-table td,
+		#rh-email-table th {
+			border: 1px solid #ddd;
+			padding: 8px;
+			font-weight: 600;
+		}
+
+		#rh-email-table {
+			border-collapse: collapse;
+      width: 540px;
+		}
+
+		#rh-email-table tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#rh-email-table tr:hover {
+			background-color: #ebf5f3;
+		}
+
+		#rh-email-table th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: center;
+			background-color: #26a69a;
+			color: white;
+			font-size: 14px;
+		}
+  </style>
+</head>
+
+<body style="margin:0;padding:0;">
+  <table role="presentation" style="width:100%!important;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;">
+    <tr>
+      <td align="center" style="padding:0;">
+        <table role="presentation"
+          style="width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;">
+          <tr>
+            <td align="center" style="padding:40px 0 40px 0;background:#2196F3;">
+              <img src="https://reporthub.org/imgs/toolbox-z1.png" alt="" width="120"
+                style="height:auto;display:block;" />
+              <h1 style="font-size:36px;margin:0 0 0 0; color:#fff;font-family:Roboto,  sans-serif;font-weight: 200;">
+                ReportHub</h1>
+                <h3 style="color:#fff;font-family:Roboto,  sans-serif;font-weight:100;margin-top: 0px;"> Humanitarian Decision Support in Real-Time </h3>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:36px 30px 42px 30px;">
+              <table role="presentation" style="width:100%!important;border-collapse:collapse;border:0;border-spacing:0;">
+                <tr>
+                  <td style="padding:0 0 20px 0;color:#153643;">
+                    <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Roboto,  sans-serif;">Hi <%= name %>,
+                    </h1>
+                    <p style="font-family:Roboto,  sans-serif;line-height:24px;font-size:15px">
+                      The following ReportHub users have been <b>INACTIVE</b> for more than <%= period %>:
+                    </p>
+                    <table id="rh-email-table" style="border-collapse: collapse;width: 540px;">
+                      <tr>
+                        <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Country</th>
+                        <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Sector</th>
+                        <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Organization</th>
+                        <th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Username</th>
+                        <th style="width:140px;border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
+                      </tr>
+                      <% for(var i=0; i < usernameStore.length; i++) { %>
+                        <tr>
+                          <td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
+                            <%= usernameStore[i].country %>
+                          </td>
+                          <td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
+                            <%= usernameStore[i].cluster %>
+                          </td>
+                          <td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
+                            <%= usernameStore[i].org %>
+                          </td>
+                          <td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
+                            <%= usernameStore[i].username %>
+                          </td>
+                          <td style="text-align: center;border: 1px solid #ddd;">
+                            <a title="Profile <%= usernameStore[i] %>" href="<%= profileBaseUrl + usernameStore[i].username %>"
+                              style="background: #26a69a; text-decoration: none; padding: 5px 12px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884;font-size:12px;text-align: center;">
+                              <span style="mso-text-raise:10pt;font-weight:bold;">
+                                Go to Profile 
+                              </span>
+                            </a>
+                            </a>
+                          </td>
+                        </tr>
+                        <% } %>
+                    
+                    </table>
+                    <p style="line-height:24px; font-size: 14px;">
+                      Please login to each ReportHub account to avoid being <b>DEACTIVATED</b>. You can review the user profiles using the above links.
+                    </p>
+
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0;">
+
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:30px;background:#2196F3;">
+              <table role="presentation"
+                style="width:100%!important;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Roboto,  sans-serif;">
+                <tr>
+                  <td style="padding:0;width:33%;" align="left">
+                    <p style="margin:0;font-size:14px;line-height: 20px;font-family:Roboto,  sans-serif;color:#ffffff;">
+                      ReportHub<br />
+                      Developed by iMMAP
+                    </p>
+                  </td>
+                  <td style="padding:0;width:33%;" align="center">
+                    <table role="presentation" style="border-collapse:collapse;border:0;border-spacing:0;">
+                      <tr>
+                        <td style="padding:5px 0px 0 10px;width:38px; text-align: center;">
+                          <a href="https://www.facebook.com/immap.org" target="_blank"
+                            style="color:#ffffff;text-decoration: none;font-size: 2em;">
+                            <img src="https://dev.reporthub.org/desk/images/fb-logo.png" alt="Facebook"
+                              style="display: inline-block;border-radius: 50%;border:2px solid #ffffff;padding: 0.2em 0.2em;"
+                              width="24" height="24" />
+          
+                          </a>
+                        </td>
+                        <td style="padding:5px 10px 0 10px;width:38px;text-align: center;">
+                          <a href="https://twitter.com/iMMAP_org" target="_blank"
+                            style="color:#ffffff;text-decoration: none;font-size: 2em;">
+                            <img src="https://dev.reporthub.org/desk/images/twitter-logo.png" alt="Twitter"
+                              style="display: inline-block;border-radius: 50%;border:2px solid #ffffff;padding: 0.2em 0.2em;"
+                              width="24" height="24" />
+          
+                          </a>
+                        </td>
+                        <td style="padding:5px 10px 0 0px;width:38px;text-align: center;">
+                          <a href="https://www.linkedin.com/company/immap" target="_blank"
+                            style="color:#ffffff;text-decoration: none;font-size: 2em;">
+                            <img src="https://dev.reporthub.org/desk/images/linkedin-logo.png" alt="linkedin"
+                              style="display: inline-block;border-radius: 50%;border:2px solid #ffffff;padding: 0.2em 0.2em;"
+                              width="24" height="24" />
+          
+                          </a>
+                        </td>
+          
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="padding:0;width:33%;" align="right">
+                    <table role="presentation" style="border-collapse:collapse;border:0;border-spacing:0;">
+                      <tr>
+                        <td style="padding:0 0 0 10px;width:38px;">
+          
+                        </td>
+                        <td style="padding:0 0 0 10px;width:38px;">
+                          <a href="https://immap.org/" style="color:#ffffff;"><img
+                              src="https://dev.reporthub.org/desk/images/iMMAPlogo2_white.png" alt="iMMAP" width="150"
+                              style="height:auto;display:block;border:0;" />
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
 </html>

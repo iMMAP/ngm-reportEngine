@@ -498,7 +498,7 @@ var ReportTasksController = {
             if ( err ) return res.negotiate( err );
 
             // no reports return
-            if ( !locations.length ) return res.json( 200, { msg: 'No reports pending for ' + moment().format( 'MMMM' ) + '!' } );
+            if ( !locations.length ) return res.json( 200, { msg: 'No reports pending for ' + moment().format( 'MMMM, YYYY' ) + '!' } );
 
             // for each report, group by username
             locations.forEach( function( location, i ) {
@@ -512,6 +512,8 @@ var ReportTasksController = {
                   email: location.email,
                   username: location.username,
                   report_month: moment().format( 'MMMM' ),
+                  report_year: moment().format('YYYY'),
+                  report_month_year: moment().format('MMMM, YYYY'),
                   reportsStore: []
                 };
 
@@ -545,6 +547,8 @@ var ReportTasksController = {
                   email: location.email,
                   username: location.username,
                   report_month: moment().format( 'MMMM' ),
+                  report_year: moment().format('YYYY'),
+                  report_month_year: moment().format('MMMM, YYYY'),
                   reportsStore: []
                 };
 
@@ -612,15 +616,17 @@ var ReportTasksController = {
 
                   // send email
                   sails.hooks.email.send( 'notification-open', {
-                      type: 'Monthly Activity',
+                      type: 'monthly activity',
                       name: result.name,
                       email: notifications[i].email,
-                      report_month: notifications[i].report_month.toUpperCase(),
+                      report_month: notifications[i].report_month,
+                      report_year: notifications[i].report_year,
+                      report_month_year: notifications[i].report_month_year,
                       reports: notifications[i].reports,
                       sendername: 'ReportHub'
                     }, {
                       to: notifications[i].email,
-                      subject: 'ReportHub - Project Reporting Period for ' + moment().format( 'MMMM' ).toUpperCase() + ' Now Open!'
+                      subject: 'ReportHub - Project Reporting Period for ' + moment().format( 'MMMM' ).toUpperCase() + ' Now Open.'
                     }, function(err) {
 
                       // return error
@@ -688,6 +694,7 @@ var ReportTasksController = {
                 email: location.email,
                 username: location.username,
                 report_month: moment().subtract( 1, 'M' ).format( 'MMMM' ),
+                report_year: moment().subtract(1, 'M').format('YYYY'),
                 reporting_due_date: moment( location.reporting_due_date ).format( 'DD MMMM, YYYY' ),
                 reporting_due_message: due_message,
                 projectsStore: []
@@ -712,6 +719,7 @@ var ReportTasksController = {
               nStore[ location.email ].projectsStore[ location.project_id ].reports.push({
                 report_value: location.report_month,
                 report_month: moment( location.reporting_period ).format( 'MMMM' ),
+                report_year: moment(location.reporting_period).format('YYYY'),
                 report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
               });
               // avoids report row per location
@@ -767,17 +775,17 @@ var ReportTasksController = {
 
                 // send email
                 sails.hooks.email.send( 'notification-due-reports', {
-                    type: 'Monthly Activity',
+                    type: 'monthly activity',
                     name: result.name,
                     email: notifications[i].email,
-                    report_month: notifications[i].report_month.toUpperCase(),
+                    report_month: notifications[i].report_month,
                     reporting_due_date: notifications[i].reporting_due_date,
                     reporting_due_message: notifications[i].reporting_due_message,
                     projects: notifications[i].projects,
                     sendername: 'ReportHub'
                   }, {
                     to: notifications[i].email,
-                    subject: 'ReportHub - Project Reports ' + notifications[i].reporting_due_message + '!'
+                    subject: 'ReportHub - Project Reports ' + notifications[i].reporting_due_message + '.'
                   }, function(err) {
 
                     // return error
@@ -825,7 +833,7 @@ var ReportTasksController = {
 
           if ( err ) return res.negotiate( err );
           // no reports return
-          if ( !reports.length ) return res.json( 200, { msg: 'No reports pending for ' + moment().subtract( 1, 'M' ).format( 'MMMM' ) + '!' } );
+          if ( !reports.length ) return res.json( 200, { msg: 'No reports pending for ' + moment().subtract( 1, 'M' ).format( 'MMMM, YYYY' ) + '!' } );
 
           // for each report, group by username
           reports.forEach( function( location, i ) {
@@ -837,10 +845,10 @@ var ReportTasksController = {
               location.report_id = location.id;
               // if username dosnt exist
               if ( !nStore[ location.email ] ) {
-                var due_message = 'due SOON';
+                var due_message = 'DUE SOON';
                 // set due message TODAY
                 if ( config.today ) {
-                  due_message = 'due TODAY';
+                  due_message = 'DUE TODAY';
                 }
                 // set due message PENDING
                 if ( config.pending ) {
@@ -852,6 +860,8 @@ var ReportTasksController = {
                   email: location.email,
                   username: location.username,
                   report_month: moment().subtract( 1, 'M' ).format( 'MMMM' ),
+                  report_year: moment().subtract(1, 'M').format('YYYY'),
+                  report_month_year: moment().subtract(1, 'M').format('MMMM, YYYY'),
                   reporting_due_date: moment( location.reporting_due_date ).format( 'DD MMMM, YYYY' ),
                   reporting_due_message: due_message,
                   projectsStore: []
@@ -876,6 +886,8 @@ var ReportTasksController = {
                 nStore[ location.email ].projectsStore[ location.project_id ].reports.push({
                   report_value: location.report_month,
                   report_month: moment( location.reporting_period ).format( 'MMMM' ),
+                  report_year: moment(location.reporting_period).format('YYYY'),
+                  report_month_year: moment().subtract(1, 'M').format('MMMM, YYYY'),
                   report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
                 });
                 // avoids report row per location
@@ -931,17 +943,19 @@ var ReportTasksController = {
 
                 // send email
                 sails.hooks.email.send( 'notification-due', {
-                    type: 'Monthly Activity',
+                    type: 'monthly activity',
                     name: result.name,
                     email: notifications[i].email,
-                    report_month: notifications[i].report_month.toUpperCase(),
+                    report_month: notifications[i].report_month,
+                    report_year: notifications[i].report_year,
+                    report_month_year: notifications[i].report_month_year,
                     reporting_due_date: notifications[i].reporting_due_date,
                     reporting_due_message: notifications[i].reporting_due_message,
                     projects: notifications[i].projects,
                     sendername: 'ReportHub'
                   }, {
                     to: notifications[i].email,
-                    subject: 'ReportHub - Project Reporting Period for ' + moment().subtract( 1, 'M' ).format( 'MMMM' ).toUpperCase() + ' is ' + notifications[i].reporting_due_message + ' !'
+                    subject: 'ReportHub - Project Reporting Period for ' + moment().subtract( 1, 'M' ).format( 'MMMM' ).toUpperCase() + ' is ' + notifications[i].reporting_due_message + '.'
                   }, function(err) {
 
                     // return error

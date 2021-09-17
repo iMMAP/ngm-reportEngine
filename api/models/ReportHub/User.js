@@ -323,58 +323,123 @@ module.exports = {
 					admin = org_admin.length ? org_admin : admin;
 
 					// set emails
-					admin.forEach(function( d, i ) {
-						org_names += d.name + ', ';
-						org_emails += d.email + ',';
-					});
+					// admin.forEach(function( d, i ) {
+					// 	org_names += d.name + ', ';
+					// 	org_emails += d.email + ',';
+					// });
 					// remove last comma
-					org_names = org_names.slice( 0, -1 );
-					org_emails = org_emails.slice( 0, -1 );
+					// org_names = org_names.slice( 0, -1 );
+					// org_emails = org_emails.slice( 0, -1 );
 
+			var admin_contacts = [];
+			// set email
+			admin.forEach(function (d, i) {
+				admin_contacts.push({ name: d.name, email: d.email })
+			});
+			var contact_length = admin_contacts.length;
           if (user.status === PENDING_STATUS) {
-            sails.hooks.email.send( 'new-user-pending', {
-	            org_names: org_names,
-	            sector: user.cluster,
-	            username: user.username,
-	            name: user.name,
-	            position: user.position,
-	            phone: user.phone,
-	            email: user.email,
-	            url: 'https://reporthub.org/desk/#/profile/' + user.username,
-	            sendername: 'ReportHub'
-	          }, {
-	            to: org_emails,
-	            subject: 'ReportHub - New ' + admin[0].organization + ' User Pending!'
-	          }, function(err) {
-							// return
-						  if ( err ) return next( err );
-					  	// next
-              next();
-            });
+            // sails.hooks.email.send( 'new-user-pending', {
+	        //     org_names: org_names,
+	        //     sector: user.cluster,
+	        //     username: user.username,
+	        //     name: user.name,
+	        //     position: user.position,
+	        //     phone: user.phone,
+	        //     email: user.email,
+	        //     url: 'https://reporthub.org/desk/#/profile/' + user.username,
+	        //     sendername: 'ReportHub'
+	        //   }, {
+	        //     to: org_emails,
+	        //     subject: 'ReportHub - New ' + admin[0].organization + ' User Pending!'
+	        //   }, function(err) {
+			// 				// return
+			// 			  if ( err ) return next( err );
+			// 		  	// next
+            //   next();
+            // });
+			var count_contact =0;
+			admin_contacts.forEach(function(contact,i){
+				sails.hooks.email.send('new-user-pending', {
+					org_names: 'org',
+					recipient:contact.name,
+					sector: user.cluster,
+					username: user.username,
+					name: user.name,
+					position: user.position,
+					phone: user.phone,
+					email: user.email,
+					user_org: user.organization_name,
+					org_abbr: user.organization,
+					country: user.admin0name,
+					url: 'https://reporthub.org/desk/#/profile/' + user.username,
+					sendername: 'ReportHub'
+				}, {
+					to: contact.email,
+					subject: 'ReportHub - New ' + admin[0].organization + ' User Pending!'
+				}, function (err) {
+					count_contact = count_contact +1;
+					// return
+					if (err) return next(err);
+					// next
+					if(count_contact === contact_length ){
+						next();
+					}
+				});
+			});
           } else {
             // send email
-            sails.hooks.email.send( 'new-user', {
-                org_names: org_names,
-                sector: user.cluster,
-                username: user.username,
-                name: user.name,
-                position: user.position,
-                phone: user.phone,
-                email: user.email,
-                url: 'https://reporthub.org/desk/#/profile/' + user.username,
-                sendername: 'ReportHub'
-              }, {
-                to: org_emails,
-                subject: 'ReportHub - New ' + admin[0].organization + ' User!'
-              }, function(err) {
+            // sails.hooks.email.send( 'new-user', {
+            //     org_names: org_names,
+            //     sector: user.cluster,
+            //     username: user.username,
+            //     name: user.name,
+            //     position: user.position,
+            //     phone: user.phone,
+            //     email: user.email,
+            //     url: 'https://reporthub.org/desk/#/profile/' + user.username,
+            //     sendername: 'ReportHub'
+            //   }, {
+            //     to: org_emails,
+            //     subject: 'ReportHub - New ' + admin[0].organization + ' User!'
+            //   }, function(err) {
 
-                // return
-                if ( err ) return next( err );
+            //     // return
+            //     if ( err ) return next( err );
 
-                // next
-                next();
+            //     // next
+            //     next();
 
-              });
+            //   });
+
+			var count_contact =0;
+			admin_contacts.forEach(function(contact,i){
+				sails.hooks.email.send('new-user', {
+					org_names:'org',
+					recipient:contact.name,
+					sector: user.cluster,
+					username: user.username,
+					name: user.name,
+					position: user.position,
+					phone: user.phone,
+					email: user.email,
+					user_org: user.organization_name,
+					org_abbr: user.organization,
+					country: user.admin0name,
+					url: 'https://reporthub.org/desk/#/profile/' + user.username,
+					sendername: 'ReportHub'
+				}, {
+					to: contact.email,
+					subject: 'ReportHub - New ' + admin[0].organization + ' User!'
+				}, function (err) {
+					count_contact = count_contact +1;
+					// return
+					if (err) return next(err);
+					// next
+					if(count_contact === contact_length ){
+						next();
+					}
+				});
+			});
           }
         // if no active users for that org notify cluster and country admins
 	    	} else {
@@ -396,6 +461,12 @@ module.exports = {
 								admin_names = admin_names.slice( 0, -1 );
                 admin_emails = admin_emails.slice( 0, -1 );
 
+				var admin_contacts =[{name:"Reporthub Admin",email:"ngmreporthub@gmail.com"}];
+				admin.forEach(function (d, i) {
+					admin_contacts.push({ name: d.name, email: d.email})
+				});
+				var contact_length = admin_contacts.length;
+
                 // new organization by default ORG
                 let isNewOrganization = false;
                 if (user.roles.indexOf( 'ORG' ) !== -1){
@@ -409,28 +480,60 @@ module.exports = {
                   subject = isNewOrganization ? 'ReportHub - New Organization ' + user.organization + '!' : 'ReportHub - New ' + user.organization + ' User!';
                 }
                 // send email
-                sails.hooks.email.send( template, {
-                  org_names: admin_names,
-                  sector: user.cluster,
-                  organization: user.organization,
-                  username: user.username,
-                  name: user.name,
-                  position: user.position,
-                  phone: user.phone,
-                  email: user.email,
-                  url: 'https://reporthub.org/desk/#/profile/' + user.username,
-                  sendername: 'ReportHub'
-                }, {
-                  to: admin_emails,
-                  subject: subject
-                }, function(err) {
+                // sails.hooks.email.send( template, {
+                //   org_names: admin_names,
+                //   sector: user.cluster,
+                //   organization: user.organization,
+                //   username: user.username,
+                //   name: user.name,
+                //   position: user.position,
+                //   phone: user.phone,
+                //   email: user.email,
+                //   url: 'https://reporthub.org/desk/#/profile/' + user.username,
+                //   sendername: 'ReportHub'
+                // }, {
+                //   to: admin_emails,
+                //   subject: subject
+                // }, function(err) {
 
-                  // return
-                  if ( err ) return next( err );
-                  // next
-                  next();
+                //   // return
+                //   if ( err ) return next( err );
+                //   // next
+                //   next();
 
-                });
+                // });
+				var count_contact =0;
+				admin_contacts.forEach(function(contact){
+					sails.hooks.email.send(template, {
+						// org_names: admin_names,
+						org_names: 'org',
+						recipient: contact.name,
+						sector: user.cluster,
+						organization: user.organization,
+						username: user.username,
+						name: user.name,
+						position: user.position,
+						phone: user.phone,
+						email: user.email,
+						user_org: user.organization_name,
+						org_abbr: user.organization,
+						country: user.admin0name,
+						url: 'https://reporthub.org/desk/#/profile/' + user.username,
+						sendername: 'ReportHub'
+					}, {
+						to: contact.email,
+						subject: subject
+					}, function (err) {
+						count_contact = count_contact + 1;
+						// return
+						if (err) return next(err);
+						// next
+						if (count_contact === contact_length) {
+							next();
+						}
+
+					});
+				})
               } else {
                 next();
               }
