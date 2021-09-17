@@ -12,14 +12,22 @@ module.exports = {
 
 	// attributes
 	attributes: {
-    admin0pcode: {
+    adminRpcode: {
+			type: 'string',
+			required: true
+    },
+	adminRname: {
 			type: 'string',
 			required: true
     },
     admin0pcode: {
 			type: 'string',
 			required: true
-    },		
+    },
+		admin0name: {
+			type: 'string',
+			required: true
+		},
 		organization_id: {
 			type: 'string'
 		},
