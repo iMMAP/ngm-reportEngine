@@ -63,30 +63,75 @@ var ProjectController = {
     delete p.createdAt;
     delete p.updatedAt;
 
-    async.each( reports_array, function ( m, next ) {
+    
+    
+    if (!project.report_type_id || project.report_type_id !== 'bi-weekly') {
+      
+      async.each(reports_array, function (m, next) {
 
-      // create report
-      var report = {
-        project_id: project.id,
-        report_status: 'todo',
-        report_active: true,
-        report_month: moment( s_date ).add( m, 'M' ).month(),
-        report_year: moment( s_date ).add( m, 'M' ).year(),
-        reporting_period: moment( s_date ).add( m, 'M' ).set( 'date', 1 ).format(),
-        reporting_due_date: moment( s_date ).add( m+1, 'M' ).set( 'date', REPORTING_DUE_DATE ).format()
-      };
+        // create report
+        var report = {
+          project_id: project.id,
+          report_status: 'todo',
+          report_active: true,
+          report_month: moment(s_date).add(m, 'M').month(),
+          report_year: moment(s_date).add(m, 'M').year(),
+          reporting_period: moment(s_date).add(m, 'M').set('date', 1).format(),
+          reporting_due_date: moment(s_date).add(m + 1, 'M').set('date', REPORTING_DUE_DATE).format()
+        };
 
-      // add report with p to reports
-      reports.push( _under.extend( {}, report, p ) );
+        // add report with p to reports
+        reports.push(_under.extend({}, report, p));
 
-      // next
-      next();
+        // next
+        next();
 
-    }, function ( err ) {
-      if ( err ) return cb( err, false );
-      // return the reports for the project period
-      return cb( false, reports );
-    });
+      }, function (err) {
+        if (err) return cb(err, false);
+        // return the reports for the project period
+        return cb(false, reports);
+      });
+    }
+
+    if (project.report_type_id && project.report_type_id === 'bi-weekly') {
+      var bi_weekly_reporting = [
+        {
+          reporting_period: 1,
+          reporting_due_date: 10
+        }, {
+          reporting_period: 15,
+          reporting_due_date: 27
+        }
+      ];
+      
+      async.each(reports_array, function (m, next) {
+
+        bi_weekly_reporting.forEach(function(w){
+
+          // create report
+          var report = {
+            project_id: project.id,
+            report_status: 'todo',
+            report_active: true,
+            report_month: moment(s_date).add(m, 'M').month(),
+            report_year: moment(s_date).add(m, 'M').year(),
+            reporting_period: moment(s_date).add(m, 'M').set('date', w.reporting_period).format(),
+            reporting_due_date: moment(s_date).add(m, 'M').set('date', w.reporting_due_date).format()
+          };
+
+          // add report with p to reports
+          reports.push(_under.extend({}, report, p));
+        });
+        // next
+        next();
+
+      }, function (err) {
+        if (err) return cb(err, false);
+        // return the reports for the project period
+        return cb(false, reports);
+      });
+    }
+    
 
   },
 
@@ -958,6 +1003,7 @@ var ProjectController = {
       ProjectController.getProjectReports( project_update, function( err, project_reports ){
         // err
         if (err) return returnProject(err);
+        
         // ASYNC REQUEST 4
         // async loop project_reports
         async.each( project_reports, function ( d, next ) {
