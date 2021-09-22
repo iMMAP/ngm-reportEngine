@@ -1117,6 +1117,199 @@ var ReportTasksController = {
         });
       // } else { return res.json( 200, { msg: 'No reports pending for ' + moment().subtract( 1, 'M' ).format( 'MMMM' ) + '!' } ); }
 
+  },
+  // sends reminder for active current reporting period month not yet submitted
+  setReportsReminderWeekly: function (req, res) {
+
+    var nStore = {}
+    var notifications = [];
+
+    
+    // request input
+    if (!req.param('biweekly_period')) {
+      // biweekly_period is first or second
+      return res.json(401, { err: 'biweekly_period required!' });
+    }
+    var biweekly_period = req.param('biweekly_period')
+    if(biweekly_period === 'first'){
+      var date_period = moment().set('date', 1).format()
+      var findReportingPeriod = { reporting_period: { 
+                                    $gte: moment(date_period).startOf('day').toDate(), 
+                                    $lte: moment(date_period).endOf('day').toDate()
+                                  }};
+    }else{
+      var date_period = moment().set('date', 15).format()
+      var findReportingPeriod = {
+        reporting_period: {
+          $gte: moment(date_period).startOf('day').toDate(),
+          $lte: moment(date_period).endOf('day').toDate()
+        }
+      };
+    };
+
+    // only run if date is 1 week before monthly reporting period required
+    // if ( moment().date() <= 10 ) {
+    Report
+      .find()
+      .where({ project_id: { '!': null } })
+      .where({ report_year: moment().year() })
+      .where({ report_month: moment().month() })
+      .where({ report_active: true })
+      .where({ report_type_id:"bi-weekly"})
+      .where({ report_status: 'todo' })
+      .where({ project_status: "active" })
+      .where(findReportingPeriod)
+      .sort('report_month DESC')
+      .exec(function (err, reports) {
+
+        if (err) return res.negotiate(err);
+        // no reports return
+        if (!reports.length) return res.json(200, { msg: 'No reports pending for ' + moment().format('MMMM, YYYY') + '!' });
+        // for each report, group by username
+        reports.forEach(function (location, i) {
+
+          let config = NotificationService.getConfigBiWeekly(location.admin0pcode, location.cluster_id, biweekly_period);;
+
+          if (config.notify && (config.soon || config.pending || config.today)) {
+
+            location.report_id = location.id;
+            // if username dosnt exist
+            if (!nStore[location.email]) {
+              var due_message = 'DUE SOON';
+              // set due message TODAY
+              if (config.today) {
+                due_message = 'DUE TODAY';
+              }
+              // set due message PENDING
+              if (config.pending) {
+                due_message = 'PENDING';
+              }
+
+              // add for notification email template
+              nStore[location.email] = {
+                email: location.email,
+                username: location.username,
+                report_month: moment().format('MMMM'),
+                report_year: moment().format('YYYY'),
+                report_month_year: moment().format('MMMM, YYYY'),
+                reporting_due_date: moment(location.reporting_due_date).format('DD MMMM, YYYY'),
+                reporting_due_message: due_message,
+                projectsStore: []
+              };
+            }
+
+            // group reports by report!
+            if (!nStore[location.email].projectsStore[location.project_id]) {
+              // add report urls
+              nStore[location.email].projectsStore[location.project_id] = {
+                country: location.admin0name,
+                cluster: location.cluster,
+                project_title: location.project_title,
+                reports: []
+              }
+
+            }
+
+            // one report per month
+            if (!nStore[location.email].projectsStore[location.project_id].reports[location.report_id]) {
+              // project reports
+              nStore[location.email].projectsStore[location.project_id].reports.push({
+                report_value: location.report_month,
+                report_month: moment(location.reporting_period).format('MMMM'),
+                report_year: moment(location.reporting_period).format('YYYY'),
+                report_month_year: moment().format('MMMM, YYYY'),
+                report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
+              });
+              // avoids report row per location
+              nStore[location.email].projectsStore[location.project_id].reports[location.report_id] = [{ report: true }];
+            }
+          }
+        });
+
+        // each user, send only one email!
+        for (var user in nStore) {
+
+          // flatten and order
+          for (var project in nStore[user].projectsStore) {
+            if (!nStore[user].projects) {
+              nStore[user].projects = [];
+            }
+            nStore[user].projects.push(nStore[user].projectsStore[project]);
+          }
+
+          // sort
+          nStore[user].projects.sort(function (a, b) {
+            return a.country.localeCompare(b.country) ||
+              a.cluster.localeCompare(b.cluster) ||
+              a.project_title.localeCompare(b.project_title);
+          });
+
+          // push
+          notifications.push(nStore[user]);
+
+        }
+
+        // counter
+        var counter = 0,
+          length = notifications.length;
+
+        // for each
+        var biweekly_period_text = (biweekly_period === 'first')? 'Biweekly First Period': 'Biweekly Second Period';
+        notifications.forEach(function (notification, i) {
+
+          User
+            .findOne()
+            .where({ email: notifications[i].email })
+            .exec(function (err, result) {
+
+              // return error
+              if (err) return res.negotiate(err);
+
+              // really have no idea whats
+              if (!result) {
+                result = {
+                  name: notifications[i].username
+                }
+              }
+
+              // send email
+              sails.hooks.email.send('notification-due-biweekly', {
+                type: 'biweekly activity',
+                name: result.name,
+                email: notifications[i].email,
+                report_month: notifications[i].report_month,
+                report_year: notifications[i].report_year,
+                report_month_year: notifications[i].report_month_year,
+                reporting_due_date: notifications[i].reporting_due_date,
+                reporting_due_message: notifications[i].reporting_due_message,
+                projects: notifications[i].projects,
+                biweekly_period: biweekly_period_text,
+                sendername: 'ReportHub'
+              }, {
+                to: notifications[i].email,
+                subject: 'DEV ReportHub - Project Reporting for ' + biweekly_period_text+', ' + moment().format('MMMM').toUpperCase()  + ' is ' + notifications[i].reporting_due_message + '.'
+              }, function (err) {
+
+                // return error
+                if (err) return res.negotiate(err);
+
+                // add to counter
+                counter++;
+                if (counter === length) {
+
+                  // email sent
+                  return res.json(200, { 'data': 'success' });
+                }
+
+              });
+
+            });
+
+        });
+
+      });
+    // } else { return res.json( 200, { msg: 'No reports pending for ' + moment().subtract( 1, 'M' ).format( 'MMMM' ) + '!' } ); }
+
   }
 
 };
