@@ -629,12 +629,19 @@ var ReportTasksController = {
 
               // group reports by report!
               if ( !nStore[ location.email ].reportsStore[ location.report_id ] ){
+                var _periodExplanation = "Monthly";
+                if (location.report_type_id && location.report_type_id === 'bi-weekly') {
+                  var number_date_of_reporting_period = moment.utc(location.reporting_period).format('D')
+                  _periodExplanation = (number_date_of_reporting_period <= 14 ? 'First Period' : 'Second Period');
+                }
                 // add location urls
                 nStore[ location.email ].reportsStore[ location.report_id ] = {
                   country: location.admin0name,
                   cluster: location.cluster,
                   username: location.username,
                   project_title: location.project_title,
+                  report_type_id: location.report_type_id === 'bi-weekly' ? location.report_type_id : 'monthly',
+                  period_explaination: _periodExplanation,
                     report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
                   };
                 }
@@ -664,12 +671,20 @@ var ReportTasksController = {
 
               // group reports by report!
               if ( !nStore[ location.email ].reportsStore[ location.report_id ] ){
+                var _periodExplanation = "Monthly"
+                if (location.report_type_id && location.report_type_id === 'bi-weekly'){
+                  var number_date_of_reporting_period = moment.utc(location.reporting_period ).format('D')
+                  _periodExplanation = (number_date_of_reporting_period <= 14 ? 'First Period' : 'Second Period');
+                }
+
                 // add location urls
                 nStore[ location.email ].reportsStore[ location.report_id ] = {
                   country: location.admin0name,
                   cluster: location.cluster,
                   username: location.username,
                   project_title: location.project_title,
+                  report_type_id: location.report_type_id === 'bi-weekly' ? location.report_type_id:'monthly',
+                  period_explaination: _periodExplanation,
                     report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
                   };
                 }
@@ -721,16 +736,32 @@ var ReportTasksController = {
                       name: notifications[i].username
                     }
                   }
-
+                  var _type = 'monthly activity';
+                  var _period_column = false;
+                  if (notifications[i].reports.length){
+                    var check_type_report = notifications[i].reports.map(x => x.report_type_id)
+                    if ((check_type_report.indexOf('monthly') >-1) && (check_type_report.indexOf('bi-weekly')>-1)){
+                      _type = 'monthly and biweekly activity'
+                      _period_column = true;
+                    } else if (check_type_report.indexOf('bi-weekly') > -1){
+                      _type = 'biweekly activity'
+                      _period_column = true;
+                    }else{
+                      _type = 'monthly activity'
+                      _period_column = false;
+                    }
+                  }
                   // send email
                   sails.hooks.email.send( 'notification-open', {
-                      type: 'monthly activity',
+                      // type: 'monthly activity',
+                      type: _type,
                       name: result.name,
                       email: notifications[i].email,
                       report_month: notifications[i].report_month,
                       report_year: notifications[i].report_year,
                       report_month_year: notifications[i].report_month_year,
                       reports: notifications[i].reports,
+                      period_column: _period_column,
                       sendername: 'ReportHub'
                     }, {
                       to: notifications[i].email,
