@@ -165,7 +165,6 @@ var ReportTasksController = {
               delete new_report.updatedAt;
               bi_weekly_newreports.push(new_report)
             })
-            // console.log(bi_weekly_newreports);
 
             bi_weekly_newreports.forEach(function(new_report){
               
@@ -173,7 +172,7 @@ var ReportTasksController = {
               Report.findOne({ project_id: new_report.project_id, report_month: new_report.report_month, report_year: new_report.report_year, report_type_id: new_report.report_type_id, reporting_period: { $gte: moment(new_report.reporting_period).startOf('day').toDate(), $lte: moment(new_report.reporting_period).endOf('day').toDate() } }).then(function (report) {
 
                 // set
-                if (!report) { report = { id: null } ,console.log("create")}
+                if (!report) { report = { id: null } }
                 if (report) { new_report.report_status = report.report_status; new_report.report_active = report.report_active, new_report.updatedAt = report.updatedAt }
 
                 // create reports
@@ -209,7 +208,7 @@ var ReportTasksController = {
 
                           // find
                           Location.findOne({ project_id: project.id, target_location_reference_id: d.target_location_reference_id, report_month: d.report_month, report_year: d.report_year, report_type_id: d.report_type_id, reporting_period: { $gte: moment(d.reporting_period).startOf('day').toDate(), $lte: moment(d.reporting_period).endOf('day').toDate() }}).then(function (location) {
-                            if (!location) { location = { id: null }; console.log('create')}
+                            if (!location) { location = { id: null }; }
                             // relations set in getProjectReportLocations
                             Location.updateOrCreate(findProject, { id: location.id }, d).exec(function (err, location_result) {
 
@@ -1119,18 +1118,21 @@ var ReportTasksController = {
 
   },
   // sends reminder for active current reporting period month not yet submitted
-  setReportsReminderWeekly: function (req, res) {
+  setReportsReminderBiWeekly: function (req, res) {
 
     var nStore = {}
     var notifications = [];
 
+    var number_date_of_reporting_period = moment.utc().format('D')
+    var biweekly_period = (number_date_of_reporting_period < 20  ? 'first' : 'second');
+
     
     // request input
-    if (!req.param('biweekly_period')) {
-      // biweekly_period is first or second
-      return res.json(401, { err: 'biweekly_period required!' });
-    }
-    var biweekly_period = req.param('biweekly_period')
+    // if (!req.param('biweekly_period')) {
+    //   // biweekly_period is first or second
+    //   return res.json(401, { err: 'biweekly_period required!' });
+    // }
+    // var biweekly_period = req.param('biweekly_period')
     if(biweekly_period === 'first'){
       var date_period = moment().set('date', 1).format()
       var findReportingPeriod = { reporting_period: { 

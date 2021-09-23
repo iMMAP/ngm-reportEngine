@@ -227,7 +227,7 @@ module.exports.routes = {
   'GET /cluster/report/setReportsReminderAllMonths': 'Cluster/Reports/ReportTasksController.setReportsReminderAllMonths',
 
   // biweekly
-  'GET /cluster/report/setReportsReminderWeekly/:biweekly_period': 'Cluster/Reports/ReportTasksController.setReportsReminderWeekly',
+  'GET /cluster/report/setReportsReminderBiWeekly': 'Cluster/Reports/ReportTasksController.setReportsReminderBiWeekly',
 
   // CLUSTER DASHBOARD
   // 'GET /cluster/latestUpdate': 'Cluster/Dashboards/ClusterDashboardController.getlatestUpdate',
