@@ -41,7 +41,7 @@ const BIWEEKLY_REPORTING_DUE_DATE_NOTIFICATIONS_CONFIG = [
     },
     second: {
       soon: [23],
-      pending: [22],
+      pending: [28],
       today: [27],
       reporting_due_date: 27
     }
@@ -55,7 +55,7 @@ const BIWEEKLY_REPORTING_DUE_DATE_NOTIFICATIONS_CONFIG = [
     },
     second: {
       soon: [23],
-      pending: [22],
+      pending: [28],
       today: [27],
       reporting_due_date: 27
     }
