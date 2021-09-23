@@ -478,86 +478,194 @@ var ReportTasksController = {
 
           var findProject = { project_id: project.id }
 
-          // create report
-          var r = {
-            project_id: project.id,
-            report_status: 'todo',
-            report_active: true,
-            report_month: moment().month(),
-            report_year: moment().year(),
-            reporting_period: moment().set( 'date', 1 ).format(),
-            reporting_due_date: moment().add( 1, 'M' ).set( 'date', 10 ).format()
-          };
+          // for now make report twice a month, can be applied for 1 week 1 report
+          var bi_weekly_reporting = [
+            {
+              reporting_period: 1,
+              reporting_due_date: 10
+            }, {
+              reporting_period: 15,
+              reporting_due_date: 27
+            }
+          ];
+          var bi_weekly_newreports = []
 
-          // clone project
-          var p = JSON.parse( JSON.stringify( project ) );
-                  delete p.id;
+          if (project.report_type_id && (project.report_type_id === 'bi-weekly')) {
+            bi_weekly_reporting.forEach(function (w) {
+              var r = {
+                project_id: project.id,
+                report_status: 'todo',
+                report_active: true,
+                report_month: moment().month(),
+                report_year: moment().year(),
+                reporting_period: moment().set('date', w.reporting_period).format(),
+                reporting_due_date: moment().set('date', w.reporting_due_date).format()
+              };
+              // clone project
+              var p = JSON.parse(JSON.stringify(project));
+              delete p.id;
 
-          // create report
-          var new_report = _under.extend( {}, p, r );
+              // create report
+              var new_report = _under.extend({}, p, r);
+              delete new_report.createdAt;
+              delete new_report.updatedAt;
+              bi_weekly_newreports.push(new_report)
+            })
 
-          // find reports
-          Report.findOne( { project_id: new_report.project_id, report_month: new_report.report_month, report_year: new_report.report_year } ).then( function ( report ){
+            bi_weekly_newreports.forEach(function (new_report) {
 
-            // set
-            if( !report ) { report = { id: null } }
-            if ( report ) { new_report.report_status = report.report_status; new_report.report_active = report.report_active, new_report.updatedAt = report.updatedAt }
+              // find reports
+              Report.findOne({ project_id: new_report.project_id, report_month: new_report.report_month, report_year: new_report.report_year, report_type_id: new_report.report_type_id, reporting_period: { $gte: moment(new_report.reporting_period).startOf('day').toDate(), $lte: moment(new_report.reporting_period).endOf('day').toDate() } }).then(function (report) {
 
-            // create reports
-            Report.updateOrCreate( findProject, { id: report.id }, new_report ).exec(function( err, report_result ){
+                // set
+                if (!report) { report = { id: null } }
+                if (report) { new_report.report_status = report.report_status; new_report.report_active = report.report_active, new_report.updatedAt = report.updatedAt }
 
-              // err
-              if ( err ) return err;
-
-              // make array ( sails returns object on create, array on update )
-              if ( !report.id ) {
-                report_result = [ report_result ];
-              }
-
-              // get target_locations
-              TargetLocation
-                .find()
-                .where( findProject )
-                .exec( function( err, target_locations ){
+                // create reports
+                Report.updateOrCreate(findProject, { id: report.id }, new_report).exec(function (err, report_result) {
 
                   // err
-                  if ( err ) return err;
+                  if (err) return err;
 
-                  // generate locations for each report ( requires report_id )
-                  ReportTasksController.getProjectReportLocations( report_result, target_locations, function( err, locations ){
+                  // make array ( sails returns object on create, array on update )
+                  if (!report.id) {
+
+                    report_result = [report_result];
+                  }
+
+                  // get target_locations
+                  TargetLocation
+                    .find()
+                    .where(findProject)
+                    .exec(function (err, target_locations) {
+
+                      // err
+                      if (err) return err;
+
+                      // generate locations for each report ( requires report_id )
+                      ReportTasksController.getProjectReportLocations(report_result, target_locations, function (err, locations) {
+
+                        // err
+                        if (err) return err;
+
+                        // ASYNC REQUEST 1.1
+                        // async loop project_update locations
+                        async.each(locations, function (d, next) {
+
+                          // find
+                          Location.findOne({ project_id: project.id, target_location_reference_id: d.target_location_reference_id, report_month: d.report_month, report_year: d.report_year, report_type_id: d.report_type_id, reporting_period: { $gte: moment(d.reporting_period).startOf('day').toDate(), $lte: moment(d.reporting_period).endOf('day').toDate() } }).then(function (location) {
+                            if (!location) { location = { id: null }; }
+                            // relations set in getProjectReportLocations
+                            Location.updateOrCreate(findProject, { id: location.id }, d).exec(function (err, location_result) {
+
+                              // err
+                              if (err) return err;
+
+                              // no need to return locations
+                              // next();
+
+                            });
+                          });
+                        }, function (err) {
+                          if (err) return err;
+                          next();
+                        });
+
+                      });
+
+                    });
+
+                });
+              });
+            })
+
+
+
+
+          }else{
+            // create report
+            var r = {
+              project_id: project.id,
+              report_status: 'todo',
+              report_active: true,
+              report_month: moment().month(),
+              report_year: moment().year(),
+              reporting_period: moment().set('date', 1).format(),
+              reporting_due_date: moment().add(1, 'M').set('date', 10).format()
+            };
+
+            // clone project
+            var p = JSON.parse(JSON.stringify(project));
+            delete p.id;
+
+            // create report
+            var new_report = _under.extend({}, p, r);
+
+            // find reports
+            Report.findOne({ project_id: new_report.project_id, report_month: new_report.report_month, report_year: new_report.report_year }).then(function (report) {
+
+              // set
+              if (!report) { report = { id: null } }
+              if (report) { new_report.report_status = report.report_status; new_report.report_active = report.report_active, new_report.updatedAt = report.updatedAt }
+
+              // create reports
+              Report.updateOrCreate(findProject, { id: report.id }, new_report).exec(function (err, report_result) {
+
+                // err
+                if (err) return err;
+
+                // make array ( sails returns object on create, array on update )
+                if (!report.id) {
+                  report_result = [report_result];
+                }
+
+                // get target_locations
+                TargetLocation
+                  .find()
+                  .where(findProject)
+                  .exec(function (err, target_locations) {
 
                     // err
-                    if ( err ) return err;
+                    if (err) return err;
 
-                    // ASYNC REQUEST 1.1
-                    // async loop project_update locations
-                    async.each( locations, function ( d, next ) {
+                    // generate locations for each report ( requires report_id )
+                    ReportTasksController.getProjectReportLocations(report_result, target_locations, function (err, locations) {
 
-                      // find
-                      Location.findOne( { project_id: project.id, target_location_reference_id: d.target_location_reference_id, report_month: d.report_month, report_year: d.report_year } ).then( function ( location ){
-                        if( !location ) { location = { id: null } }
-                        // relations set in getProjectReportLocations
-                        Location.updateOrCreate( findProject, { id: location.id }, d ).exec(function( err, location_result ){
+                      // err
+                      if (err) return err;
 
-                          // err
-                          if ( err ) return err;
+                      // ASYNC REQUEST 1.1
+                      // async loop project_update locations
+                      async.each(locations, function (d, next) {
 
-                          // no need to return locations
-                          next();
+                        // find
+                        Location.findOne({ project_id: project.id, target_location_reference_id: d.target_location_reference_id, report_month: d.report_month, report_year: d.report_year }).then(function (location) {
+                          if (!location) { location = { id: null } }
+                          // relations set in getProjectReportLocations
+                          Location.updateOrCreate(findProject, { id: location.id }, d).exec(function (err, location_result) {
 
+                            // err
+                            if (err) return err;
+
+                            // no need to return locations
+                            next();
+
+                          });
                         });
+                      }, function (err) {
+                        if (err) return err;
+                        next();
                       });
-                    }, function ( err ) {
-                      if ( err ) return err;
-                      next();
+
                     });
 
                   });
 
-                });
-
+              });
             });
-          });
+          }
+
+          
 
         }, function ( err ) {
           if ( err ) return err;
