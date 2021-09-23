@@ -852,17 +852,25 @@ var ReportTasksController = {
             }
 
             // one report per month
-            if ( !nStore[ location.email ].projectsStore[ location.project_id ].reports[ location.report_id ] ) {
+            if (!nStore[location.email].projectsStore[location.project_id].reports[location.report_id]) {
+              var _periodExplanation = "Monthly"
+              if (location.report_type_id && location.report_type_id === 'bi-weekly') {
+                var number_date_of_reporting_period = moment.utc(location.reporting_period).format('D')
+                _periodExplanation = (number_date_of_reporting_period <= 14 ? 'First Period' : 'Second Period');
+              }
               // project reports
-              nStore[ location.email ].projectsStore[ location.project_id ].reports.push({
+              nStore[location.email].projectsStore[location.project_id].reports.push({
                 report_value: location.report_month,
-                report_month: moment( location.reporting_period ).format( 'MMMM' ),
+                report_month: moment(location.reporting_period).format('MMMM'),
                 report_year: moment(location.reporting_period).format('YYYY'),
+                report_type_id: location.report_type_id === 'bi-weekly' ? location.report_type_id : 'monthly',
+                period_explaination: _periodExplanation,
                 report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
               });
               // avoids report row per location
-              nStore[ location.email ].projectsStore[ location.project_id ].reports[ location.report_id ] = [{ report: true }];
+              nStore[location.email].projectsStore[location.project_id].reports[location.report_id] = [{ report: true }];
             }
+           
 
           });
 
@@ -923,7 +931,7 @@ var ReportTasksController = {
                     sendername: 'ReportHub'
                   }, {
                     to: notifications[i].email,
-                    subject: 'ReportHub - Project Reports ' + notifications[i].reporting_due_message + '.'
+                    subject: 'DEV ReportHub - Project Reports ' + notifications[i].reporting_due_message + '.'
                   }, function(err) {
 
                     // return error
