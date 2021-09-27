@@ -108,6 +108,9 @@
 												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Country</th>
 												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Cluster</th>
 												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Project Title</th>
+												<% if( period_column ){ %>
+												<th style="border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Period</th>
+												<% } %>
 												<th style=" width: 140px;text-align: center;border: 1px solid #ddd;padding: 8px;font-weight: 600;padding-top: 12px;padding-bottom: 12px;text-align: center;background-color: #26a69a;color: white;font-size: 14px;">Link</th>
 											</tr>
 											<% for(var i=0; i < reports.length; i++) { %>
@@ -121,13 +124,30 @@
 													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
 														<%= reports[i].project_title %>
 													</td>
+													<% if( period_column  && ( !reports[i].report_type_id || (reports[i].report_type_id !== "bi-weekly") )){ %>
+													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
+														<%= report_month %>, Monthly Period
+													</td>
+													<% } %>
+													<% if( period_column && ( reports[i].report_type_id && (reports[i].report_type_id ==="bi-weekly" ) )){ %>
+														<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center">
+															<%= report_month %>, Biweekly <%= reports[i].period_explaination %>
+														</td>
+														<% } %>
 													<td tyle="text-align: center;border: 1px solid #ddd;">
 														<a title="<%= report_month %> <%= type %> Report" href="<%= reports[i].report_url %>"
 															style="background: #26a69a; text-decoration: none; padding: 5px 12px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884;font-size:12px;text-align: center;">
-															<span style="mso-text-raise:10pt;font-weight:bold;">
-																<%= report_month %>
-																	Monthly Activity Report
-															</span>
+															<% if( !reports[i].report_type_id || (reports[i].report_type_id !== "bi-weekly") ){ %>
+																<span style="mso-text-raise:10pt;font-weight:bold;">
+																	<%= report_month %>
+																		Monthly Activity Report
+																</span>
+															<% } %>
+															<% if(reports[i].report_type_id && (reports[i].report_type_id === "bi-weekly") ){ %>
+																<span style="mso-text-raise:10pt;font-weight:bold;">
+																	<%=reports[i].period_explaination%> Activity Report
+																</span>
+															<% } %>
 														</a>
 														</a>
 													</td>
