@@ -1008,7 +1008,12 @@ var ProjectController = {
         // async loop project_reports
         async.each( project_reports, function ( d, next ) {
           // Report.updateOrCreate( findProject, { project_id: project_update.id, report_month: d.report_month, report_year: d.report_year }, d ).exec(function( err, result ){
-          Report.findOne( { project_id: project_update.id, report_month: d.report_month, report_year: d.report_year } ).then( function ( report ){
+          var filterReport = { project_id: project_update.id, report_month: d.report_month, report_year: d.report_year }
+          if (project_update.report_type_id && project_update.report_type_id === 'bi-weekly') {
+            filterReport = _.extend({}, filterReport, { report_type_id: d.report_type_id, reporting_period: { $gte: moment(d.reporting_period).startOf('day').toDate(), $lte: moment(d.reporting_period).endOf('day').toDate() } })
+          }
+          // Report.findOne( { project_id: project_update.id, report_month: d.report_month, report_year: d.report_year } ).then( function ( report ){
+          Report.findOne( filterReport ).then( function ( report ){
             if( !report ) { report = { id: null } }
             if ( report ) { d.report_status = report.report_status; d.report_active = report.report_active, d.updatedAt = report.updatedAt }
             if ( d.project_status === 'complete' ) d.report_status = 'complete';
@@ -1079,7 +1084,12 @@ var ProjectController = {
           // ASYNC REQUEST 5
           // async loop project_update locations
           async.each( locations, function ( d, next ) {
-            Location.findOne( { project_id: project_update.id, target_location_reference_id: d.target_location_reference_id, report_month: d.report_month, report_year: d.report_year } ).then( function ( location ){
+            var filterLocation = { project_id: project_update.id, target_location_reference_id: d.target_location_reference_id, report_month: d.report_month, report_year: d.report_year };
+            if (project_update.report_type_id && project_update.report_type_id === 'bi-weekly'){
+              filterLocation = _.extend({}, filterLocation, { report_type_id: d.report_type_id, reporting_period: { $gte: moment(d.reporting_period).startOf('day').toDate(), $lte: moment(d.reporting_period).endOf('day').toDate() } })
+            }
+            // Location.findOne( { project_id: project_update.id, target_location_reference_id: d.target_location_reference_id, report_month: d.report_month, report_year: d.report_year } ).then( function ( location ){
+            Location.findOne(filterLocation).then(function (location) {
               if( !location ) { location = { id: null } }
               if ( d.project_status === 'complete' ) d.report_status = 'complete';
               // relations set in getProjectReportLocations
