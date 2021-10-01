@@ -74,7 +74,8 @@ var ClusterDashboardController = {
 			start_date: req.param('start_date'),
 			end_date: req.param('end_date'),
 			hrp: req.param('hrp') === 'true' ? true : false,
-			hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false
+			hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
+			report_type_id: req.param('report_type_id')
 		}
 
 	},
@@ -136,7 +137,8 @@ var ClusterDashboardController = {
 					filter = { delivery_type_id: 'service' }
 				}
 				return filter
-			}
+			},
+			report_type_Native: params.report_type_id === 'all' ? {} : (params.report_type_id === 'bi-weekly' ? { report_type_id: params.report_type_id } : { report_type_id: { $ne: 'bi-weekly' } })
 
 		}
 	},
@@ -160,7 +162,8 @@ var ClusterDashboardController = {
 										filters.organization_tag_Native,
 										filters.beneficiaries,
 										filters.date_Native,
-										filters.delivery_type_id() )
+										filters.delivery_type_id(),
+										filters.report_type_Native )
 
 		// switch on indicator
 		switch( params.indicator ) {
