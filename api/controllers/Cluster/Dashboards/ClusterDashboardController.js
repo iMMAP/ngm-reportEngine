@@ -77,6 +77,8 @@ var ClusterDashboardController = {
 			hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
 			response: req.param('response') ? req.param('response') : 'all',
 			project_detail: req.param('project_detail') ? req.param('project_detail') : 'all'
+			hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
+			report_type_id: req.param('report_type_id')
 		}
 
 	},
@@ -141,6 +143,9 @@ var ClusterDashboardController = {
 			},
 			response_Native: params.response === 'all' ? {} : { response: { $elemMatch: { response_id: params.response } } },
 			project_detailsNative: params.project_detail === 'all' ? {} : { project_details: { $elemMatch: { project_detail_id: params.project_detail } } }
+			},
+			report_type_Native: params.report_type_id === 'all' ? {} : (params.report_type_id === 'bi-weekly' ? { report_type_id: params.report_type_id } : { report_type_id: { $ne: 'bi-weekly' } })
+
 		}
 	},
 
@@ -166,6 +171,8 @@ var ClusterDashboardController = {
 										filters.delivery_type_id(),
 										filters.project_detailsNative,
 										filters.response_Native )
+										filters.delivery_type_id(),
+										filters.report_type_Native )
 
 		// switch on indicator
 		switch( params.indicator ) {
