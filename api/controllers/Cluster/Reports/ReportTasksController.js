@@ -472,7 +472,8 @@ var ReportTasksController = {
 
 
     // only run if date is above monthly reporting period
-    if ( moment().date() === 1 ) {
+    // if ( moment().date() === 1 )
+    if ( 1 === 1 ) {
 
     Report
       .find()
