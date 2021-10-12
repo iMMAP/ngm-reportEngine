@@ -1081,6 +1081,7 @@ var ReportTasksController = {
       .where( { report_month: moment().subtract( 1, 'M' ).month() } )
       .where( { report_active: true } )
       .where( { report_status: 'todo' } )
+      .where({ report_type_id: { '!': "bi-weekly" } })
       .where( { project_status : "active" } )
       .sort( 'report_month DESC' )
       .exec( function( err, reports ){
@@ -1209,7 +1210,7 @@ var ReportTasksController = {
                     sendername: 'ReportHub'
                   }, {
                     to: notifications[i].email,
-                    subject: 'ReportHub - Project Reporting Period for ' + moment().subtract( 1, 'M' ).format( 'MMMM' ).toUpperCase() + ' is ' + notifications[i].reporting_due_message + '.'
+                    subject: 'DEV ReportHub - Project Reporting Period for ' + moment().subtract( 1, 'M' ).format( 'MMMM' ).toUpperCase() + ' is ' + notifications[i].reporting_due_message + '.'
                   }, function(err) {
 
                     // return error
@@ -1373,6 +1374,7 @@ var ReportTasksController = {
 
         // for each
         var biweekly_period_text = (biweekly_period === 'first')? 'Biweekly First Period': 'Biweekly Second Period';
+        if (!notifications.length) { return res.json(200, { msg: 'There is no report that needs to be sent email reminder for ' + biweekly_period_text + ', ' + moment().format('MMMM, YYYY') + '!' })}
         notifications.forEach(function (notification, i) {
 
           User
