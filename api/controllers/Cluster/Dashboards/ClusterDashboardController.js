@@ -196,6 +196,7 @@ var ClusterDashboardController = {
 					.where( filters.date )
 					.where( filters.project_detailsNative )
 					.where( filters.response_Native )
+					.where( filters.report_type_Native )
 					.sort( 'updatedAt DESC' )
 					.limit(1)
 					.exec( function( err, results ){
@@ -381,6 +382,7 @@ var ClusterDashboardController = {
 					.where( filters.date )
 					.where( filters.project_detailsNative )
 					.where( filters.response_Native )
+					.where( filters.report_type_Native )
 					.exec( function( err, beneficiaries ){
 
 						// return error
@@ -499,6 +501,7 @@ var ClusterDashboardController = {
 					.where( filters.date )
 					.where( filters.project_detailsNative )
 					.where( filters.response_Native )
+					.where( filters.report_type_Native )
 					.exec( function( err, beneficiaries ){
 
 						// return error
@@ -795,6 +798,7 @@ var ClusterDashboardController = {
 					.where( filters.acbar_partners )
 					.where( filters.organization_tag )
 					.where( { project_budget_date_recieved: { '>=': new Date( params.start_date ), '<=': new Date( params.end_date ) } } )
+					.where( filters.report_type_Native )
 					.exec( function( err, budget ){
 
 						// return error
@@ -1444,6 +1448,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.report_type_Native )
 					.populate( params.indicator )
 					.exec( function( err, result ){
 
@@ -1512,6 +1517,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.report_type_Native )
 					.populate( params.indicator )
 					.exec( function( err, result ){
 
@@ -1579,6 +1585,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.report_type_Native )
 					.populate( params.indicator )
 					.exec( function( err, result ){
 
@@ -1647,6 +1654,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.report_type_Native )
 					.populate( params.indicator )
 					.exec( function( err, result ){
 
@@ -1715,6 +1723,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.report_type_Native )
 					.populate( params.indicator )
 					.exec( function( err, result ){
 
@@ -1783,6 +1792,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.report_type_Native )
 					.populate( params.indicator )
 					.exec( function( err, result ){
 
