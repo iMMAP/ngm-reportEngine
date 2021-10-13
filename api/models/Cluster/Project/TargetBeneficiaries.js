@@ -495,7 +495,11 @@ module.exports = {
 
     response: {
       type: 'array'
-    }
+    },
+	report_type_id: {
+			type: 'string',
+			defaultsTo: 'monthly'
+		}
 	},
 
   // updateOrCreate
