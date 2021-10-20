@@ -1250,7 +1250,7 @@ var ReportTasksController = {
     var notifications = [];
 
     var number_date_of_reporting_period = moment.utc().format('D')
-    var biweekly_period = (number_date_of_reporting_period < 20  ? 'first' : 'second');
+    var biweekly_period = (number_date_of_reporting_period > 15  ? 'first' : 'second');
 
     
     // request input
