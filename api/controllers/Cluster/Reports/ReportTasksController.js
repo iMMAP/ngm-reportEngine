@@ -135,11 +135,17 @@ var ReportTasksController = {
           // for now make report twice a month, can be applied for 1 week 1 report
           var bi_weekly_reporting = [
             {
+              // reporting_period: 1,
+              // reporting_due_date: 10
               reporting_period: 1,
-              reporting_due_date: 10
+              reporting_due_date: 18,
+              period_biweekly :1
             }, {
+              // reporting_period: 15,
+              // reporting_due_date: 27
               reporting_period: 15,
-              reporting_due_date: 27
+              reporting_due_date: 3,
+              period_biweekly: 2
             }
           ];
           var bi_weekly_newreports =[]
@@ -155,6 +161,9 @@ var ReportTasksController = {
                 reporting_period: moment().set('date', w.reporting_period).format(),
                 reporting_due_date: moment().set('date', w.reporting_due_date).format()
               };
+              if(w.period_biweekly>1){
+                r.reporting_due_date = moment().add(1, 'M').set('date', w.reporting_due_date).format()
+              }
               // clone project
               var p = JSON.parse(JSON.stringify(project));
               delete p.id;
@@ -1241,7 +1250,7 @@ var ReportTasksController = {
     var notifications = [];
 
     var number_date_of_reporting_period = moment.utc().format('D')
-    var biweekly_period = (number_date_of_reporting_period < 20  ? 'first' : 'second');
+    var biweekly_period = (number_date_of_reporting_period > 15  ? 'first' : 'second');
 
     
     // request input

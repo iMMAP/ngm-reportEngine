@@ -96,11 +96,17 @@ var ProjectController = {
     if (project.report_type_id && project.report_type_id === 'bi-weekly') {
       var bi_weekly_reporting = [
         {
+          // reporting_period: 1,
+          // reporting_due_date: 10
           reporting_period: 1,
-          reporting_due_date: 10
+          reporting_due_date: 18,
+          period_biweekly: 1
         }, {
+          // reporting_period: 15,
+          // reporting_due_date: 27
           reporting_period: 15,
-          reporting_due_date: 27
+          reporting_due_date: 3,
+          period_biweekly: 2
         }
       ];
       
@@ -118,6 +124,9 @@ var ProjectController = {
             reporting_period: moment(s_date).add(m, 'M').set('date', w.reporting_period).format(),
             reporting_due_date: moment(s_date).add(m, 'M').set('date', w.reporting_due_date).format()
           };
+          if (w.period_biweekly > 1) {
+            report.reporting_due_date = moment(s_date).add(m + 1, 'M').set('date', w.reporting_due_date).format()
+          }
 
           // add report with p to reports
           reports.push(_under.extend({}, report, p));
@@ -263,7 +272,7 @@ var ProjectController = {
       }
 
     var allowedParams =
-        ['project_id','organization_id','cluster_id','organization_tag','implementer_id','project_type_component','activity_type_id','hrpplan','adminRpcode', 'admin0pcode','admin1pcode','admin2pcode', 'project_start_date', 'project_end_date', 'donor_id'];
+      ['project_id', 'organization_id', 'cluster_id', 'organization_tag', 'implementer_id', 'project_type_component', 'activity_type_id', 'hrpplan', 'adminRpcode', 'admin0pcode', 'admin1pcode', 'admin2pcode', 'project_start_date', 'project_end_date', 'donor_id','report_type_id'];
 
 
       // if dissallowed parameters sent
@@ -353,6 +362,10 @@ var ProjectController = {
           // include multicluster projects
           query.$or = [{ cluster_id: reqQuery.cluster_id }, { "activity_type.cluster_id": reqQuery.cluster_id }]
           delete query.cluster_id
+        }
+
+        if (reqQuery.report_type_id !== 'all'){
+          query.report_type_id = reqQuery.report_type_id === 'bi-weekly' ?  reqQuery.report_type_id  : { '!': 'bi-weekly' };
         }
 
         // pick props for locations

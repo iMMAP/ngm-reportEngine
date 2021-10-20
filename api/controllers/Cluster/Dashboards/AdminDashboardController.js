@@ -1379,7 +1379,7 @@ var AdminDashboardController = {
 					}
 					return num;
 				}
-				function filter(){
+				function filterProgressBeneficiaries(){
 					return{
 						adminRpcode_Native: req.param('adminRpcode') === 'hq' ? {} : { adminRpcode: req.param('adminRpcode').toUpperCase() },
 						admin0pcode_Native: req.param('admin0pcode') === 'all' ? {} : { admin0pcode: req.param('admin0pcode').toUpperCase() },
@@ -1400,7 +1400,7 @@ var AdminDashboardController = {
 						// organization_default_Native: { organization_tag: { $nin: $nin_organizations } }
 					}
 				}
-				var filters = filter(params);
+				var filters = filterProgressBeneficiaries(params);
 				var filterObject = _.extend({},
 					filters.default_native,
 					filters.adminRpcode_Native,
