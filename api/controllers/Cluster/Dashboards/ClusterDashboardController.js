@@ -74,7 +74,8 @@ var ClusterDashboardController = {
 			start_date: req.param('start_date'),
 			end_date: req.param('end_date'),
 			hrp: req.param('hrp') === 'true' ? true : false,
-			hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false
+			hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
+			response: req.param('response')
 		}
 
 	},
@@ -136,7 +137,8 @@ var ClusterDashboardController = {
 					filter = { delivery_type_id: 'service' }
 				}
 				return filter
-			}
+			},
+			response_Native: params.response === 'all' ? {} : { $or: [{ project_details: { $elemMatch: { response_id: params.response }}},{response: { $elemMatch: { response_id: params.response } }}] }
 
 		}
 	},
@@ -160,7 +162,8 @@ var ClusterDashboardController = {
 										filters.organization_tag_Native,
 										filters.beneficiaries,
 										filters.date_Native,
-										filters.delivery_type_id() )
+										filters.delivery_type_id(),
+										filters.response_Native )
 
 		// switch on indicator
 		switch( params.indicator ) {
@@ -182,6 +185,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.response_Native )
 					.sort( 'updatedAt DESC' )
 					.limit(1)
 					.exec( function( err, results ){
@@ -365,6 +369,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.response_Native )
 					.exec( function( err, beneficiaries ){
 
 						// return error
@@ -481,6 +486,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.response_Native )
 					.exec( function( err, beneficiaries ){
 
 						// return error
