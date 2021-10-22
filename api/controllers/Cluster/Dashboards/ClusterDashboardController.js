@@ -75,7 +75,8 @@ var ClusterDashboardController = {
 			end_date: req.param('end_date'),
 			hrp: req.param('hrp') === 'true' ? true : false,
 			hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
-			response: req.param('response')
+			response: req.param('response'),
+			project_detail: req.param('project_detail')
 		}
 
 	},
@@ -138,8 +139,8 @@ var ClusterDashboardController = {
 				}
 				return filter
 			},
-			response_Native: params.response === 'all' ? {} : { $or: [{ project_details: { $elemMatch: { project_detail_id: params.response }}},{response: { $elemMatch: { response_id: params.response } }}] }
-
+			response_Native: params.response === 'all' ? {} : { response: { $elemMatch: { response_id: params.response } } },
+			project_detailsNative: params.project_detail === 'all' ? {} : { project_details: { $elemMatch: { project_detail_id: params.project_detail } } }
 		}
 	},
 
@@ -163,6 +164,7 @@ var ClusterDashboardController = {
 										filters.beneficiaries,
 										filters.date_Native,
 										filters.delivery_type_id(),
+										filters.project_detailsNative,
 										filters.response_Native )
 
 		// switch on indicator
@@ -185,6 +187,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.project_detailsNative )
 					.where( filters.response_Native )
 					.sort( 'updatedAt DESC' )
 					.limit(1)
@@ -369,6 +372,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.project_detailsNative )
 					.where( filters.response_Native )
 					.exec( function( err, beneficiaries ){
 
@@ -486,6 +490,7 @@ var ClusterDashboardController = {
 					.where( filters.organization_tag )
 					.where( filters.beneficiaries )
 					.where( filters.date )
+					.where( filters.project_detailsNative )
 					.where( filters.response_Native )
 					.exec( function( err, beneficiaries ){
 
