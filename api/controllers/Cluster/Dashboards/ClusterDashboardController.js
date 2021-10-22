@@ -138,7 +138,7 @@ var ClusterDashboardController = {
 				}
 				return filter
 			},
-			response_Native: params.response === 'all' ? {} : { $or: [{ project_details: { $elemMatch: { response_id: params.response }}},{response: { $elemMatch: { response_id: params.response } }}] }
+			response_Native: params.response === 'all' ? {} : { $or: [{ project_details: { $elemMatch: { project_detail_id: params.response }}},{response: { $elemMatch: { response_id: params.response } }}] }
 
 		}
 	},
