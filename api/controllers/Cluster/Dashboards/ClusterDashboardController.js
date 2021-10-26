@@ -75,8 +75,8 @@ var ClusterDashboardController = {
 			end_date: req.param('end_date'),
 			hrp: req.param('hrp') === 'true' ? true : false,
 			hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
-			response: req.param('response'),
-			project_detail: req.param('project_detail')
+			response: req.param('response') ? req.param('response') : 'all',
+			project_detail: req.param('project_detail') ? req.param('project_detail') : 'all'
 		}
 
 	},
