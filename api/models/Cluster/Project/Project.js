@@ -271,6 +271,10 @@ module.exports = {
 		},
 		activity_description_other: {
 			type: 'string'
+		},
+		report_type_id:{
+			type: 'string',
+			defaultsTo: 'monthly'
 		}
 
 	},

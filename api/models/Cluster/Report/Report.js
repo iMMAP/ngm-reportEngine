@@ -216,6 +216,10 @@ module.exports = {
 	project_details: {
 		type: 'array'
 	},
+		report_type_id:{
+			type: 'string',
+			defaultsTo: 'monthly'
+		},
 
 
 		/*********** 2016 *************/

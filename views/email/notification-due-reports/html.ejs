@@ -138,7 +138,9 @@
 														<%= projects[i].project_title %>
 													</td>
 													<td style="font-size: 14px;border: 1px solid #ddd;padding: 8px;font-weight: 600;text-align: center;">
-														<%= projects[i].reports[j].report_month %> <%= projects[i].reports[j].report_year %>
+														<%= projects[i].reports[j].report_month %> <%= projects[i].reports[j].report_year %> <% if(projects[i].reports[j].report_type_id==='bi-weekly' ){ %>
+																Biweekly (<%= projects[i].reports[j].period_explaination %>)
+															<% } %>
 													</td>
 													
 														<td style="text-align: center;border: 1px solid #ddd;"><a title="<%= projects[i].reports[j].report_month %> <%= type %> Report"

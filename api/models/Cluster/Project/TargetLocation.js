@@ -377,6 +377,10 @@ module.exports = {
 		site_name_checked:{
 			type: 'boolean'
 		},
+		report_type_id: {
+			type: 'string',
+			defaultsTo: 'monthly'
+		},
 
 		// flag to manage location updates
 		// update_location: {

@@ -63,30 +63,84 @@ var ProjectController = {
     delete p.createdAt;
     delete p.updatedAt;
 
-    async.each( reports_array, function ( m, next ) {
+    
+    
+    if (!project.report_type_id || project.report_type_id !== 'bi-weekly') {
+      
+      async.each(reports_array, function (m, next) {
 
-      // create report
-      var report = {
-        project_id: project.id,
-        report_status: 'todo',
-        report_active: true,
-        report_month: moment( s_date ).add( m, 'M' ).month(),
-        report_year: moment( s_date ).add( m, 'M' ).year(),
-        reporting_period: moment( s_date ).add( m, 'M' ).set( 'date', 1 ).format(),
-        reporting_due_date: moment( s_date ).add( m+1, 'M' ).set( 'date', REPORTING_DUE_DATE ).format()
-      };
+        // create report
+        var report = {
+          project_id: project.id,
+          report_status: 'todo',
+          report_active: true,
+          report_month: moment(s_date).add(m, 'M').month(),
+          report_year: moment(s_date).add(m, 'M').year(),
+          reporting_period: moment(s_date).add(m, 'M').set('date', 1).format(),
+          reporting_due_date: moment(s_date).add(m + 1, 'M').set('date', REPORTING_DUE_DATE).format()
+        };
 
-      // add report with p to reports
-      reports.push( _under.extend( {}, report, p ) );
+        // add report with p to reports
+        reports.push(_under.extend({}, report, p));
 
-      // next
-      next();
+        // next
+        next();
 
-    }, function ( err ) {
-      if ( err ) return cb( err, false );
-      // return the reports for the project period
-      return cb( false, reports );
-    });
+      }, function (err) {
+        if (err) return cb(err, false);
+        // return the reports for the project period
+        return cb(false, reports);
+      });
+    }
+
+    if (project.report_type_id && project.report_type_id === 'bi-weekly') {
+      var bi_weekly_reporting = [
+        {
+          // reporting_period: 1,
+          // reporting_due_date: 10
+          reporting_period: 1,
+          reporting_due_date: 18,
+          period_biweekly: 1
+        }, {
+          // reporting_period: 15,
+          // reporting_due_date: 27
+          reporting_period: 15,
+          reporting_due_date: 3,
+          period_biweekly: 2
+        }
+      ];
+      
+      async.each(reports_array, function (m, next) {
+
+        bi_weekly_reporting.forEach(function(w){
+
+          // create report
+          var report = {
+            project_id: project.id,
+            report_status: 'todo',
+            report_active: true,
+            report_month: moment(s_date).add(m, 'M').month(),
+            report_year: moment(s_date).add(m, 'M').year(),
+            reporting_period: moment(s_date).add(m, 'M').set('date', w.reporting_period).format(),
+            reporting_due_date: moment(s_date).add(m, 'M').set('date', w.reporting_due_date).format()
+          };
+          if (w.period_biweekly > 1) {
+            report.reporting_due_date = moment(s_date).add(m + 1, 'M').set('date', w.reporting_due_date).format()
+          }
+
+          // add report with p to reports
+          reports.push(_under.extend({}, report, p));
+        });
+        // next
+        next();
+
+      }, function (err) {
+        if (err) return cb(err, false);
+        // return the reports for the project period
+        return cb(false, reports);
+      });
+    }
+    
 
   },
 
@@ -218,7 +272,7 @@ var ProjectController = {
       }
 
     var allowedParams =
-        ['project_id','organization_id','cluster_id','organization_tag','implementer_id','project_type_component','activity_type_id','hrpplan','adminRpcode', 'admin0pcode','admin1pcode','admin2pcode', 'project_start_date', 'project_end_date', 'donor_id'];
+      ['project_id', 'organization_id', 'cluster_id', 'organization_tag', 'implementer_id', 'project_type_component', 'activity_type_id', 'hrpplan', 'adminRpcode', 'admin0pcode', 'admin1pcode', 'admin2pcode', 'project_start_date', 'project_end_date', 'donor_id','report_type_id'];
 
 
       // if dissallowed parameters sent
@@ -308,6 +362,10 @@ var ProjectController = {
           // include multicluster projects
           query.$or = [{ cluster_id: reqQuery.cluster_id }, { "activity_type.cluster_id": reqQuery.cluster_id }]
           delete query.cluster_id
+        }
+
+        if (reqQuery.report_type_id !== 'all'){
+          query.report_type_id = reqQuery.report_type_id === 'bi-weekly' ?  reqQuery.report_type_id  : { '!': 'bi-weekly' };
         }
 
         // pick props for locations
@@ -958,11 +1016,17 @@ var ProjectController = {
       ProjectController.getProjectReports( project_update, function( err, project_reports ){
         // err
         if (err) return returnProject(err);
+        
         // ASYNC REQUEST 4
         // async loop project_reports
         async.each( project_reports, function ( d, next ) {
           // Report.updateOrCreate( findProject, { project_id: project_update.id, report_month: d.report_month, report_year: d.report_year }, d ).exec(function( err, result ){
-          Report.findOne( { project_id: project_update.id, report_month: d.report_month, report_year: d.report_year } ).then( function ( report ){
+          var filterReport = { project_id: project_update.id, report_month: d.report_month, report_year: d.report_year }
+          if (project_update.report_type_id && project_update.report_type_id === 'bi-weekly') {
+            filterReport = _.extend({}, filterReport, { report_type_id: d.report_type_id, reporting_period: { $gte: moment(d.reporting_period).startOf('day').toDate(), $lte: moment(d.reporting_period).endOf('day').toDate() } })
+          }
+          // Report.findOne( { project_id: project_update.id, report_month: d.report_month, report_year: d.report_year } ).then( function ( report ){
+          Report.findOne( filterReport ).then( function ( report ){
             if( !report ) { report = { id: null } }
             if ( report ) { d.report_status = report.report_status; d.report_active = report.report_active, d.updatedAt = report.updatedAt }
             if ( d.project_status === 'complete' ) d.report_status = 'complete';
@@ -1033,7 +1097,12 @@ var ProjectController = {
           // ASYNC REQUEST 5
           // async loop project_update locations
           async.each( locations, function ( d, next ) {
-            Location.findOne( { project_id: project_update.id, target_location_reference_id: d.target_location_reference_id, report_month: d.report_month, report_year: d.report_year } ).then( function ( location ){
+            var filterLocation = { project_id: project_update.id, target_location_reference_id: d.target_location_reference_id, report_month: d.report_month, report_year: d.report_year };
+            if (project_update.report_type_id && project_update.report_type_id === 'bi-weekly'){
+              filterLocation = _.extend({}, filterLocation, { report_type_id: d.report_type_id, reporting_period: { $gte: moment(d.reporting_period).startOf('day').toDate(), $lte: moment(d.reporting_period).endOf('day').toDate() } })
+            }
+            // Location.findOne( { project_id: project_update.id, target_location_reference_id: d.target_location_reference_id, report_month: d.report_month, report_year: d.report_year } ).then( function ( location ){
+            Location.findOne(filterLocation).then(function (location) {
               if( !location ) { location = { id: null } }
               if ( d.project_status === 'complete' ) d.report_status = 'complete';
               // relations set in getProjectReportLocations
