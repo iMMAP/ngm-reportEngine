@@ -364,7 +364,7 @@ var ProjectController = {
           delete query.cluster_id
         }
 
-        if (reqQuery.report_type_id !== 'all'){
+        if (reqQuery.report_type_id && reqQuery.report_type_id !== 'all'){
           query.report_type_id = reqQuery.report_type_id === 'bi-weekly' ?  reqQuery.report_type_id  : { '!': 'bi-weekly' };
         }
 
