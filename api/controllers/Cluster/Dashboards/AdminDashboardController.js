@@ -49,7 +49,8 @@ var AdminDashboardController = {
           adminRpcode_filter: req.param( 'adminRpcode' ) === 'all' ? {} : { adminRpcode: req.param( 'adminRpcode' ).toUpperCase() },
           admin0pcode_filter: req.param( 'admin0pcode' ) === 'all' ? {} : { admin0pcode: req.param( 'admin0pcode' ).toUpperCase() },
           start_date: req.param( 'start_date' ),
-          end_date: req.param( 'end_date' )
+          end_date: req.param( 'end_date' ),
+          report_period_type: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } })
       }
 
     params.organization_and_cluster_filter_Native = { $and: [params.cluster_filter, params.organization_filter_Native] };
@@ -644,6 +645,7 @@ var AdminDashboardController = {
           .where( params.activity_type_id )
           .where( { project_start_date: { '<=': new Date( params.end_date ) } } )
           .where( { project_end_date: { '>=': new Date( params.start_date ) } } )
+          .where( params.report_period_type )
           .sort( 'updatedAt DESC' )
           .limit(1)
           .exec( function( err, reports ){
@@ -673,6 +675,7 @@ var AdminDashboardController = {
             .where( params.activity_type_id )
             .where( { project_start_date: { '<=': new Date( params.end_date ) } } )
             .where( { project_end_date: { '>=': new Date( params.start_date ) } } )
+            .where(params.report_period_type)
             .exec( function( err, projects ){
 
               // return error
@@ -714,7 +717,9 @@ var AdminDashboardController = {
                   if (err) return res.negotiate( err );
 
                   if ( !projects.length ) {
-                    organizations[1] = organization[0];
+                    if(organization.length){
+                      organizations[1] = organization[0];
+                    }
                   }
 
                   // get a list of projects for side menu
@@ -743,6 +748,7 @@ var AdminDashboardController = {
           .where(params.activity_type_id)
           .where({ project_end_date: { '>=': new Date(params.start_date) } })
           .where({ project_start_date: { '<=': new Date(params.end_date) } })
+          .where(params.report_period_type)
           .sort('createdAt DESC')
           .exec(function (err, locations) {
 
@@ -795,6 +801,7 @@ var AdminDashboardController = {
           .where( params.activity_type_id )
           .where( { report_status: [ 'todo', 'complete' ] } )
           .where( { reporting_period: { '>=': params.moment( params.start_date ).format('YYYY-MM-DD'), '<=': params.moment( params.end_date ).format('YYYY-MM-DD') } } )
+          .where(params.report_period_type)
           .sort('updatedAt DESC')
           .exec( function( err, reports ){
 
@@ -826,6 +833,7 @@ var AdminDashboardController = {
                                           '$lte': new Date(params.moment( params.end_date   ).format('YYYY-MM-DD'))
                                         }
                                       },
+                                      params.report_period_type
                                   );
         // reports due
         Report.native(function(err, collection) {
@@ -918,6 +926,7 @@ var AdminDashboardController = {
                                             '$lte': new Date(params.moment( params.end_date   ).format('YYYY-MM-DD'))
                                           }
                                         },
+                                        params.report_period_type
                                       );
 
         Report.native(function(err, collection) {
@@ -1069,6 +1078,7 @@ var AdminDashboardController = {
                                           '$lte': new Date(params.moment( params.end_date   ).format('YYYY-MM-DD'))
                                         }
                                       },
+                                      params.report_period_type
                                   );
 
         // reports due
@@ -1208,6 +1218,7 @@ var AdminDashboardController = {
           .where( params.acbar_partners_filter )
           .where( { report_status: [ 'todo', 'complete' ] } )
           .where( { reporting_period: { '>=': params.moment( params.start_date ).format('YYYY-MM-DD'), '<=': params.moment( params.end_date ).format('YYYY-MM-DD') } } )
+          .where(params.report_period_type)
           .sort('updatedAt DESC')
           .exec( function( err, reports ){
 
@@ -1277,6 +1288,7 @@ var AdminDashboardController = {
           .where( params.activity_type_id )
           .where( { reporting_period: { '>=': params.moment( params.start_date ).format('YYYY-MM-DD'), '<=': params.moment( params.end_date ).format('YYYY-MM-DD') } } )
           .where( params.organization_filter )
+          .where( params.report_period_type )
           .sort('updatedAt DESC')
           .exec( function( err, total_reports ){
 
@@ -1294,6 +1306,7 @@ var AdminDashboardController = {
               .where( params.activity_type_id )
               .where( { report_status: 'complete' } )
               .where( { reporting_period: { '>=': params.moment( params.start_date ).format('YYYY-MM-DD'), '<=': params.moment( params.end_date ).format('YYYY-MM-DD') } } )
+              .where(params.report_period_type)
               .sort('updatedAt DESC')
               .exec( function( err, reports ){
 
@@ -1326,6 +1339,7 @@ var AdminDashboardController = {
           .where( params.activity_type_id )
           .where( params.acbar_partners_filter )
           .where( { project_budget_date_recieved: { '>=': new Date( params.start_date ), '<=': new Date( params.end_date ) } } )
+          .where(params.report_period_type)
           .exec( function( err, budget ){
 
             // return error
@@ -1365,7 +1379,7 @@ var AdminDashboardController = {
 					}
 					return num;
 				}
-				function filter(){
+				function filterProgressBeneficiaries(){
 					return{
 						adminRpcode_Native: req.param('adminRpcode') === 'hq' ? {} : { adminRpcode: req.param('adminRpcode').toUpperCase() },
 						admin0pcode_Native: req.param('admin0pcode') === 'all' ? {} : { admin0pcode: req.param('admin0pcode').toUpperCase() },
@@ -1381,11 +1395,12 @@ var AdminDashboardController = {
 						project_startDateNative: { project_start_date: { $lte: new Date(req.param('end_date')) }},
 						project_endDateNative: { project_end_date: { $gte: new Date(req.param('start_date')) }},
 						default_native: { project_id: { $ne: null }},
-						activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') }
+						activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
+            report_period_typeNative: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } })
 						// organization_default_Native: { organization_tag: { $nin: $nin_organizations } }
 					}
 				}
-				var filters = filter(params);
+				var filters = filterProgressBeneficiaries(params);
 				var filterObject = _.extend({},
 					filters.default_native,
 					filters.adminRpcode_Native,
@@ -1393,7 +1408,7 @@ var AdminDashboardController = {
           { $and: [filters.cluster_id_Native, filters.organization_tag_Native] },
 					filters.activity_typeNative,
 					filters.project_startDateNative,
-					filters.project_endDateNative)
+          filters.project_endDateNative, filters.report_period_typeNative)
 
 				TargetBeneficiaries.native(function (err, results_target_beneficiaries) {
 					if (err) return res.serverError(err);
@@ -1509,7 +1524,8 @@ var AdminDashboardController = {
             // project_endDateNative: { project_end_date: { $gte: new Date(req.param('start_date')) } },
             reporting_periodDateNative: { reporting_period: { $gte: new Date(req.param('start_date')), $lte: new Date(req.param('end_date'))}},
             default_native: { project_id: { $ne: null } },
-            activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') }
+            activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
+            report_period_typeNative: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } })
           }
         }
 
@@ -1522,7 +1538,8 @@ var AdminDashboardController = {
           filters.activity_typeNative,
           // filters.project_startDateNative,
           // filters.project_endDateNative,
-          filters.reporting_periodDateNative)
+          filters.reporting_periodDateNative,
+          filters.report_period_typeNative)
 
         Beneficiaries.native(function (err, results_report_benefciaries) {
           if (err) return res.serverError(err);
