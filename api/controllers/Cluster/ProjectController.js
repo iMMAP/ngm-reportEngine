@@ -99,13 +99,13 @@ var ProjectController = {
           // reporting_period: 1,
           // reporting_due_date: 10
           reporting_period: 1,
-          reporting_due_date: 18,
+          reporting_due_date: 19,
           period_biweekly: 1
         }, {
           // reporting_period: 15,
           // reporting_due_date: 27
-          reporting_period: 15,
-          reporting_due_date: 3,
+          reporting_period: 16,
+          reporting_due_date: 4,
           period_biweekly: 2
         }
       ];

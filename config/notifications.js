@@ -46,16 +46,16 @@ const BIWEEKLY_REPORTING_DUE_DATE_NOTIFICATIONS_CONFIG = [
     //   reporting_due_date: 27
     // }
     first: {
-      soon: [15],
+      soon: [16],
       pending: [20],
-      today: [18],
-      reporting_due_date: 18
+      today: [19],
+      reporting_due_date: 19
     },
     second: {
       soon: [1],
       pending: [5],
-      today: [3],
-      reporting_due_date: 3
+      today: [4],
+      reporting_due_date: 4
     }
   },{
     admin0pcode: "ALL",
@@ -72,16 +72,16 @@ const BIWEEKLY_REPORTING_DUE_DATE_NOTIFICATIONS_CONFIG = [
     //   reporting_due_date: 27
     // }
     first: {
-      soon: [15],
+      soon: [16],
       pending: [20],
-      today: [18],
-      reporting_due_date: 18
+      today: [19],
+      reporting_due_date: 19
     },
     second: {
       soon: [1],
       pending: [5],
-      today: [3],
-      reporting_due_date: 3
+      today: [4],
+      reporting_due_date: 4
     }
   }
 ]
