@@ -138,13 +138,13 @@ var ReportTasksController = {
               // reporting_period: 1,
               // reporting_due_date: 10
               reporting_period: 1,
-              reporting_due_date: 18,
+              reporting_due_date: 19,
               period_biweekly :1
             }, {
               // reporting_period: 15,
               // reporting_due_date: 27
-              reporting_period: 15,
-              reporting_due_date: 3,
+              reporting_period: 16,
+              reporting_due_date: 4,
               period_biweekly: 2
             }
           ];
@@ -493,13 +493,13 @@ var ReportTasksController = {
               // reporting_period: 1,
               // reporting_due_date: 10
               reporting_period: 1,
-              reporting_due_date: 18,
+              reporting_due_date: 19,
               period_biweekly: 1
             }, {
               // reporting_period: 15,
               // reporting_due_date: 27
-              reporting_period: 15,
-              reporting_due_date: 3,
+              reporting_period: 16,
+              reporting_due_date: 4,
               period_biweekly: 2
             }
           ];
@@ -757,7 +757,7 @@ var ReportTasksController = {
                 var _periodExplanation = "Monthly";
                 if (location.report_type_id && location.report_type_id === 'bi-weekly') {
                   var number_date_of_reporting_period = moment.utc(location.reporting_period).format('D')
-                  _periodExplanation = (number_date_of_reporting_period <= 14 ? 'First Period' : 'Second Period');
+                  _periodExplanation = (number_date_of_reporting_period <= 15 ? 'First Period' : 'Second Period');
                 }
                 // add location urls
                 nStore[ location.email ].reportsStore[ location.report_id ] = {
@@ -799,7 +799,7 @@ var ReportTasksController = {
                 var _periodExplanation = "Monthly"
                 if (location.report_type_id && location.report_type_id === 'bi-weekly'){
                   var number_date_of_reporting_period = moment.utc(location.reporting_period ).format('D')
-                  _periodExplanation = (number_date_of_reporting_period <= 14 ? 'First Period' : 'Second Period');
+                  _periodExplanation = (number_date_of_reporting_period <= 15 ? 'First Period' : 'Second Period');
                 }
 
                 // add location urls
@@ -982,7 +982,7 @@ var ReportTasksController = {
               var _periodExplanation = "Monthly"
               if (location.report_type_id && location.report_type_id === 'bi-weekly') {
                 var number_date_of_reporting_period = moment.utc(location.reporting_period).format('D')
-                _periodExplanation = (number_date_of_reporting_period <= 14 ? 'First Period' : 'Second Period');
+                _periodExplanation = (number_date_of_reporting_period <= 15 ? 'First Period' : 'Second Period');
               }
               // project reports
               nStore[location.email].projectsStore[location.project_id].reports.push({
@@ -1258,8 +1258,10 @@ var ReportTasksController = {
     var nStore = {}
     var notifications = [];
 
-    var number_date_of_reporting_period = moment.utc().format('D')
-    var biweekly_period = (number_date_of_reporting_period > 15  ? 'first' : 'second');
+    var reminder_biweekly_period = moment.utc().format('D')
+    // if this function run before 15 then reminder for biweely first period viceversa
+    var biweekly_period = (reminder_biweekly_period > 15  ? 'first' : 'second');
+    biweekly_period = 'first';
 
     
     // request input
@@ -1274,14 +1276,18 @@ var ReportTasksController = {
                                     $gte: moment(date_period).startOf('day').toDate(), 
                                     $lte: moment(date_period).endOf('day').toDate()
                                   }};
+      var findReportMonth = moment().month();
+      var findReportYear = moment().year();
     }else{
-      var date_period = moment().set('date', 15).format()
+      var date_period = moment().subtract(1, 'M').set('date', 16).format()
       var findReportingPeriod = {
         reporting_period: {
           $gte: moment(date_period).startOf('day').toDate(),
           $lte: moment(date_period).endOf('day').toDate()
         }
       };
+      var findReportMonth = moment().subtract(1, 'M').month();
+      var findReportYear = moment().subtract(1, 'M').year();
     };
 
     // only run if date is 1 week before monthly reporting period required
@@ -1289,8 +1295,8 @@ var ReportTasksController = {
     Report
       .find()
       .where({ project_id: { '!': null } })
-      .where({ report_year: moment().year() })
-      .where({ report_month: moment().month() })
+      .where({ report_year: findReportYear })
+      .where({ report_month: findReportMonth })
       .where({ report_active: true })
       .where({ report_type_id:"bi-weekly"})
       .where({ report_status: 'todo' })
@@ -1301,7 +1307,7 @@ var ReportTasksController = {
 
         if (err) return res.negotiate(err);
         // no reports return
-        if (!reports.length) return res.json(200, { msg: 'No reports pending for ' + moment().format('MMMM, YYYY') + '!' });
+        if (!reports.length) return res.json(200, { msg: 'No reports pending for ' + moment().subtract(1, 'M').format('MMMM, YYYY') + '!' });
         // for each report, group by username
         reports.forEach(function (location, i) {
 
