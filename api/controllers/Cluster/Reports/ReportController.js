@@ -544,6 +544,12 @@ var ReportController = {
 			findLocation = _under.extend( {}, findLocation, { location_group_id: req.param( 'location_group_id') } );
 		}
 
+		if (req.param('report_type_id')){
+			var _reporting_period = { report_type_id: req.param('report_type_id'), reporting_period: { $gte: moment(req.param('reporting_period')).startOf('day').toDate(), $lte: moment(req.param('reporting_period')).endOf('day').toDate() }};
+			find = _under.extend({}, find, _reporting_period);
+			findLocation = _under.extend({}, findLocation, _reporting_period);
+		}
+
 		// promise
 		Promise.all([
 			Report.findOne( find ),
