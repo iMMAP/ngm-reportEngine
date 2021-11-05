@@ -1261,7 +1261,6 @@ var ReportTasksController = {
     var reminder_biweekly_period = moment.utc().format('D')
     // if this function run before 15 then reminder for biweely first period viceversa
     var biweekly_period = (reminder_biweekly_period > 15  ? 'first' : 'second');
-    biweekly_period = 'first';
 
     
     // request input
