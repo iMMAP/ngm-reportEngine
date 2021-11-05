@@ -1277,6 +1277,7 @@ var ReportTasksController = {
                                   }};
       var findReportMonth = moment().month();
       var findReportYear = moment().year();
+      var no_report_pending = moment().format('MMMM, YYYY')
     }else{
       var date_period = moment().subtract(1, 'M').set('date', 16).format()
       var findReportingPeriod = {
@@ -1287,6 +1288,7 @@ var ReportTasksController = {
       };
       var findReportMonth = moment().subtract(1, 'M').month();
       var findReportYear = moment().subtract(1, 'M').year();
+      var no_report_pending = moment().subtract(1, 'M').format('MMMM, YYYY')
     };
 
     // only run if date is 1 week before monthly reporting period required
@@ -1306,7 +1308,7 @@ var ReportTasksController = {
 
         if (err) return res.negotiate(err);
         // no reports return
-        if (!reports.length) return res.json(200, { msg: 'No reports pending for ' + moment().subtract(1, 'M').format('MMMM, YYYY') + '!' });
+        if (!reports.length) return res.json(200, { msg: 'No reports pending for ' + no_report_pending + '!' });
         // for each report, group by username
         reports.forEach(function (location, i) {
 
@@ -1331,8 +1333,8 @@ var ReportTasksController = {
               nStore[location.email] = {
                 email: location.email,
                 username: location.username,
-                report_month: moment().format('MMMM'),
-                report_year: moment().format('YYYY'),
+                report_month: biweekly_period === 'first' ? moment().format('MMMM') : moment().subtract(1, 'M').format('MMMM'),
+                report_year: biweekly_period === 'first' ? moment().format('YYYY') : moment().subtract(1, 'M').format('YYYY'),
                 report_month_year: moment().format('MMMM, YYYY'),
                 reporting_due_date: moment(location.reporting_due_date).format('DD MMMM, YYYY'),
                 reporting_due_message: due_message,
@@ -1430,7 +1432,7 @@ var ReportTasksController = {
                 sendername: 'ReportHub'
               }, {
                 to: notifications[i].email,
-                subject: 'ReportHub - Project Reporting for ' + biweekly_period_text+', ' + moment().format('MMMM').toUpperCase()  + ' is ' + notifications[i].reporting_due_message + '.'
+                subject: 'ReportHub - Project Reporting for ' + biweekly_period_text + ', ' + (biweekly_period === 'first' ? moment().format('MMMM') : moment().subtract(1, 'M').format('MMMM')).toUpperCase()  + ' is ' + notifications[i].reporting_due_message + '.'
               }, function (err) {
 
                 // return error
