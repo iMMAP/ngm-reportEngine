@@ -51,6 +51,10 @@ var AdminDashboardController = {
           start_date: req.param( 'start_date' ),
           end_date: req.param( 'end_date' ),
           report_period_type: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } })
+          end_date: req.param( 'end_date' ),
+          project_detail: req.param('project_detail') === 'all' ? {} : { project_details: { $elemMatch: { project_detail_id: req.param('project_detail') } } },
+          response: req.param('response') === 'all' ? {} : { response: { $elemMatch: { response_id: req.param('response') } } }
+
       }
 
     params.organization_and_cluster_filter_Native = { $and: [params.cluster_filter, params.organization_filter_Native] };
@@ -646,6 +650,7 @@ var AdminDashboardController = {
           .where( { project_start_date: { '<=': new Date( params.end_date ) } } )
           .where( { project_end_date: { '>=': new Date( params.start_date ) } } )
           .where( params.report_period_type )
+          .where( params.project_detail )
           .sort( 'updatedAt DESC' )
           .limit(1)
           .exec( function( err, reports ){
@@ -676,6 +681,7 @@ var AdminDashboardController = {
             .where( { project_start_date: { '<=': new Date( params.end_date ) } } )
             .where( { project_end_date: { '>=': new Date( params.start_date ) } } )
             .where(params.report_period_type)
+            .where( params.project_detail )
             .exec( function( err, projects ){
 
               // return error
@@ -802,6 +808,7 @@ var AdminDashboardController = {
           .where( { report_status: [ 'todo', 'complete' ] } )
           .where( { reporting_period: { '>=': params.moment( params.start_date ).format('YYYY-MM-DD'), '<=': params.moment( params.end_date ).format('YYYY-MM-DD') } } )
           .where(params.report_period_type)
+          .where( params.project_detail )
           .sort('updatedAt DESC')
           .exec( function( err, reports ){
 
@@ -834,6 +841,7 @@ var AdminDashboardController = {
                                         }
                                       },
                                       params.report_period_type
+                                      params.project_detail
                                   );
         // reports due
         Report.native(function(err, collection) {
@@ -861,14 +869,14 @@ var AdminDashboardController = {
 
                   // reports ids
                   var reports_array = _.map(reports,function(report){return report._id.toString()});
-
+                  var _filterBenefSaved = _.extend({}, { report_id: { "$in": reports_array } }, params.project_detail, params.response)
                   // find saved
                   Beneficiaries.native(function(err, collection) {
                     if (err) return res.serverError(err);
 
                     collection.aggregate([
                         {
-                          $match : {report_id:{"$in":reports_array}}
+                        $match: _filterBenefSaved
                         },
                         {
                           $group: {
@@ -927,6 +935,7 @@ var AdminDashboardController = {
                                           }
                                         },
                                         params.report_period_type
+                                        params.project_detail
                                       );
 
         Report.native(function(err, collection) {
@@ -958,10 +967,11 @@ var AdminDashboardController = {
 
                   Beneficiaries.native(function(err, collection) {
                     if (err) return res.serverError(err);
-
+                    var _filterBenefSubmitted = _.extend({}, { report_id: { "$in": reports_array }}, params.project_detail,params.response)
+                    
                     collection.aggregate([
                         {
-                          $match : {report_id:{"$in":reports_array}}
+                        $match: _filterBenefSubmitted
                         },
                         {
                           $group: {
@@ -973,7 +983,7 @@ var AdminDashboardController = {
 
                         // for reports not submitted with entries
                         var non_empty_reports=_.map(results,'_id')
-
+                        
                         // reports
                         reports.forEach( function( d, i ){
 
@@ -1027,6 +1037,11 @@ var AdminDashboardController = {
                                       counter++;
                                       if ( counter === length ) {
 
+                                        if (req.param('response') !== 'all') {
+                                          var reports_with_response = reports.filter(r => non_empty_reports.indexOf(r._id.toString()) > -1)
+                                          reports = reports_with_response;
+                                        }
+
                                         // !csv
                                         if ( !params.csv ) {
                                           // table
@@ -1056,7 +1071,35 @@ var AdminDashboardController = {
 
               } else {
                   // return indicator
-                  return res.json( 200, { 'value': reports.length });
+                  // return res.json( 200, { 'value': reports.length });
+
+                var reports_array_value = _.map(reports, function (report) { return report._id.toString() });
+                Beneficiaries.native(function (err, collection) {
+                  if (err) return res.serverError(err);
+                  var _filterBenefSubmitted = _.extend({}, { report_id: { "$in": reports_array_value } }, params.project_detail, params.response)
+
+                  collection.aggregate([
+                    {
+                      $match: _filterBenefSubmitted
+                    },
+                    {
+                      $group: {
+                        _id: '$report_id'
+                      }
+                    }
+                  ]).toArray(function (err, results) {
+                    if (err) return res.serverError(err);
+
+                    // for reports not submitted with entries
+                    var non_empty_reports = _.map(results, '_id')
+                    if (req.param('response') !== 'all') {
+                      var reports_dup_value = reports.filter(r => non_empty_reports.indexOf(r._id.toString()) > -1)
+                      reports = reports_dup_value;
+                    }
+                    return res.json(200, { 'value': reports.length })
+                  })
+                })
+              
               }
             });
           });
@@ -1079,6 +1122,7 @@ var AdminDashboardController = {
                                         }
                                       },
                                       params.report_period_type
+                                      params.project_detail
                                   );
 
         // reports due
@@ -1109,21 +1153,35 @@ var AdminDashboardController = {
 
                 Beneficiaries.native(function(err, collection) {
                   if (err) return res.serverError(err);
-
+                  var _filterBenefDue = _.extend({}, { report_id: { "$in": reports_array } })
                   collection.aggregate([
                       {
-                        $match : {report_id:{"$in":reports_array}}
+                      $match: _filterBenefDue
                       },
                       {
                         $group: {
-                          _id: '$report_id'
+                          _id: '$report_id',
+                          response: { $addToSet: '$response' },
                         }
                       }
                     ]).toArray(function (err, results) {
+                      
                         if (err) return res.negotiate(err);
+
+                      results.forEach(function (x) {
+                        var _temp = [];
+                        if (x.response && (x.response.length)) {
+                          x.response.forEach(function (y) {
+                            _temp.push(...y)
+                          })
+                        }
+                        x.response = _temp
+                      })
 
                         // for reports not submitted with entries
                         var non_empty_reports=_.map(results,'_id')
+                        var results_with_response = results.filter(x => x.response && x.response.findIndex(r => r.response_id === 'winterization') > -1);
+                        var non_empty_reports_with_response = _.map(results_with_response, '_id')
 
                         // status
                         reports.forEach( function( d, i ){
@@ -1169,6 +1227,12 @@ var AdminDashboardController = {
                                 if ( !params.list ) {
                                   // return indicator
                                   return res.json( 200, { 'value': reports.length - non_empty_reports.length });
+                                }
+
+                                if (req.param('response') !== 'all'){
+                                  non_empty_reports_without_response = non_empty_reports.filter(r => non_empty_reports_with_response.indexOf(r)<0);
+                                  _temp_reports = reports.filter(r => non_empty_reports_without_response.indexOf(r.id) <0);
+                                  reports = _temp_reports;
                                 }
 
                                 // !csv
@@ -1219,12 +1283,101 @@ var AdminDashboardController = {
           .where( { report_status: [ 'todo', 'complete' ] } )
           .where( { reporting_period: { '>=': params.moment( params.start_date ).format('YYYY-MM-DD'), '<=': params.moment( params.end_date ).format('YYYY-MM-DD') } } )
           .where(params.report_period_type)
+          .where( params.project_detail )
           .sort('updatedAt DESC')
           .exec( function( err, reports ){
 
             // return error
             if (err) return res.negotiate( err );
 
+            if (req.param('response') !== 'all') {
+              var reports_array_value = _.map(reports, function (report) { return report.id });
+              Beneficiaries.native(function (err, collection) {
+                if (err) return res.serverError(err);
+                var _filterBeneftotal = _.extend({}, { report_id: { "$in": reports_array_value } })
+
+                collection.aggregate([
+                  {
+                    $match: _filterBeneftotal
+                  },
+                  {
+                    $group: {
+                      _id: '$report_id',
+                      response: { $addToSet: '$response'  },
+                    }
+                  }
+                ]).toArray(function (err, results) {
+                  if (err) return res.serverError(err);
+
+                  results.forEach(function(x){
+                    var _temp=[];
+                    if (x.response && (x.response.length)){
+                        x.response.forEach(function(y){
+                          _temp.push(...y)
+                        })
+                    }
+                    x.response = _temp
+                  })
+
+                  // for reports not submitted with entries
+                  var non_empty_reports = _.map(results, '_id')
+                  var results_with_response = results.filter(x => x.response && x.response.findIndex(r => r.response_id === 'winterization') > -1);
+                  var non_empty_reports_with_response = _.map(results_with_response, '_id')
+
+
+                  var report_pending = reports.filter(r => non_empty_reports.indexOf(r.id) < 0 && r.report_status === 'todo');
+                  var report_submitted_empty = reports.filter(r => non_empty_reports.indexOf(r.id) < 0 && r.report_status === 'complete');
+                  var report_saved = reports.filter(r => non_empty_reports_with_response.indexOf(r.id) > -1 && r.report_status === 'todo');
+                  var report_submitted = reports.filter(r => non_empty_reports_with_response.indexOf(r.id) > -1 && r.report_status === 'complete');
+                  
+                  var final = [...report_pending, ...report_saved, ...report_submitted]
+                  
+
+                  if(params.list){
+                    // counter
+                    var counter = 0,
+                      length = reports.length;
+
+                    // reports
+                    final.forEach(function (d, i) {
+
+                      // check if form has been edited
+                      Beneficiaries
+                        .where(params.project_detail)
+                        .where(params.response)
+                        .count({ report_id: d.id })
+                        .exec(function (err, b) {
+
+                          // return error
+                          if (err) return res.negotiate(err);
+
+                          // add status / icon
+                          final[i].status = '#e57373';
+                          final[i].icon = 'fiber_manual_record';
+
+                          // if benficiaries
+                          if (b) {
+                            // add status
+                            final[i].status = final[i].report_status === 'complete' ? '#4db6ac' : '#fff176'
+                          }
+
+                          // reutrn
+                          counter++;
+                          if (counter === length) {
+                            // table
+                            return res.json(200, final);
+                          }
+
+                        });
+
+                    });
+                  }else{
+                    return res.json(200, { 'value': final.length })
+                  }
+
+                })
+              })
+            } else{
             // return
             if ( params.list ) {
 
@@ -1237,6 +1390,8 @@ var AdminDashboardController = {
 
                 // check if form has been edited
                 Beneficiaries
+                  .where(params.project_detail)
+                  .where(params.response)
                   .count( { report_id: d.id } )
                   .exec(function( err, b ){
 
@@ -1269,6 +1424,7 @@ var AdminDashboardController = {
               // return indicator
               return res.json( 200, { 'value': reports.length });
             }
+          }
 
           });
 
@@ -1289,6 +1445,7 @@ var AdminDashboardController = {
           .where( { reporting_period: { '>=': params.moment( params.start_date ).format('YYYY-MM-DD'), '<=': params.moment( params.end_date ).format('YYYY-MM-DD') } } )
           .where( params.organization_filter )
           .where( params.report_period_type )
+          .where( params.project_detail )
           .sort('updatedAt DESC')
           .exec( function( err, total_reports ){
 
@@ -1398,6 +1555,10 @@ var AdminDashboardController = {
 						activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
             report_period_typeNative: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } })
 						// organization_default_Native: { organization_tag: { $nin: $nin_organizations } }
+						activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
+            // organization_default_Native: { organization_tag: { $nin: $nin_organizations } }
+            project_detail: req.param('project_detail') === 'all' ? {} : { project_details: { $elemMatch: { project_detail_id: req.param('project_detail') } } },
+            response: req.param('response') === 'all' ? {} : { response: { $elemMatch: { response_id: req.param('response') } } }
 					}
 				}
 				var filters = filterProgressBeneficiaries(params);
@@ -1409,6 +1570,9 @@ var AdminDashboardController = {
 					filters.activity_typeNative,
 					filters.project_startDateNative,
           filters.project_endDateNative, filters.report_period_typeNative)
+					filters.project_endDateNative,
+          filters.project_detail,
+          filters.response)
 
 				TargetBeneficiaries.native(function (err, results_target_beneficiaries) {
 					if (err) return res.serverError(err);
@@ -1526,6 +1690,9 @@ var AdminDashboardController = {
             default_native: { project_id: { $ne: null } },
             activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
             report_period_typeNative: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } })
+            activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
+            project_detail: req.param('project_detail') === 'all' ? {} : { project_details: { $elemMatch: { project_detail_id: req.param('project_detail') } } },
+            response: req.param('response') === 'all' ? {} : { response: { $elemMatch: { response_id: req.param('response') } } }
           }
         }
 
@@ -1540,6 +1707,9 @@ var AdminDashboardController = {
           // filters.project_endDateNative,
           filters.reporting_periodDateNative,
           filters.report_period_typeNative)
+          filters.reporting_periodDateNative,
+          filters.project_detail,
+          filters.response)
 
         Beneficiaries.native(function (err, results_report_benefciaries) {
           if (err) return res.serverError(err);
@@ -1598,6 +1768,125 @@ var AdminDashboardController = {
             
 
             return res.json(200, distinct_sectors);
+          })
+        })
+        break;
+
+      case 'target_beneficiaries':
+        function filterTargetBeneficiaries() {
+          return {
+            adminRpcode_Native: req.param('adminRpcode') === 'hq' ? {} : { adminRpcode: req.param('adminRpcode').toUpperCase() },
+            admin0pcode_Native: req.param('admin0pcode') === 'all' ? {} : { admin0pcode: req.param('admin0pcode').toUpperCase() },
+            cluster_id_Native: (req.param('cluster_id') === 'all') ? {} : { $or: [{ cluster_id: req.param('cluster_id') }, { "activity_type.cluster_id": req.param('cluster_id') }] },
+            organization_tag_Native: req.param('organization_tag') === 'all' ? { organization_tag: { $nin: $nin_organizations } } : { $or: [{ organization_tag: req.param('organization_tag') }, { "implementing_partners.organization_tag": req.param('organization_tag') }, { "programme_partners.organization_tag": req.param('organization_tag') }] },
+            project_startDateNative: { project_start_date: { $lte: new Date(req.param('end_date')) } },
+            project_endDateNative: { project_end_date: { $gte: new Date(req.param('start_date')) } },
+            default_native: { project_id: { $ne: null } },
+            activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
+            project_detail: req.param('project_detail') === 'all' ? {} : { project_details: { $elemMatch: { project_detail_id: req.param('project_detail') } } },
+            response: req.param('response') === 'all' ? {} : { response: { $elemMatch: { response_id: req.param('response') } } }
+          }
+        }
+        var filters = filterTargetBeneficiaries(params);
+        var filterObject = _.extend({},
+          filters.default_native,
+          filters.adminRpcode_Native,
+          filters.admin0pcode_Native,
+          { $and: [filters.cluster_id_Native, filters.organization_tag_Native] },
+          filters.activity_typeNative,
+          filters.project_startDateNative,
+          filters.project_endDateNative,
+          filters.project_detail,
+          filters.response)
+        
+        TargetBeneficiaries.native(function (err, results_target_beneficiaries) {
+          if (err) return res.serverError(err);
+          results_target_beneficiaries.aggregate([
+            { $match: filterObject }
+          ]).toArray(function (err, target_beneficiaries) {
+            if (err) return res.serverError(err);
+            var _cluster= req.param('cluster_id');
+            var _admin0pcode=req.param('admin0pcode').toUpperCase();
+            if (req.param('csv')) {
+              let { fields, fieldNames } = FieldsService.getTargetBeneficiariesDownloadFields(_admin0pcode, _cluster);
+              var total = 0;
+
+              // format beneficiaries
+              async.eachLimit(target_beneficiaries, 200, function (d, next) {
+                d._id = d._id.toString();
+                // hrp code
+                if (!d.project_hrp_code) {
+                  d.project_hrp_code = '-';
+                }
+                // project code
+                if (!d.project_code) {
+                  d.project_code = '-';
+                }
+                // project donor
+                if (d.project_donor) {
+                  var da = [];
+                  d.project_donor.forEach(function (d, i) {
+                    if (d) da.push(d.project_donor_name);
+                  });
+                  da.sort();
+                  d.donor = da.join(', ');
+                }
+
+                // implementing_partner
+                if (Array.isArray(d.implementing_partners)) {
+                  var im = [];
+                  d.implementing_partners.forEach(function (impl, i) {
+                    if (impl) im.push(impl.organization);
+                  });
+                  im.sort();
+                  d.implementing_partners = im.join(', ');
+                }
+
+                // programme_partners
+                if (Array.isArray(d.programme_partners)) {
+                  var pp = [];
+                  d.programme_partners.forEach(function (p, i) {
+                    if (p) pp.push(p.organization);
+                  });
+                  pp.sort();
+                  d.programme_partners = pp.join(', ');
+                }
+
+                d.project_details = Utils.arrayToString(d.project_details, "project_detail_name");
+                d.response = Utils.arrayToString(d.response, "response_name");
+
+                //plan_component
+                if (Array.isArray(d.plan_component)) {
+                  d.plan_component = d.plan_component.join(', ');
+                }
+
+                // sum
+                // var sum = d.boys + d.girls + d.men + d.women + d.elderly_men + d.elderly_women;
+                // beneficiaries
+                // d.total = sum;
+                d.project_start_date = moment(d.project_start_date).format('YYYY-MM-DD');
+                d.project_end_date = moment(d.project_end_date).format('YYYY-MM-DD');
+                d.updatedAt = moment(d.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+                d.createdAt = moment(d.createdAt).format('YYYY-MM-DD HH:mm:ss');
+                // grand total
+                // total += sum;
+                total += d.total_beneficiaries;
+                next();
+
+              }, function (err) {
+                if (err) return res.negotiate(err);
+                // return csv
+                json2csv({ data: target_beneficiaries, fields: fields, fieldNames: fieldNames }, function (err, csv) {
+
+                  // error
+                  if (err) return res.negotiate(err);
+
+                  // success
+                    return res.json(200, { data: csv });
+                });
+              });
+              
+            }
           })
         })
         break;
