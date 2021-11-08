@@ -50,8 +50,7 @@ var AdminDashboardController = {
           admin0pcode_filter: req.param( 'admin0pcode' ) === 'all' ? {} : { admin0pcode: req.param( 'admin0pcode' ).toUpperCase() },
           start_date: req.param( 'start_date' ),
           end_date: req.param( 'end_date' ),
-          report_period_type: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } })
-          end_date: req.param( 'end_date' ),
+          report_period_type: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } }),
           project_detail: req.param('project_detail') === 'all' ? {} : { project_details: { $elemMatch: { project_detail_id: req.param('project_detail') } } },
           response: req.param('response') === 'all' ? {} : { response: { $elemMatch: { response_id: req.param('response') } } }
 
@@ -840,7 +839,7 @@ var AdminDashboardController = {
                                           '$lte': new Date(params.moment( params.end_date   ).format('YYYY-MM-DD'))
                                         }
                                       },
-                                      params.report_period_type
+                                      params.report_period_type,
                                       params.project_detail
                                   );
         // reports due
@@ -934,7 +933,7 @@ var AdminDashboardController = {
                                             '$lte': new Date(params.moment( params.end_date   ).format('YYYY-MM-DD'))
                                           }
                                         },
-                                        params.report_period_type
+                                        params.report_period_type,
                                         params.project_detail
                                       );
 
@@ -1121,7 +1120,7 @@ var AdminDashboardController = {
                                           '$lte': new Date(params.moment( params.end_date   ).format('YYYY-MM-DD'))
                                         }
                                       },
-                                      params.report_period_type
+                                      params.report_period_type,
                                       params.project_detail
                                   );
 
@@ -1553,7 +1552,7 @@ var AdminDashboardController = {
 						project_endDateNative: { project_end_date: { $gte: new Date(req.param('start_date')) }},
 						default_native: { project_id: { $ne: null }},
 						activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
-            report_period_typeNative: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } })
+            report_period_typeNative: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } }),
 						// organization_default_Native: { organization_tag: { $nin: $nin_organizations } }
 						activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
             // organization_default_Native: { organization_tag: { $nin: $nin_organizations } }
@@ -1569,8 +1568,8 @@ var AdminDashboardController = {
           { $and: [filters.cluster_id_Native, filters.organization_tag_Native] },
 					filters.activity_typeNative,
 					filters.project_startDateNative,
-          filters.project_endDateNative, filters.report_period_typeNative)
-					filters.project_endDateNative,
+          filters.project_endDateNative, 
+          filters.report_period_typeNative,
           filters.project_detail,
           filters.response)
 
@@ -1689,8 +1688,7 @@ var AdminDashboardController = {
             reporting_periodDateNative: { reporting_period: { $gte: new Date(req.param('start_date')), $lte: new Date(req.param('end_date'))}},
             default_native: { project_id: { $ne: null } },
             activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
-            report_period_typeNative: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } })
-            activity_typeNative: req.param('activity_type_id') === 'all' ? {} : { 'activity_type.activity_type_id': req.param('activity_type_id') },
+            report_period_typeNative: req.param('report_period_type_id') === 'all' ? {} : (req.param('report_period_type_id') === 'bi-weekly' ? { report_type_id: req.param('report_period_type_id') } : { report_type_id: { $ne: 'bi-weekly' } }),
             project_detail: req.param('project_detail') === 'all' ? {} : { project_details: { $elemMatch: { project_detail_id: req.param('project_detail') } } },
             response: req.param('response') === 'all' ? {} : { response: { $elemMatch: { response_id: req.param('response') } } }
           }
@@ -1706,8 +1704,7 @@ var AdminDashboardController = {
           // filters.project_startDateNative,
           // filters.project_endDateNative,
           filters.reporting_periodDateNative,
-          filters.report_period_typeNative)
-          filters.reporting_periodDateNative,
+          filters.report_period_typeNative,
           filters.project_detail,
           filters.response)
 
