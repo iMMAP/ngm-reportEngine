@@ -272,7 +272,7 @@ var ProjectController = {
       }
 
     var allowedParams =
-      ['project_id', 'organization_id', 'cluster_id', 'organization_tag', 'implementer_id', 'project_type_component', 'activity_type_id', 'hrpplan', 'adminRpcode', 'admin0pcode', 'admin1pcode', 'admin2pcode', 'project_start_date', 'project_end_date', 'donor_id','report_type_id'];
+      ['project_id', 'organization_id', 'cluster_id', 'organization_tag', 'implementer_id', 'project_type_component', 'activity_type_id', 'hrpplan', 'adminRpcode', 'admin0pcode', 'admin1pcode', 'admin2pcode', 'project_start_date', 'project_end_date', 'donor_id', 'report_type_id', 'project_detail'];
 
 
       // if dissallowed parameters sent
@@ -362,6 +362,12 @@ var ProjectController = {
           // include multicluster projects
           query.$or = [{ cluster_id: reqQuery.cluster_id }, { "activity_type.cluster_id": reqQuery.cluster_id }]
           delete query.cluster_id
+        }
+
+        
+        if(reqQuery.project_detail){
+          query.project_details = { $elemMatch: { "project_detail_id": reqQuery.project_detail } }
+          delete query.project_detail;
         }
 
         if (reqQuery.report_type_id && reqQuery.report_type_id !== 'all'){
