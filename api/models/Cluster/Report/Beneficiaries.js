@@ -423,6 +423,10 @@ module.exports = {
 			type: 'integer',
 			defaultsTo: 0
 		},
+		assessed_households:{
+			type: 'integer',
+			defaultsTo: 0
+		},
 		families: {
 			type: 'integer',
 			defaultsTo: 0
