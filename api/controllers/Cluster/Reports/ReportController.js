@@ -563,6 +563,7 @@ var ReportController = {
 
 			// gather results
 			var report = result[ 0 ];
+			if (!report) return res.json({ err: true, error: "report not found" });
 			var locations = result[ 1 ];
 			var beneficiaries = result[ 2 ];
 
