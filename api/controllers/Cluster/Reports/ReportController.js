@@ -926,6 +926,54 @@ var ReportController = {
     } catch (err) {
       return res.negotiate(err);
     }
+  },
+  getBeneficiariesAssessedHouseholds:function(req, res){
+	  if (!req.param('project_id') || !req.param('reporting_period')) {
+		  return res.json(401, { err: 'project_id  && reporting_period required!' });
+	  }
+	  var _filterBenef = _.extend({}, { project_id: req.param('project_id') }, {reporting_period: { $lt: moment(req.param('reporting_period')).startOf('day').toDate() }})
+	  if (req.param('report_type_id')) {
+		  var _reporting_period = { report_type_id: req.param('report_type_id') };
+		  _filterBenef = _.extend({}, _filterBenef, _reporting_period);
+	  }
+	  Beneficiaries.native(function (err, collection) {
+		  if (err) return res.serverError(err);
+
+		  collection.aggregate([
+			  {
+				  $match: _filterBenef
+			  },
+			//   {
+			// 	  $group: {
+			// 		  _id: {
+			// 			  report_id: "$report_id",
+			// 			  report_month: "$report_month",
+			// 			  report_year:"$report_year",
+			// 			  reporting_period: "$reporting_period",
+			// 			  activity_type_id: "$activity_type_id",
+			// 			  activity_description_id: "$activity_description_id",
+			// 			  activity_detail_id: "$activity_detail_id",
+			// 			  indicator_id: "$indicator_id",
+			// 			  beneficiary_type_id: "$beneficiary_type_id",
+			// 			  beneficiary_category_id: "$beneficiary_category_id",
+			// 			  target_location_reference_id: "$target_location_reference_id",
+			// 			  assessed_households: "$assessed_households"
+			// 		  },
+
+			// 	  }
+			//   }
+		  ]).toArray(function (err, assessed_households) {
+			  if(assessed_households.length){
+				//   assessed_households = assessed_households.map(y=>y._id);
+				  assessed_households.forEach(function(a){
+					  if (!a.assessed_households){
+						  a.assessed_households = 0;
+					  }
+				  })
+			  }
+			  return res.json(200, assessed_households);
+		   })
+	  })
   }
 
 };

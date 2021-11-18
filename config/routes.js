@@ -212,6 +212,7 @@ module.exports.routes = {
 	'POST /cluster/report/updateReportValidation': 'Cluster/Reports/ReportController.updateReportValidation',
   'POST /cluster/report/removeBeneficiary': 'Cluster/Reports/ReportController.removeBeneficiary',
   'POST /cluster/report/delete': 'Cluster/Reports/ReportController.deleteReportById',
+  'POST /cluster/report/getAssessedHouseholds': 'Cluster/Reports/ReportController.getBeneficiariesAssessedHouseholds',
 
 
   // STOCK / ACTIVITY REPORTS TASKS
