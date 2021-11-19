@@ -643,6 +643,8 @@ var UserController = {
               email: user[i].email,
               token: jwtToken.issueToken({ sid: user[i].id, roles: user[i].roles })
             }
+            // set user status
+            var user_status= user[i].status;
 
             // Add record in reset
             UserReset
@@ -651,6 +653,8 @@ var UserController = {
 
                 // return error
                 if (err) return res.negotiate( err );
+                // set user status
+                reset.status = user_status;
 
                 // push
                 resets.push(reset);
