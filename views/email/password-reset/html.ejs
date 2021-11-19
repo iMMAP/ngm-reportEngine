@@ -120,12 +120,22 @@
 													<%=resets[i].username%>
 												</td>
 										
+												<% if(resets[i].status !=='deactivated' ){ %>
 												<td style="text-align: center;border: 1px solid #ddd;">
 													<a title="Reset your ReportHub password for <%=resets[i].cluster%>" href="<%=url%><%=resets[i].token%>"
 														style="font-size: 14px;background: #26a69a; text-decoration: none; padding: 3px 12px; color: #ffffff; border-radius: 2px; display:inline-block; mso-padding-alt:0;text-underline-color:#ff3884;"><span
 															style="mso-text-raise:10pt;font-weight:bold;">Reset
 															Password</span></a>
 												</td>
+												<% } %>
+
+												<% if(resets[i].status === 'deactivated' ){ %>
+													<td style="text-align: center;border: 1px solid #ddd;">
+														Cannot reset password.
+														<br /> This account has been <b>DEACTIVATED</b>.
+													</td>
+													<% } %>
+												
 											</tr>
 											<% } %>
 
