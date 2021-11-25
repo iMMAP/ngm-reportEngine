@@ -937,164 +937,169 @@ var ClusterDashboardController = {
 
       // raw data export
       case 'beneficiaries':
-        if (params.api_key) {
-          User
-            .findOne({ api_key: params.api_key })
-            .then(user => {
-              if (user) {
-                // download beneficiairies in json format
-                if (params.json) {
+        // if (params.api_key) {
+        //   User
+        //     .findOne({ api_key: params.api_key })
+        //     .then(user => {
+        //       if (user) {
+        // download beneficiairies in json format
+        if (params.json) {
 
-                  Beneficiaries.native(function (err, collection) {
-                    if (err) return res.serverError(err);
+          Beneficiaries.native(function (err, collection) {
+            if (err) return res.serverError(err);
 
-                    if (req.param('activity_type_id') && req.param('activity_type_id') !== 'all') {
-                      filterObject.activity_type_id = req.param('activity_type_id');
-                    }
+            if (req.param('activity_type_id') && req.param('activity_type_id') !== 'all') {
+              filterObject.activity_type_id = req.param('activity_type_id');
+            }
 
-                    collection.find(filterObject).toArray(function (err, beneficiaries) {
-                      if (err) return res.serverError(err);
+            collection.find(filterObject).toArray(function (err, beneficiaries) {
+              if (err) return res.serverError(err);
 
-                      return res.json(200, { data: beneficiaries });
+              return res.json(200, { data: beneficiaries });
 
-                    });
+            });
 
+          });
+
+          // download beneficiairies in CSV format
+        } else if (params.csv) {
+          // get beneficiaries export
+          Beneficiaries.native(function (err, collection) {
+            if (err) return res.serverError(err);
+            //fiter donor from projects plan or 4wplus activities dasbhoards
+            if (req.param('donor') && req.param('donor') !== 'all') {
+              filterObject.project_donor = { $elemMatch: { 'project_donor_id': req.param('donor') } };
+            }
+            //fiter implementer partner from projects plan or 4wplus activities dasbhoards
+            if (req.param('implementer') && req.param('implementer') !== 'all') {
+              filterObject.implementing_partners = { $elemMatch: { 'organization_tag': req.param('implementer') } };
+            }
+            //fiter project type and is hrp plan? from projects plan or 4wplus activities dasbhoards
+            if ((req.param('project_type_component') && req.param('project_type_component') !== 'all') && (req.param('hrpplan') !== 'all' && req.param('hrpplan') === 'true')) {
+              //is not possible implement operator $and
+              filterObject.plan_component = { $in: [req.param('project_type_component'), 'hrp_plan'] };
+              ///filterObject.plan_component = {$and: [ { plan_component : {$in: [req.param('project_type_component')]} } , {plan_component: {$in:["hrp_plan"]}}]};
+            } else if ((req.param('project_type_component') && req.param('project_type_component') !== 'all') && (req.param('hrpplan') !== 'all' && req.param('hrpplan') === 'false')) {
+
+              filterObject.plan_component = { $in: [req.param('project_type_component')], $nin: ['hrp_plan'] };
+              // delete filterObject.project_type_component;
+              // delete filterObject.hrpplan;
+
+            } else if ((req.param('project_type_component') && req.param('project_type_component') !== 'all') && req.param('hrpplan') === 'all') {
+
+              filterObject.plan_component = { $in: [req.param('project_type_component')] };
+              // delete queryProject.project_type_component;
+
+            } else if ((req.param('project_type_component') && req.param('project_type_component') === 'all') && (req.param('hrpplan') !== 'all' && req.param('hrpplan') === 'true')) {
+
+              filterObject.plan_component = { $in: ['hrp_plan'] };
+              //  delete queryProject.hrpplan;
+
+            } else if ((req.param('project_type_component') && req.param('project_type_component') === 'all') && (req.param('hrpplan') !== 'all' && req.param('hrpplan') === 'false')) {
+              filterObject.plan_component = { $nin: ['hrp_plan'] };
+              //   delete queryProject.hrpplan;
+            }
+
+            //fiter activity type from projects plan or 4wplus activities dasbhoards
+
+            if (req.param('activity_type_id') && req.param('activity_type_id') !== 'all') {
+              //activity_typeid = req.param('activity_type_id');
+              filterObject.activity_type_id = req.param('activity_type_id');
+
+            }
+
+
+            collection.find(filterObject).toArray(function (err, beneficiaries) {
+              if (err) return res.serverError(err);
+
+              let { fields, fieldNames } = FieldsService.getBeneficiariesDownloadFields(params.admin0pcode, params.cluster_id);
+
+              if (params.hide_contact) {
+                fields = fields.filter(f => (f !== 'phone') && (f !== 'email') && (f !== 'name'));
+                fieldNames = fieldNames.filter(f => (f !== 'focal_point_phone') && (f !== 'focal_point_email') && (f !== 'focal_point_name'));
+              }
+              var total = 0;
+
+              // format beneficiaries
+              async.eachLimit(beneficiaries, 200, function (d, next) {
+                d._id = d._id.toString();
+                // hrp code
+                if (!d.project_hrp_code) {
+                  d.project_hrp_code = '-';
+                }
+                // project code
+                if (!d.project_code) {
+                  d.project_code = '-';
+                }
+                // project donor
+                if (d.project_donor) {
+                  var da = [];
+                  d.project_donor.forEach(function (d, i) {
+                    if (d) da.push(d.project_donor_name);
                   });
+                  da.sort();
+                  d.donor = da.join(', ');
+                }
 
-                  // download beneficiairies in CSV format
-                } else if (params.csv) {
-                  // get beneficiaries export
-                  Beneficiaries.native(function (err, collection) {
-                    if (err) return res.serverError(err);
-                    //fiter donor from projects plan or 4wplus activities dasbhoards
-                    if (req.param('donor') && req.param('donor') !== 'all') {
-                      filterObject.project_donor = { $elemMatch: { 'project_donor_id': req.param('donor') } };
-                    }
-                    //fiter implementer partner from projects plan or 4wplus activities dasbhoards
-                    if (req.param('implementer') && req.param('implementer') !== 'all') {
-                      filterObject.implementing_partners = { $elemMatch: { 'organization_tag': req.param('implementer') } };
-                    }
-                    //fiter project type and is hrp plan? from projects plan or 4wplus activities dasbhoards
-                    if ((req.param('project_type_component') && req.param('project_type_component') !== 'all') && (req.param('hrpplan') !== 'all' && req.param('hrpplan') === 'true')) {
-                      //is not possible implement operator $and
-                      filterObject.plan_component = { $in: [req.param('project_type_component'), 'hrp_plan'] };
-                      ///filterObject.plan_component = {$and: [ { plan_component : {$in: [req.param('project_type_component')]} } , {plan_component: {$in:["hrp_plan"]}}]};
-                    } else if ((req.param('project_type_component') && req.param('project_type_component') !== 'all') && (req.param('hrpplan') !== 'all' && req.param('hrpplan') === 'false')) {
+                // implementing_partner
+                if (Array.isArray(d.implementing_partners)) {
+                  var im = [];
+                  d.implementing_partners.forEach(function (impl, i) {
+                    if (impl) im.push(impl.organization);
+                  });
+                  im.sort();
+                  d.implementing_partners = im.join(', ');
+                }
 
-                      filterObject.plan_component = { $in: [req.param('project_type_component')], $nin: ['hrp_plan'] };
-                      // delete filterObject.project_type_component;
-                      // delete filterObject.hrpplan;
+                // programme_partners
+                if (Array.isArray(d.programme_partners)) {
+                  var pp = [];
+                  d.programme_partners.forEach(function (p, i) {
+                    if (p) pp.push(p.organization);
+                  });
+                  pp.sort();
+                  d.programme_partners = pp.join(', ');
+                }
 
-                    } else if ((req.param('project_type_component') && req.param('project_type_component') !== 'all') && req.param('hrpplan') === 'all') {
+                d.project_details = Utils.arrayToString(d.project_details, "project_detail_name");
+                d.response = Utils.arrayToString(d.response, "response_name");
 
-                      filterObject.plan_component = { $in: [req.param('project_type_component')] };
-                      // delete queryProject.project_type_component;
+                //plan_component
+                if (Array.isArray(d.plan_component)) {
+                  d.plan_component = d.plan_component.join(', ');
+                }
 
-                    } else if ((req.param('project_type_component') && req.param('project_type_component') === 'all') && (req.param('hrpplan') !== 'all' && req.param('hrpplan') === 'true')) {
+                // sum
+                // var sum = d.boys + d.girls + d.men + d.women + d.elderly_men + d.elderly_women;
+                // beneficiaries
+                // d.total = sum;
+                d.report_month_number = d.report_month + 1;
+                d.report_month = moment(d.reporting_period).format('MMMM');
+                d.reporting_period = moment(d.reporting_period).format('YYYY-MM-DD');
+                d.project_start_date = moment(d.project_start_date).format('YYYY-MM-DD');
+                d.project_end_date = moment(d.project_end_date).format('YYYY-MM-DD');
+                d.updatedAt = moment(d.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+                d.createdAt = moment(d.createdAt).format('YYYY-MM-DD HH:mm:ss');
+                // grand total
+                // total += sum;
+                total += d.total_beneficiaries;
+                next();
 
-                      filterObject.plan_component = { $in: ['hrp_plan'] };
-                      //  delete queryProject.hrpplan;
+              }, function (err) {
+                if (err) return res.negotiate(err);
+                // return csv
+                json2csv({ data: beneficiaries, fields: fields, fieldNames: fieldNames }, function (err, csv) {
 
-                    } else if ((req.param('project_type_component') && req.param('project_type_component') === 'all') && (req.param('hrpplan') !== 'all' && req.param('hrpplan') === 'false')) {
-                      filterObject.plan_component = { $nin: ['hrp_plan'] };
-                      //   delete queryProject.hrpplan;
-                    }
+                  // error
+                  if (err) return res.negotiate(err);
 
-                    //fiter activity type from projects plan or 4wplus activities dasbhoards
-
-                    if (req.param('activity_type_id') && req.param('activity_type_id') !== 'all') {
-                      //activity_typeid = req.param('activity_type_id');
-                      filterObject.activity_type_id = req.param('activity_type_id');
-
-                    }
-
-
-                    collection.find(filterObject).toArray(function (err, beneficiaries) {
-                      if (err) return res.serverError(err);
-
-                      let { fields, fieldNames } = FieldsService.getBeneficiariesDownloadFields(params.admin0pcode, params.cluster_id);
-
-                      if (params.hide_contact) {
-                        fields = fields.filter(f => (f !== 'phone') && (f !== 'email') && (f !== 'name'));
-                        fieldNames = fieldNames.filter(f => (f !== 'focal_point_phone') && (f !== 'focal_point_email') && (f !== 'focal_point_name'));
-                      }
-                      var total = 0;
-
-                      // format beneficiaries
-                      async.eachLimit(beneficiaries, 200, function (d, next) {
-                        d._id = d._id.toString();
-                        // hrp code
-                        if (!d.project_hrp_code) {
-                          d.project_hrp_code = '-';
-                        }
-                        // project code
-                        if (!d.project_code) {
-                          d.project_code = '-';
-                        }
-                        // project donor
-                        if (d.project_donor) {
-                          var da = [];
-                          d.project_donor.forEach(function (d, i) {
-                            if (d) da.push(d.project_donor_name);
-                          });
-                          da.sort();
-                          d.donor = da.join(', ');
-                        }
-
-                        // implementing_partner
-                        if (Array.isArray(d.implementing_partners)) {
-                          var im = [];
-                          d.implementing_partners.forEach(function (impl, i) {
-                            if (impl) im.push(impl.organization);
-                          });
-                          im.sort();
-                          d.implementing_partners = im.join(', ');
-                        }
-
-                        // programme_partners
-                        if (Array.isArray(d.programme_partners)) {
-                          var pp = [];
-                          d.programme_partners.forEach(function (p, i) {
-                            if (p) pp.push(p.organization);
-                          });
-                          pp.sort();
-                          d.programme_partners = pp.join(', ');
-                        }
-
-                        d.project_details = Utils.arrayToString(d.project_details, "project_detail_name");
-                        d.response = Utils.arrayToString(d.response, "response_name");
-
-                        //plan_component
-                        if (Array.isArray(d.plan_component)) {
-                          d.plan_component = d.plan_component.join(', ');
-                        }
-
-                        // sum
-                        // var sum = d.boys + d.girls + d.men + d.women + d.elderly_men + d.elderly_women;
-                        // beneficiaries
-                        // d.total = sum;
-                        d.report_month_number = d.report_month + 1;
-                        d.report_month = moment(d.reporting_period).format('MMMM');
-                        d.reporting_period = moment(d.reporting_period).format('YYYY-MM-DD');
-                        d.project_start_date = moment(d.project_start_date).format('YYYY-MM-DD');
-                        d.project_end_date = moment(d.project_end_date).format('YYYY-MM-DD');
-                        d.updatedAt = moment(d.updatedAt).format('YYYY-MM-DD HH:mm:ss');
-                        d.createdAt = moment(d.createdAt).format('YYYY-MM-DD HH:mm:ss');
-                        // grand total
-                        // total += sum;
-                        total += d.total_beneficiaries;
-                        next();
-
-                      }, function (err) {
-                        if (err) return res.negotiate(err);
-                        // return csv
-                        json2csv({ data: beneficiaries, fields: fields, fieldNames: fieldNames }, function (err, csv) {
-
-                          // error
-                          if (err) return res.negotiate(err);
-
-                          // success
-                          if (params.ocha) {
+                  // success
+                  if (params.ocha) {
+                    if (params.api_key) {
+                      User
+                        .findOne({ api_key: params.api_key })
+                        .then(user => {
+                          if (user) {
                             res.set('Content-Type', 'text/csv');
                             filename = req.param('reportname') ? req.param('reportname') : 'beneficiaries'
                             res.setHeader('Content-disposition', 'attachment; filename=' + filename + '.csv');
@@ -1105,51 +1110,60 @@ var ClusterDashboardController = {
                               url: req.url,
                             }, function (err) { return })
                           } else {
-                            return res.json(200, { data: csv });
+                            return res.json(400, { 'message': 'API key not valid, error when trying to get data' });
                           }
                         });
-                      });
+                    } else {
+                      return res.json(401, { 'value': 'Unauthorized' });
+                    }
+                  } else {
+                    return res.json(200, { data: csv });
+                  }
 
-                    });
 
-                  });
+                });
+              });
 
-                } else {
-                  // total sum
-                  Beneficiaries.native(function (err, collection) {
-                    if (err) return res.serverError(err);
-
-                    collection.aggregate(
-                      [
-                        {
-                          $match: filterObject
-                        },
-                        {
-                          $group:
-                          {
-                            _id: null,
-                            // total:  { $sum: { $add: [ "$men", "$women","$boys","$girls","$elderly_men","$elderly_women" ] } }
-                            total: { $sum: { $add: ["$total_beneficiaries"] } }
-                          }
-                        }
-                      ]
-                    ).toArray(function (err, beneficiaries) {
-                      if (err) return res.serverError(err);
-
-                      var total = beneficiaries[0] ? beneficiaries[0].total : 0;
-
-                      return res.json(200, { 'value': total });
-
-                    });
-                  });
-                }
-              } else {
-                return res.json(400, { 'message': 'API key not valid, error when trying to get data' });
-              }
             });
+
+          });
+
         } else {
-          return res.json(401, { 'value': 'Unauthorized' });
+          // total sum
+          Beneficiaries.native(function (err, collection) {
+            if (err) return res.serverError(err);
+
+            collection.aggregate(
+              [
+                {
+                  $match: filterObject
+                },
+                {
+                  $group:
+                  {
+                    _id: null,
+                    // total:  { $sum: { $add: [ "$men", "$women","$boys","$girls","$elderly_men","$elderly_women" ] } }
+                    total: { $sum: { $add: ["$total_beneficiaries"] } }
+                  }
+                }
+              ]
+            ).toArray(function (err, beneficiaries) {
+              if (err) return res.serverError(err);
+
+              var total = beneficiaries[0] ? beneficiaries[0].total : 0;
+
+              return res.json(200, { 'value': total });
+
+            });
+          });
         }
+        //       } else {
+        //         return res.json(400, { 'message': 'API key not valid, error when trying to get data' });
+        //       }
+        //     });
+        // } else {
+        //   return res.json(401, { 'value': 'Unauthorized' });
+        // }
 
         break;
 
