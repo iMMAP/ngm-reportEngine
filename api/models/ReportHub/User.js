@@ -200,6 +200,9 @@ module.exports = {
 		},
 		last_logged_in:{
 			type: 'date'
+		},
+		api_key:{
+			type: 'string'
 		}
 
 	},
