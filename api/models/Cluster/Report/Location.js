@@ -338,6 +338,10 @@ module.exports = {
 			type: 'integer',
 			defaultsTo: 0
 		},
+		assessed_households: {
+			type: 'integer',
+			defaultsTo: 0
+		},
 		boys:{
 			type: 'integer',
 			defaultsTo: 0
