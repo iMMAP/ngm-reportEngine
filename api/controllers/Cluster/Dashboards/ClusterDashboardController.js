@@ -1102,7 +1102,7 @@ var ClusterDashboardController = {
           }
         }
 
-        if(req.method === 'POST'){
+        if (req.method === 'POST') {
           beneficiariesData();
         } else {
           if (params.api_key) {
@@ -1110,7 +1110,17 @@ var ClusterDashboardController = {
               .findOne({ api_key: params.api_key })
               .then(user => {
                 if (user) {
-                  beneficiariesData();
+                  let canDownload = AuthService.canGetApiData('DASHBOARD_DOWNLOAD', user, {
+                    adminRpcode: params.adminRpcode,
+                    admin0pcode: params.admin0pcode,
+                    cluster_id: params.cluster_id,
+                    organization_tag: params.organization_tag,
+                  });
+                  if (canDownload) {
+                    beneficiariesData();
+                  } else {
+                    return res.json(400, { 'message': "you don't have permission to access the data" });
+                  }
                 } else {
                   return res.json(400, { 'message': 'API key not valid, error when trying to get data' });
                 }
