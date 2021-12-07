@@ -49,7 +49,7 @@ var UserController = {
           user.token = jwtToken.issueToken({ sid: user.id, roles: user.roles });
 
           // add last_logged_id attribute
-          user.last_logged_in = moment().format();
+          user.last_logged_in = moment().toISOString();//moment().format();
 
           // save
           user.save( function(err){
@@ -160,7 +160,7 @@ var UserController = {
           user.token = jwtToken.issueToken({ sid: user.id, roles: user.roles });
           
           // add last_logged_id attribute
-          user.last_logged_in = moment().format();
+          user.last_logged_in = moment().toISOString();//moment().format();
 
           // save user data on session
           req.session.session_user = user;
@@ -303,7 +303,7 @@ var UserController = {
         user.visits++;
 
         // add last_logged_id attribute
-        user.last_logged_in = moment().format()
+        user.last_logged_in = moment().toISOString();//moment().format()
 
         // save updates
         user.save(function(err) {
@@ -734,7 +734,7 @@ var UserController = {
             user.visits = user.visits + 1;
 
             // add last_logged_id attribute
-            user.last_logged_in = moment().format()
+            user.last_logged_in = moment().toISOString();//moment().format()
 
             // save updates
             user.save( function( err ) {
