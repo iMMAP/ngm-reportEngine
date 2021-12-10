@@ -2057,6 +2057,7 @@ var AdminDashboardController = {
                       
                       if(results.length){
                         var real = results.filter(x=>x.total >0);
+                        var real = results.filter(x=>x.total >= 0);
                         var location_with_beneficiary = real.map(x=>x._id.location_id);
                       }else{
                         var location_with_beneficiary =[];
