@@ -1893,6 +1893,264 @@ var AdminDashboardController = {
           })
         })
         break;
+      
+      case 'location_empty_beneficiary':
+
+        // reports complete
+        var filterObject = _.extend({}, params.organization_and_cluster_filter_Native,
+          params.acbar_partners_filter,
+          params.adminRpcode_filter,
+          params.admin0pcode_filter,
+          { report_active: true },
+          params.activity_type_id,
+          { report_status: 'complete' },
+          {
+            reporting_period:
+            {
+              '$gte': new Date(params.moment(params.start_date).format('YYYY-MM-DD')),
+              '$lte': new Date(params.moment(params.end_date).format('YYYY-MM-DD'))
+            }
+          },
+          params.report_period_type,
+          params.project_detail
+        );
+
+        Report.native(function (err, collection) {
+          if (err) return res.serverError(err);
+
+          collection.find(
+            filterObject
+          ).sort({ updatedAt: -1 }).toArray(function (err, reports) {
+
+            // return error
+            if (err) return res.negotiate(err);
+
+              var reports_array_value = _.map(reports, function (report) { return report._id.toString() });
+              Location.native(function(err, collection){
+                if (err) return res.serverError(err);
+                var _filterLocation = _.extend({}, { report_id: { "$in": reports_array_value } })
+
+                collection.aggregate([
+                  {
+                    $match: _filterLocation
+                  },
+                  {
+                    $group: {
+                      _id: {
+                        // project_id: '$project_id',
+                        // report_id: '$report_id',
+                        // site_lat: '$site_lat',
+                        // site_lng: '$site_lng',
+                        // site_name: '$site_name',
+                        // cluster: '$cluster',
+                        // organization: '$organization',
+                        // project_title: '$project_title',
+                        // report_year:'$report_year',
+                        // report_month: '$report_month',
+                        // reporting_period: '$reporting_period',
+                        // report_type_id:'$report_type_id',
+                        // location_group_id:'$location_group_id',
+                        // admin0name: '$admin0name',
+                        // admin1name: '$admin1name',
+                        // admin2name: '$admin2name',
+                        // admin3name: '$admin3name',
+                        // admin4name: '$admin4name',
+                        // admin5name: '$admin5name',
+                        // cluster_id: '$cluster_id',
+                        // site_type_name: '$site_type_name',
+                        // site_name: '$site_name',
+                        // name: '$name',
+                        // position: '$position',
+                        // phone: '$phone',
+                        // email: '$email',
+                        // id: '$_id'
+
+                        /// 
+                        project_id: '$project_id',
+                        report_id: '$report_id',
+                        id: '$_id',
+                        cluster_id: '$cluster_id',
+                        cluster: '$cluster',
+                        name: '$name',
+                        phone: '$phone',
+                        email: '$email',
+                        organization: '$organization',
+                        programme_partners: '$programme_partners',
+                        implementing_partners: '$implementing_partners',
+                        project_hrp_code: '$project_hrp_code',
+                        project_code: '$project_code',
+                        project_title: '$project_title',
+                        project_start_date: '$project_start_date',
+                        project_end_date: '$project_end_date',
+                        project_status: '$project_status',
+                        project_details: '$project_details',
+                        project_donor: '$project_donor',
+                        project_budget: '$project_budget',
+                        project_budget_currency: '$project_budget_currency',
+                        report_month_number: '$report_month_number',
+                        report_month: '$report_month',
+                        report_year: '$report_year',
+                        reporting_period: '$reporting_period',
+                        admin0pcode: '$admin0pcode',
+                        admin0name: '$admin0name',
+                        admin1pcode: '$admin1pcode',
+                        admin1name: '$admin1name',
+                        admin2pcode: '$admin2pcode',
+                        admin2name: '$admin2name',
+                        admin3pcode: '$admin3pcode',
+                        admin3name: '$admin3name',
+                        admin4pcode: '$admin4pcode',
+                        admin4name: '$admin4name',
+                        admin5pcode: '$admin5pcode',
+                        admin5name: '$admin5name',
+                        conflict: '$conflict',
+                        site_id: '$site_id',
+                        site_class: '$site_class',
+                        site_status: '$site_status',
+                        site_population: '$site_population',
+                        site_hub_id: '$site_hub_id',
+                        site_hub_name: '$site_hub_name',
+                        site_implementation_name: '$site_implementation_name',
+                        site_type_name: '$site_type_name',
+                        site_name: '$site_name',
+                        admin1lng: '$admin1lng',
+                        admin1lat: '$admin1lat',
+                        admin2lng: '$admin2lng',
+                        admin2lat: '$admin2lat',
+                        admin3lng: '$admin3lng',
+                        admin3lat: '$admin3lat',
+                        admin4lng: '$admin4lng',
+                        admin4lat: '$admin4lat',
+                        admin5lng: '$admin5lng',
+                        admin5lat: '$admin5lat',
+                        site_lng: '$site_lng',
+                        site_lat: '$site_lat',
+                        updatedAt: '$updatedAt',
+                        createdAt: '$createdAt'
+                      }
+                    }
+                  }
+                ]).toArray(function (err, locations) {
+                  var array_of_locations = _.map(locations, function (location) { return location._id.id.toString() })
+                  Beneficiaries.native(function (err, collection) {
+                    if (err) return res.serverError(err);
+                    var _filterBenefSubmitted = _.extend({}, { location_id: { "$in": array_of_locations } })
+
+                    collection.aggregate([
+                      {
+                        $match: _filterBenefSubmitted
+                      },
+                      {
+                        $group: {
+                          _id: {
+                            project_id: '$project_id',
+                            report_id: '$report_id',
+                            location_id: '$location_id'
+                          },
+                          total: {
+                            "$sum": "$total_beneficiaries"
+                          }
+                        }
+                      }
+                    ]).toArray(function (err, results) {
+                      if (err) return res.serverError(err);
+                      
+                      if(results.length){
+                        var real = results.filter(x=>x.total >0);
+                        var location_with_beneficiary = real.map(x=>x._id.location_id);
+                      }else{
+                        var location_with_beneficiary =[];
+                      }
+                      var locations_with_empty_beneficiary = locations.filter(l => location_with_beneficiary.indexOf(l._id.id.toString())<0);
+
+                      locations_with_empty_beneficiary = locations_with_empty_beneficiary.map(x=>x._id);
+                      if(locations_with_empty_beneficiary.length){
+                        locations_with_empty_beneficiary.forEach(function(x){
+
+                          var filterReport = reports.filter(r => r._id.toString() === x.report_id);
+                          if(filterReport.length){
+                            dataFromReport = filterReport[0]
+                          }
+
+                          // project donor
+                          if (Array.isArray(x.project_donor)) {
+                            var da = [];
+                            x.project_donor.forEach(function (d, i) {
+                              if (d) da.push(d.project_donor_name);
+                            });
+                            da.sort();
+                            x.donor = da.join(', ');
+                          }
+
+                          // implementing_partner
+                          if (Array.isArray(x.implementing_partners)) {
+                            var im = [];
+                            x.implementing_partners.forEach(function (impl, i) {
+                              if (impl) im.push(impl.organization);
+                            });
+                            im.sort();
+                            x.implementing_partners = im.join(', ');
+                          }
+
+                          // programme_partners
+                          if (Array.isArray(x.programme_partners)) {
+                            var pp = [];
+                            x.programme_partners.forEach(function (p, i) {
+                              if (p) pp.push(p.organization);
+                            });
+                            pp.sort();
+                            x.programme_partners = pp.join(', ');
+                          }
+                          
+                          // project_details
+                          x.project_details = dataFromReport.project_details && dataFromReport.project_details.length ? dataFromReport.project_details:[];
+                          x.project_details = Utils.arrayToString(x.project_details, "project_detail_name");
+
+                          // response
+                          x.response = Utils.arrayToString(x.response, "response_name");
+
+                          //plan_component
+                          x.plan_component = dataFromReport.plan_component && dataFromReport.plan_component.length ? dataFromReport.plan_component: [];
+                          if (Array.isArray(x.plan_component)) {
+                            x.plan_component = x.plan_component.join(', ');
+                          }
+
+                          x.report_month_number = x.report_month + 1;
+                          x.report_month = moment(x.reporting_period).format('MMMM');
+                          x.reporting_period = moment(x.reporting_period).format('YYYY-MM-DD');
+                          x.project_start_date = moment(x.project_start_date).format('YYYY-MM-DD');
+                          x.project_end_date = moment(x.project_end_date).format('YYYY-MM-DD');
+
+                          x.updatedAt = moment(dataFromReport.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+                          x.createdAt = moment(dataFromReport.createdAt).format('YYYY-MM-DD HH:mm:ss');
+                          if (x.report_type_id && x.report_type_id === 'bi-weekly'){
+                            var biweeekly_period = (moment.utc(x.reporting_period).format('D') <= 15 ? 'Biweekly Period 1' : 'Biweekly Period 2');
+                            x.report_month += ' ' + biweeekly_period;
+                          }
+                          // x.url = !x.location_group_id ? req.host + '/desk/#/cluster/projects/report/' + x.project_id + '/' + x.report_id : req.host + '/desk/#/cluster/projects/group/' + x.project_id + '/' + x.report_id;
+                        })
+                      }
+                      let { fields, fieldNames } = FieldsService.getLocationWithEmptyBeneficiaries();
+                      json2csv({ data: locations_with_empty_beneficiary, fields: fields, fieldNames: fieldNames }, function (err, csv) {
+
+                        // error
+                        if (err) return res.negotiate(err);
+
+                        // success
+                        
+                        return res.json(200, { data: csv });
+                      });
+                    })
+                  })
+
+                })
+
+              })  
+          });
+        });
+
+        break;
+
     }
 
   }
