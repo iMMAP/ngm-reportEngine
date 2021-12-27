@@ -78,7 +78,7 @@ var ClusterDashboardController = {
 			response: req.param('response') ? req.param('response') : 'all',
 			project_detail: req.param('project_detail') ? req.param('project_detail') : 'all',
 			// hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
-			report_type_id: req.param('report_type_id')
+			report_type_id: req.param('report_type_id') ? req.param('report_type_id'): 'all'
 		}
 
 	},
@@ -154,6 +154,7 @@ var ClusterDashboardController = {
 		// parmas, filters
 		var params = ClusterDashboardController.getParams( req, res );
 		var filters = ClusterDashboardController.getFilters( params );
+
 		// match clause for native mongo query
 		var filterObject = _.extend({},	filters.default_Native,
 										filters.adminRpcode_Native,
