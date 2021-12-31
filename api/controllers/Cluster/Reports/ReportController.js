@@ -481,6 +481,10 @@ var ReportController = {
 				});
 			}, function ( err ) {
 				if ( err ) return err;
+				// temporarry solution, remove after setReportTodo biweekly deploy on PROD
+				if(reports && reports.length){
+					reports = reports.filter(r => r && r.reporting_period && (moment().format('YYYY-MM-DD') >= moment(r.reporting_period).format('YYYY-MM-DD')))
+				}
 				// return
 				return res.json( 200, reports );
 			});

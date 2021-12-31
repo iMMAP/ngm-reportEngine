@@ -857,6 +857,12 @@ var AdminDashboardController = {
               // return error
               if (err) return res.negotiate( err );
 
+              // temporarry solution, remove after setReportTodo biweekly deploy on PROD
+              if (reports && reports.length) {
+                reports = reports.filter(r => r && r.reporting_period && (moment().format('YYYY-MM-DD') >= moment(r.reporting_period).format('YYYY-MM-DD')))
+              };
+
+
                 // counter
                 var counter = 0,
                     length  = reports.length,
@@ -950,6 +956,11 @@ var AdminDashboardController = {
 
               // return error
               if (err) return res.negotiate( err );
+
+              // temporarry solution, remove after setReportTodo biweekly deploy on PROD
+              if (reports && reports.length) {
+                reports = reports.filter(r => r && r.reporting_period && (moment().format('YYYY-MM-DD') >= moment(r.reporting_period).format('YYYY-MM-DD')))
+              }
 
               // return
               if ( params.list ) {
@@ -1139,6 +1150,12 @@ var AdminDashboardController = {
               // return error
               if (err) return res.negotiate( err );
 
+              // temporarry solution, remove after setReportTodo biweekly deploy on PROD
+              if (reports && reports.length) {
+                reports = reports.filter(r => r && r.reporting_period && (moment().format('YYYY-MM-DD') >= moment(r.reporting_period).format('YYYY-MM-DD')))
+              }
+
+
               // counter
               var counter = 0,
                   length  = reports.length;
@@ -1289,6 +1306,12 @@ var AdminDashboardController = {
           .where( params.project_detail )
           .sort('updatedAt DESC')
           .exec( function( err, reports ){
+
+            // temporarry solution, remove after setReportTodo biweekly deploy on PROD
+            if (reports && reports.length) {
+              reports = reports.filter(r => r && r.reporting_period && (moment().format('YYYY-MM-DD') >= moment(r.reporting_period).format('YYYY-MM-DD')))
+            }
+
 
             // return error
             if (err) return res.negotiate( err );
@@ -1472,6 +1495,11 @@ var AdminDashboardController = {
 
                 // return error
                 if (err) return res.negotiate( err );
+
+                // temporarry solution, remove after setReportTodo biweekly deploy on PROD
+                if (reports && reports.length) {
+                  reports = reports.filter(r => r && r.reporting_period && (moment().format('YYYY-MM-DD') >= moment(r.reporting_period).format('YYYY-MM-DD')))
+                }
 
                 // return new Project
                 return res.json(200, { 'value': reports.length, 'value_total': total_reports.length });
