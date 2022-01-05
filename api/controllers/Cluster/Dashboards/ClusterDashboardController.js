@@ -78,32 +78,9 @@ var ClusterDashboardController = {
 			response: req.param('response') ? req.param('response') : 'all',
 			project_detail: req.param('project_detail') ? req.param('project_detail') : 'all',
 			// hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
-			report_type_id: req.param('report_type_id') ? req.param('report_type_id'): 'all'
+			report_type_id: req.param('report_type_id') ? req.param('report_type_id'): 'all',
+			api_key: req.param('api_key') ? req.param('api_key') : undefined
 		}
-      ocha: req.param('ocha') ? req.param('ocha') : false,
-      list: req.param('list') ? req.param('list') : false,
-      indicator: req.param('indicator'),
-      report: req.param('report'),
-      cluster_id: req.param('cluster_id'),
-      cluster_ids: req.param('cluster_ids') ? req.param('cluster_ids') : [req.param('cluster_id')],
-      activity_type_id: req.param('activity_type_id') ? req.param('activity_type_id') : 'all',
-      activity_description_id: req.param('activity_description_id') ? req.param('activity_description_id') : 'all',
-      adminRpcode: req.param('adminRpcode'),
-      admin0pcode: req.param('admin0pcode'),
-      organization_tag: req.param('organization_tag'),
-      admin1pcode: req.param('admin1pcode'),
-      admin2pcode: req.param('admin2pcode'),
-      beneficiaries: req.param('beneficiaries'),
-      start_date: req.param('start_date'),
-      end_date: req.param('end_date'),
-      hrp: (req.param('hrp') === 'true' || !req.param('hrp')) ? true : false,
-      hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
-      response: req.param('response') ? req.param('response') : 'all',
-      project_detail: req.param('project_detail') ? req.param('project_detail') : 'all',
-      // hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
-      report_type_id: req.param('report_type_id'),
-      api_key: req.param('api_key') ? req.param('api_key') : undefined,
-    }
 
   },
 
@@ -171,6 +148,8 @@ var ClusterDashboardController = {
 
     }
   },
+	// indicators
+	getIndicator: function (req, res) {
 
 		// parmas, filters
 		var params = ClusterDashboardController.getParams( req, res );
