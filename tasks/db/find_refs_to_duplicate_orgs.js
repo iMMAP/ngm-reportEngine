@@ -9,6 +9,8 @@ Description:
     // open mongo shell with find_refs_to_duplicate_orgs.js script
     mongo localhost:27017/ngmHealthCluster find_refs_to_duplicate_orgs.js --shell
 
+    // 1. DELETE DUPLICATE ORGANIZATIONS
+    
     // show duplicate organizations
     run_query_func(find_duplicate_orgs_query)
 
@@ -17,6 +19,8 @@ Description:
 
     // check delete result
     run_query_func(find_duplicate_orgs_query)
+
+    // 2. UPDATE REFERENCES TO DUPLICATE ORGANIZATIONS
 
     // show references to duplicate organizations
     show_refs_to_duplicate_orgs()
@@ -27,13 +31,25 @@ Description:
     // check update result
     show_refs_to_duplicate_orgs()
 
+    // 3. UPDATE REFERENCES TO DUPLICATE AND NON DUPLICATE ORGANIZATIONS
+
+    // show references to duplicate and non duplicate organizations
+    show_refs_to_duplicate_orgs(include_non_duplicate=true)
+
+    // update references to duplicate and non duplicate organizations
+    update_refs_to_duplicate_orgs(include_non_duplicate=true)
+
+    // check update result
+    show_refs_to_duplicate_orgs(include_non_duplicate=true)
+
 Fix issue https://github.com/rafinkanisa/ngm-reportDesk/issues/18
 
 */
 
 // collections with references to duplicate organizations 
-var org_collections = {
-    'ngmHealthCluster': {
+var org_collections = [
+    {
+        'db_name': 'ngmHealthCluster',
         'collections': [
             "beneficiaries",
             "budgetprogress",
@@ -43,16 +59,23 @@ var org_collections = {
             "stock",
             "stocklocation",
             "stockreport",
-            "stockwarehouse",
             "targetbeneficiaries",
             "targetlocation",
         ],
         'match_fields': [
             'admin0pcode',
-            'report_year',
+            // 'report_year',
         ]
-    },
-    'ngmReportHub': {
+    }, {
+        'db_name': 'ngmHealthCluster',
+        'collections': [
+            "stockwarehouse",
+        ],
+        'match_fields': [
+            'admin0pcode',
+        ]
+    }, {
+        'db_name': 'ngmReportHub',
         'collections': [
             "user",
             "userhistory",
@@ -62,27 +85,37 @@ var org_collections = {
             'admin0pcode',
         ]
     },
-};
+];
 
 // base match
 var admin0pcode = "ET"
 var lt_report_year = 2023
 
 function merge_objects(objects) {
-    var merged = {};
-    objects.forEach(function (obj) {
-        for (var attrname in obj) { merged[attrname] = obj[attrname]; }
-    })
-    return merged;
+    // var merged = {};
+    // objects.forEach(function (obj) {
+    //     for (var attr in obj) { merged[attr] = obj[attr]; }
+    // })
+    // return merged;
+    return objects.reduce(
+        function (merged, obj) { for (var attr in obj) { merged[attr] = obj[attr] }; return merged }, {}
+    )
 }
 
-function find_refs_to_duplicate_orgs_query(db_name, collection) {
-    return db.getSiblingDB(db_name).getCollection(collection).aggregate(
-        [{
+function get_match_fields(db_name, collection) {
+    var found = org_collections.filter(function (value) {
+        return value['db_name'] == db_name && value['collections'].indexOf(collection) >= 0;
+    });
+    return (found.length && found[0].hasOwnProperty('match_fields')) ? found[0]['match_fields'] : [];
+}
+
+function find_refs_to_duplicate_orgs_query(db_name, collection, include_non_duplicate) {
+    var pipeline = [
+        {
             $match: merge_objects([
                 { organization_id: { $ne: null } }, // with or without this line is the same, confirmed using diff
-                org_collections[db_name]['match_fields'].indexOf('admin0pcode') >= 0 ? { admin0pcode: admin0pcode } : {},
-                org_collections[db_name]['match_fields'].indexOf('report_year') >= 0 ? { report_year: { $lt: lt_report_year } } : {},
+                get_match_fields(db_name, collection).indexOf('admin0pcode') >= 0 ? { admin0pcode: admin0pcode } : {},
+                get_match_fields(db_name, collection).indexOf('report_year') >= 0 ? { report_year: { $lt: lt_report_year } } : {},
             ])
         }, {
             $sort: { // make sure ordering is consistent before using diff 
@@ -112,28 +145,40 @@ function find_refs_to_duplicate_orgs_query(db_name, collection) {
                 document_count: true,
                 has_ref_to_duplicate_orgs: { $gte: [{ $size: "$organization_ids" }, 2] },
             }
-        }, {
-            $match: {
-                has_ref_to_duplicate_orgs: true,
+        },
+    ]
+
+    if (include_non_duplicate != true) {
+        pipeline = pipeline.concat([
+            {
+                $match: {
+                    has_ref_to_duplicate_orgs: true,
+                }
             }
-        }]
-    );
+        ]);
+    }
+
+    return db.getSiblingDB(db_name).getCollection(collection).aggregate(pipeline);
 }
 
 function get_one_org(org_tag) {
-    var cursor = db.getSiblingDB('ngmReportHub').getCollection("organization").find({ organization_tag: org_tag, admin0pcode: admin0pcode }).sort({ createdAt: 1 }).limit(1);
+    var cursor = db.getSiblingDB('ngmReportHub').getCollection("organization").find({
+        admin0pcode: admin0pcode,
+        organization_tag: org_tag,
+    }).sort({ createdAt: 1 }).limit(1);
     return cursor.hasNext() ? cursor.next() : null;
 }
 
-function show_refs_to_duplicate_orgs() {
-    for (db_name in org_collections) {
-        org_collections[db_name]['collections'].forEach(function (collection) {
+function show_refs_to_duplicate_orgs(include_non_duplicate) {
+    org_collections.forEach(function (collection_set) {
+        var db_name = collection_set['db_name'];
+        collection_set['collections'].forEach(function (collection) {
 
-            var refs = find_refs_to_duplicate_orgs_query(db_name, collection);
+            var refs = find_refs_to_duplicate_orgs_query(db_name, collection, include_non_duplicate);
             if (refs.hasNext()) {
                 refs.forEach(function (doc) {
 
-                    print('\ncollection:', db_name + '.' + collection, ', org:', doc._id);
+                    print('\ncollection:', db_name + '.' + collection, ', org_tag:', doc._id);
                     printjson(doc);
 
                     print('check by org_ref:');
@@ -159,17 +204,18 @@ function show_refs_to_duplicate_orgs() {
                 print('\ncollection:', db_name + '.' + collection, ', no reference to duplicate organizations found');
             }
         });
-    }
+    })
 }
 
-function update_refs_to_duplicate_orgs() {
-    for (db_name in org_collections) {
-        org_collections[db_name]['collections'].forEach(function (collection) {
+function update_refs_to_duplicate_orgs(include_non_duplicate) {
+    org_collections.forEach(function (collection_set) {
+        var db_name = collection_set['db_name'];
+        collection_set['collections'].forEach(function (collection) {
 
-            var refs = find_refs_to_duplicate_orgs_query(db_name, collection);
+            var refs = find_refs_to_duplicate_orgs_query(db_name, collection, include_non_duplicate);
             if (refs.hasNext()) {
                 refs.forEach(function (doc) {
-                    print('\ncollection:', db_name + '.' + collection, ', org:', doc._id);
+                    print('\ncollection:', db_name + '.' + collection, ', org_tag:', doc._id);
                     var org = get_one_org(doc._id);
                     if (org) {
                         print('update org ref using _id:', org._id.valueOf());
@@ -193,7 +239,7 @@ function update_refs_to_duplicate_orgs() {
                 print('\ncollection:', db_name + '.' + collection, ', no reference to duplicate organizations found');
             }
         });
-    }
+    })
 }
 
 function find_duplicate_orgs_query() {
@@ -211,6 +257,7 @@ function find_duplicate_orgs_query() {
                 _id: {
                     adminRpcode: "$adminRpcode",
                     adminRname: "$adminRname",
+                    admin0pcode: "$admin0pcode",
                     organization_type: "$organization_type",
                     organization_name: "$organization_name",
                     organization_tag: "$organization_tag",
