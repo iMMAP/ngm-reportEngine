@@ -1803,7 +1803,7 @@ var ProjectController = {
 
 
     User
-      .find({ organization_tag: organization_tag, admin0pcode: admin0pcode, roles: { $in: ['ORG']}})
+      .find({ organization_tag: organization_tag, admin0pcode: admin0pcode, roles: { $in: ['ORG'] }, status:"active"})
       .exec(function (err, admins) {
         // if no config file, return, else send email ( PROD )
         if (!fs.existsSync('/home/ubuntu/nginx/www/ngm-reportEngine/config/email.js')) return res.json(200, { 'data': 'No email config' });
