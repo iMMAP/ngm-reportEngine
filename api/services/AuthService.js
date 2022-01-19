@@ -352,7 +352,7 @@ module.exports.canGetApiData = function (permission, user, params) {
 
       for (const z of role[permission_restricted]) {
         if (!z || !user[z] || !params[z] || (user[z].toLowerCase() !== params[z].toLowerCase())) {
-          return false;
+          allowed = false;
         }
       }
       // fast return on match
