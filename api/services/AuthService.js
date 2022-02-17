@@ -2,38 +2,38 @@ const ROLES = [{
   ROLE: 'PUBLIC',
   EDIT: false,
   EDIT_USER: false,
-  EDIT_USER_CLUSTER:false,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:false,
-  EDIT_USER_ORG_RESTRICTED:[],
-  ADMIN_RESTRICTED: [ 'admin0pcode', 'organization_tag' ],
-  ADMIN_MENU: [ 'cluster_id', 'report_id' ],
+  EDIT_USER_CLUSTER: false,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
+  ADMIN_RESTRICTED: ['admin0pcode', 'organization_tag'],
+  ADMIN_MENU: ['cluster_id', 'report_id'],
   DASHBOARD_RESTRICTED: [],
-  DASHBOARD_MENU: [ 'adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag' ],
+  DASHBOARD_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag'],
   TEAM_RESTRICTED: [],
   TEAM_MENU: [],
   VALIDATE: false,
   LEVEL: 0,
   DESCRIPTION: 'Public Access'
-},{
+}, {
   ROLE: 'USER',
   EDIT: true,
-  EDIT_RESTRICTED: ['organization_tag', 'admin0pcode', 'adminRpcode' ],
+  EDIT_RESTRICTED: ['organization_tag', 'admin0pcode', 'adminRpcode'],
   EDIT_USER: false,
-  EDIT_USER_CLUSTER:false,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:false,
-  EDIT_USER_ORG_RESTRICTED:[],
+  EDIT_USER_CLUSTER: false,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
   EDIT_USER_RESTRICTED: ['organization_tag', 'admin0pcode', 'adminRpcode'],
-  ADMIN_RESTRICTED: [ 'admin0pcode', 'organization_tag' ],
-  ADMIN_MENU: [ 'cluster_id', 'report_id' ],
-  DASHBOARD_RESTRICTED: [ 'adminRpcode', 'admin0pcode', 'organization_tag' ],
-  DASHBOARD_MENU: [ 'cluster_id' ],
+  ADMIN_RESTRICTED: ['admin0pcode', 'organization_tag'],
+  ADMIN_MENU: ['cluster_id', 'report_id'],
+  DASHBOARD_RESTRICTED: ['adminRpcode', 'admin0pcode', 'organization_tag'],
+  DASHBOARD_MENU: ['cluster_id'],
   DASHBOARD_DOWNLOAD: true,
   DASHBOARD_DOWNLOAD_RESTRICTED: ['organization_tag', 'admin0pcode', 'adminRpcode'],
-  TEAM_RESTRICTED: [ 'admin0pcode', 'organization_tag' ],
-  TEAM_MENU: [ 'cluster_id', 'report_id' ],
-  PROJECT_RESTRICTED: ['adminRpcode','admin0pcode', 'organization_tag'],
+  TEAM_RESTRICTED: ['admin0pcode', 'organization_tag'],
+  TEAM_MENU: ['cluster_id', 'report_id'],
+  PROJECT_RESTRICTED: ['adminRpcode', 'admin0pcode', 'organization_tag'],
   PROJECT_MENU: ['cluster_id'],
   VALIDATE: false,
   LEVEL: 1,
@@ -44,46 +44,75 @@ const ROLES = [{
   EDIT: true,
   EDIT_RESTRICTED: ['organization_tag', 'admin0pcode', 'adminRpcode'],
   EDIT_USER: true,
-  EDIT_USER_CLUSTER:true,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:false,
-  EDIT_USER_ORG_RESTRICTED:[],
-  EDIT_USER_ROLES: [ 'USER', 'ORG' ],
+  EDIT_USER_CLUSTER: true,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
+  EDIT_USER_ROLES: ['USER', 'ORG'],
   EDIT_USER_RESTRICTED: ['organization_tag', 'admin0pcode', 'adminRpcode'],
-  ADMIN_RESTRICTED: [ 'admin0pcode', 'organization_tag' ],
-  ADMIN_MENU: [ 'cluster_id', 'report_id' ],
-  DASHBOARD_RESTRICTED: [ 'adminRpcode', 'admin0pcode', 'organization_tag' ],
-  DASHBOARD_MENU: [ 'cluster_id' ],
+  ADMIN_RESTRICTED: ['admin0pcode', 'organization_tag'],
+  ADMIN_MENU: ['cluster_id', 'report_id'],
+  DASHBOARD_RESTRICTED: ['adminRpcode', 'admin0pcode', 'organization_tag'],
+  DASHBOARD_MENU: ['cluster_id'],
   DASHBOARD_DOWNLOAD: true,
   DASHBOARD_DOWNLOAD_RESTRICTED: ['organization_tag', 'admin0pcode', 'adminRpcode'],
-  TEAM_RESTRICTED: [ 'admin0pcode', 'organization_tag' ],
-  TEAM_MENU: [ 'cluster_id' ],
-  PROJECT_RESTRICTED: ['adminRpcode','admin0pcode', 'organization_tag'],
+  TEAM_RESTRICTED: ['admin0pcode', 'organization_tag'],
+  TEAM_MENU: ['cluster_id'],
+  PROJECT_RESTRICTED: ['adminRpcode', 'admin0pcode', 'organization_tag'],
   PROJECT_MENU: ['cluster_id'],
   VALIDATE: false,
   LEVEL: 2,
   DESCRIPTION: 'The ORG role is to manage the USERS of your Organization'
 },
 {
+  ROLE: 'CLUSTER_OBSERVER',
+  EDIT: false,
+  EDIT_RESTRICTED: ['cluster_id', 'admin0pcode', 'adminRpcode'],
+  EDIT_USER: false,
+  EDIT_USER_CLUSTER: false,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
+  EDIT_USER_ROLES: ['USER', 'CLUSTER_OBSERVER'],
+  EDIT_USER_RESTRICTED: [],
+  EDIT_ORGANIZATION: false,
+  EDIT_ORGANIZATION_RESTRICTED: [],
+  ADMIN: true,
+  ADMIN_RESTRICTED: ['adminRpcode', 'admin0pcode', 'cluster_id'],
+  ADMIN_MENU: ['organization_tag', 'report_id'],
+  DASHBOARD_RESTRICTED: ['adminRpcode', 'admin0pcode', 'cluster_id'],
+  DASHBOARD_MENU: ['organization_tag'],
+  DASHBOARD_DOWNLOAD: true,
+  DASHBOARD_DOWNLOAD_RESTRICTED: ['cluster_id', 'admin0pcode', 'adminRpcode'],
+  TEAM_RESTRICTED: ['admin0pcode', 'cluster_id'],
+  TEAM_MENU: ['organization_tag'],
+  PROJECT_RESTRICTED: ['adminRpcode', 'admin0pcode', 'cluster_id'],
+  PROJECT_MENU: ['organization_tag'],
+  VALIDATE: true,
+  MULTICOUNTRY: false,
+  LEVEL: 2,
+  DESCRIPTION: 'The CLUSTER_OBSERVER role acts as an observer and can view (but not edit)  of your Sectoe'
+},
+{
   ROLE: 'CLUSTER',
   EDIT: true,
   EDIT_RESTRICTED: ['cluster_id', 'admin0pcode', 'adminRpcode'],
   EDIT_USER: true,
-  EDIT_USER_CLUSTER:true,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:false,
-  EDIT_USER_ORG_RESTRICTED:[],
-  EDIT_USER_ROLES: [ 'USER', 'ORG', 'CLUSTER' ],
+  EDIT_USER_CLUSTER: true,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
+  EDIT_USER_ROLES: ['USER', 'ORG', 'CLUSTER'],
   EDIT_USER_RESTRICTED: ['cluster_id', 'admin0pcode', 'adminRpcode'],
-  ADMIN_RESTRICTED: [ 'admin0pcode', 'cluster_id' ],
-  ADMIN_MENU: [ 'organization_tag', 'report_id' ],
-  DASHBOARD_RESTRICTED: [ 'adminRpcode', 'admin0pcode', 'cluster_id' ],
-  DASHBOARD_MENU: [ 'organization_tag' ],
+  ADMIN_RESTRICTED: ['admin0pcode', 'cluster_id'],
+  ADMIN_MENU: ['organization_tag', 'report_id'],
+  DASHBOARD_RESTRICTED: ['adminRpcode', 'admin0pcode', 'cluster_id'],
+  DASHBOARD_MENU: ['organization_tag'],
   DASHBOARD_DOWNLOAD: true,
   DASHBOARD_DOWNLOAD_RESTRICTED: ['cluster_id', 'admin0pcode', 'adminRpcode'],
-  TEAM_RESTRICTED: [ 'admin0pcode', 'cluster_id' ],
-  TEAM_MENU: [ 'organization_tag' ],
-  PROJECT_RESTRICTED: ['adminRpcode','admin0pcode', 'cluster_id' ],
+  TEAM_RESTRICTED: ['admin0pcode', 'cluster_id'],
+  TEAM_MENU: ['organization_tag'],
+  PROJECT_RESTRICTED: ['adminRpcode', 'admin0pcode', 'cluster_id'],
   PROJECT_MENU: ['organization_tag'],
   VALIDATE: true,
   LEVEL: 3,
@@ -94,21 +123,21 @@ const ROLES = [{
   EDIT: false,
   EDIT_RESTRICTED: ['admin0pcode', 'adminRpcode'],
   EDIT_USER: false,
-  EDIT_USER_CLUSTER:true,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:false,
-  EDIT_USER_ORG_RESTRICTED:[],
-  EDIT_USER_ROLES: [ 'USER', 'ORG', 'CLUSTER', 'COUNTRY' ],
+  EDIT_USER_CLUSTER: true,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
+  EDIT_USER_ROLES: ['USER', 'ORG', 'CLUSTER', 'COUNTRY'],
   EDIT_USER_RESTRICTED: ['admin0pcode', 'adminRpcode'],
-  ADMIN_RESTRICTED: [ 'admin0pcode' ],
-  ADMIN_MENU: [ 'cluster_id', 'report_id', 'organization_tag' ],
-  DASHBOARD_RESTRICTED: [ 'admin0pcode', 'adminRpcode' ],
-  DASHBOARD_MENU: [ 'cluster_id', 'organization_tag' ],
+  ADMIN_RESTRICTED: ['admin0pcode'],
+  ADMIN_MENU: ['cluster_id', 'report_id', 'organization_tag'],
+  DASHBOARD_RESTRICTED: ['admin0pcode', 'adminRpcode'],
+  DASHBOARD_MENU: ['cluster_id', 'organization_tag'],
   DASHBOARD_DOWNLOAD: true,
   DASHBOARD_DOWNLOAD_RESTRICTED: ['admin0pcode', 'adminRpcode'],
-  TEAM_RESTRICTED: [ 'admin0pcode' ],
-  TEAM_MENU: [ 'cluster_id', 'organization_tag' ],
-  PROJECT_RESTRICTED: ['adminRpcode','admin0pcode'],
+  TEAM_RESTRICTED: ['admin0pcode'],
+  TEAM_MENU: ['cluster_id', 'organization_tag'],
+  PROJECT_RESTRICTED: ['adminRpcode', 'admin0pcode'],
   PROJECT_MENU: ['cluster_id', 'organization_tag'],
   VALIDATE: true,
   LEVEL: 4,
@@ -117,23 +146,23 @@ const ROLES = [{
 {
   ROLE: 'COUNTRY_ADMIN',
   EDIT: true,
-  EDIT_RESTRICTED: [ 'admin0pcode', 'adminRpcode'],
+  EDIT_RESTRICTED: ['admin0pcode', 'adminRpcode'],
   EDIT_USER: true,
-  EDIT_USER_CLUSTER:true,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:true,
+  EDIT_USER_CLUSTER: true,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: true,
   EDIT_USER_ORG_RESTRICTED: ['admin0pcode'],
-  EDIT_USER_ROLES: [ 'USER', 'ORG', 'CLUSTER', 'COUNTRY', 'COUNTRY_ADMIN' ],
+  EDIT_USER_ROLES: ['USER', 'ORG', 'CLUSTER', 'COUNTRY', 'COUNTRY_ADMIN'],
   EDIT_USER_RESTRICTED: ['admin0pcode', 'adminRpcode'],
-  ADMIN_RESTRICTED: [ 'admin0pcode' ],
-  ADMIN_MENU: [ 'cluster_id', 'report_id', 'organization_tag' ],
-  DASHBOARD_RESTRICTED: [ 'admin0pcode', 'adminRpcode' ],
-  DASHBOARD_MENU: [ 'cluster_id', 'organization_tag' ],
+  ADMIN_RESTRICTED: ['admin0pcode'],
+  ADMIN_MENU: ['cluster_id', 'report_id', 'organization_tag'],
+  DASHBOARD_RESTRICTED: ['admin0pcode', 'adminRpcode'],
+  DASHBOARD_MENU: ['cluster_id', 'organization_tag'],
   DASHBOARD_DOWNLOAD: true,
   DASHBOARD_DOWNLOAD_RESTRICTED: ['admin0pcode', 'adminRpcode'],
-  TEAM_RESTRICTED: [ 'admin0pcode' ],
-  TEAM_MENU: [ 'cluster_id', 'organization_tag' ],
-  PROJECT_RESTRICTED: ['adminRpcode','admin0pcode'],
+  TEAM_RESTRICTED: ['admin0pcode'],
+  TEAM_MENU: ['cluster_id', 'organization_tag'],
+  PROJECT_RESTRICTED: ['adminRpcode', 'admin0pcode'],
   PROJECT_MENU: ['cluster_id', 'organization_tag'],
   VALIDATE: false,
   LEVEL: 4,
@@ -144,19 +173,19 @@ const ROLES = [{
   EDIT: false,
   EDIT_RESTRICTED: ['organization_tag', 'adminRpcode'],
   EDIT_USER: false,
-  EDIT_USER_CLUSTER:false,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:false,
-  EDIT_USER_ORG_RESTRICTED:[],
+  EDIT_USER_CLUSTER: false,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
   EDIT_USER_RESTRICTED: ['adminRpcode', 'organization_tag'],
-  ADMIN_RESTRICTED: [ 'adminRpcode', 'organization_tag' ],
-  ADMIN_MENU: [ 'admin0pcode', 'cluster_id', 'report_id' ],
-  DASHBOARD_RESTRICTED: [ 'adminRpcode', 'organization_tag' ],
-  DASHBOARD_MENU: [ 'admin0pcode', 'cluster_id' ],
+  ADMIN_RESTRICTED: ['adminRpcode', 'organization_tag'],
+  ADMIN_MENU: ['admin0pcode', 'cluster_id', 'report_id'],
+  DASHBOARD_RESTRICTED: ['adminRpcode', 'organization_tag'],
+  DASHBOARD_MENU: ['admin0pcode', 'cluster_id'],
   DASHBOARD_DOWNLOAD: true,
   DASHBOARD_DOWNLOAD_RESTRICTED: ['organization_tag', 'adminRpcode'],
-  TEAM_RESTRICTED: [ 'adminRpcode', 'organization_tag' ],
-  TEAM_MENU: [ 'admin0pcode', 'cluster_id' ],
+  TEAM_RESTRICTED: ['adminRpcode', 'organization_tag'],
+  TEAM_MENU: ['admin0pcode', 'cluster_id'],
   PROJECT_RESTRICTED: ['adminRpcode', 'organization_tag'],
   PROJECT_MENU: ['admin0pcode', 'cluster_id'],
   VALIDATE: false,
@@ -168,19 +197,19 @@ const ROLES = [{
   EDIT: false,
   EDIT_RESTRICTED: ['adminRpcode'],
   EDIT_USER: false,
-  EDIT_USER_CLUSTER:false,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:false,
-  EDIT_USER_ORG_RESTRICTED:[],
+  EDIT_USER_CLUSTER: false,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
   EDIT_USER_RESTRICTED: ['adminRpcode'],
-  ADMIN_RESTRICTED: [ 'adminRpcode' ],
-  ADMIN_MENU: [ 'admin0pcode', 'cluster_id', 'report_id', 'organization_tag' ],
-  DASHBOARD_RESTRICTED: [ 'adminRpcode' ],
-  DASHBOARD_MENU: [ 'admin0pcode', 'cluster_id', 'organization_tag' ],
+  ADMIN_RESTRICTED: ['adminRpcode'],
+  ADMIN_MENU: ['admin0pcode', 'cluster_id', 'report_id', 'organization_tag'],
+  DASHBOARD_RESTRICTED: ['adminRpcode'],
+  DASHBOARD_MENU: ['admin0pcode', 'cluster_id', 'organization_tag'],
   DASHBOARD_DOWNLOAD: true,
   DASHBOARD_DOWNLOAD_RESTRICTED: ['adminRpcode'],
-  TEAM_RESTRICTED: [ 'adminRpcode' ],
-  TEAM_MENU: [ 'admin0pcode', 'cluster_id', 'organization_tag' ],
+  TEAM_RESTRICTED: ['adminRpcode'],
+  TEAM_MENU: ['admin0pcode', 'cluster_id', 'organization_tag'],
   PROJECT_RESTRICTED: ['adminRpcode'],
   PROJECT_MENU: ['admin0pcode', 'cluster_id', 'organization_tag'],
   VALIDATE: false,
@@ -192,19 +221,19 @@ const ROLES = [{
   EDIT: false,
   EDIT_RESTRICTED: ['organization_tag'],
   EDIT_USER: false,
-  EDIT_USER_CLUSTER:false,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:false,
-  EDIT_USER_ORG_RESTRICTED:[],
+  EDIT_USER_CLUSTER: false,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
   EDIT_USER_RESTRICTED: ['organization_tag'],
-  ADMIN_RESTRICTED: [ 'organization_tag' ],
-  ADMIN_MENU: [ 'adminRpcode', 'admin0pcode', 'cluster_id', 'report_id' ],
-  DASHBOARD_RESTRICTED: [ 'organization_tag' ],
-  DASHBOARD_MENU: [ 'adminRpcode', 'admin0pcode', 'cluster_id' ],
+  ADMIN_RESTRICTED: ['organization_tag'],
+  ADMIN_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id', 'report_id'],
+  DASHBOARD_RESTRICTED: ['organization_tag'],
+  DASHBOARD_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id'],
   DASHBOARD_DOWNLOAD: true,
   DASHBOARD_DOWNLOAD_RESTRICTED: ['organization_tag'],
-  TEAM_RESTRICTED: [ 'organization_tag' ],
-  TEAM_MENU: [ 'adminRpcode', 'admin0pcode', 'cluster_id' ],
+  TEAM_RESTRICTED: ['organization_tag'],
+  TEAM_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id'],
   PROJECT_RESTRICTED: ['organization_tag'],
   PROJECT_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id'],
   VALIDATE: false,
@@ -216,19 +245,19 @@ const ROLES = [{
   EDIT: false,
   EDIT_RESTRICTED: [],
   EDIT_USER: false,
-  EDIT_USER_CLUSTER:false,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:false,
-  EDIT_USER_ORG_RESTRICTED:[],
+  EDIT_USER_CLUSTER: false,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
   EDIT_USER_RESTRICTED: [],
   ADMIN_RESTRICTED: [],
-  ADMIN_MENU: [ 'adminRpcode', 'admin0pcode', 'cluster_id', 'report_id', 'organization_tag' ],
+  ADMIN_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id', 'report_id', 'organization_tag'],
   DASHBOARD_RESTRICTED: [],
-  DASHBOARD_MENU: [ 'adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag' ],
+  DASHBOARD_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag'],
   DASHBOARD_DOWNLOAD: true,
   DASHBOARD_DOWNLOAD_RESTRICTED: [],
   TEAM_RESTRICTED: [],
-  TEAM_MENU: [ 'adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag' ],
+  TEAM_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag'],
   PROJECT_RESTRICTED: [],
   PROJECT_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag'],
   VALIDATE: false,
@@ -240,20 +269,20 @@ const ROLES = [{
   EDIT: true,
   EDIT_RESTRICTED: [],
   EDIT_USER: true,
-  EDIT_USER_CLUSTER:false,
-  EDIT_USER_CLUSTER_RESTRICTED:[],
-  EDIT_USER_ORG:false,
-  EDIT_USER_ORG_RESTRICTED:[],
-  EDIT_USER_ROLES: [ 'USER', 'ORG', 'CLUSTER', 'COUNTRY', 'COUNTRY_ADMIN', 'REGION_ORG', 'REGION', 'HQ_ORG', 'HQ', 'SUPERADMIN'],
+  EDIT_USER_CLUSTER: false,
+  EDIT_USER_CLUSTER_RESTRICTED: [],
+  EDIT_USER_ORG: false,
+  EDIT_USER_ORG_RESTRICTED: [],
+  EDIT_USER_ROLES: ['USER', 'ORG', 'CLUSTER', 'COUNTRY', 'COUNTRY_ADMIN', 'REGION_ORG', 'REGION', 'HQ_ORG', 'HQ', 'SUPERADMIN'],
   EDIT_USER_RESTRICTED: [],
   ADMIN_RESTRICTED: [],
-  ADMIN_MENU: [ 'adminRpcode', 'admin0pcode', 'cluster_id', 'report_id', 'organization_tag' ],
+  ADMIN_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id', 'report_id', 'organization_tag'],
   DASHBOARD_RESTRICTED: [],
-  DASHBOARD_MENU: [ 'adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag' ],
+  DASHBOARD_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag'],
   DASHBOARD_DOWNLOAD: true,
   DASHBOARD_DOWNLOAD_RESTRICTED: [],
   TEAM_RESTRICTED: [],
-  TEAM_MENU: [ 'adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag' ],
+  TEAM_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag'],
   PROJECT_RESTRICTED: [],
   PROJECT_MENU: ['adminRpcode', 'admin0pcode', 'cluster_id', 'organization_tag'],
   VALIDATE: true,
@@ -272,10 +301,10 @@ const ROLES = [{
  * @param {string} zones.organization_tag - organization_tag.
  * @returns {boolean} User can/cannot edit for input view zones.
  */
-module.exports.canDo = function(permission, user, zones) {
-  let USER_PERMISSIONS = ROLES.filter(function(x){return user.roles.includes(x.ROLE)});
+module.exports.canDo = function (permission, user, zones) {
+  let USER_PERMISSIONS = ROLES.filter(function (x) { return user.roles.includes(x.ROLE) });
   // check params
-  if (!permission||!zones||typeof zones!=='object'||typeof permission!=='string') return false
+  if (!permission || !zones || typeof zones !== 'object' || typeof permission !== 'string') return false
 
   // _RESTRICTED prop on permissions conf with user restricted zones
   const permission_restricted = (permission ? permission : 'EDIT') + '_RESTRICTED';
@@ -283,21 +312,21 @@ module.exports.canDo = function(permission, user, zones) {
   // validation logic
 
   // roll over user roles definitions, use for...of in future
-  for (const role of USER_PERMISSIONS){
+  for (const role of USER_PERMISSIONS) {
     // if permission active
-    if (role[permission]){
+    if (role[permission]) {
       allowed = true;
       // roll over role restricted zones
-      for (const z of role[permission_restricted]){
+      for (const z of role[permission_restricted]) {
         // if not own zone
         // console.log(user[z], zones[z]);
-        if(!z||!user[z]||!zones[z]||(user[z].toLowerCase() !== zones[z].toLowerCase())){
+        if (!z || !user[z] || !zones[z] || (user[z].toLowerCase() !== zones[z].toLowerCase())) {
           // disallow access
           allowed = false;
         }
       }
       // fast return on match
-      if(allowed) return allowed
+      if (allowed) return allowed
     }
   }
 
@@ -326,4 +355,38 @@ module.exports.canEditRecord = async function (userObj, collection, id) {
     return { err: 'Not permitted!', code: 403 }
   }
   return { err: false, code: 200 }
+};
+
+
+/**
+ * Checks if user can get data from URL (API).
+ * @param {string} permission - permission.
+ * @param {Object} user - User object.
+ * @param {Object} params - Parameter requested from url.
+ * @param {string} params.adminRpcode - adminRpcode.
+ * @param {string} params.admin0pcode - admin0pcode.
+ * @param {string} params.cluster_id - cluster_id.
+ * @param {string} params.organization_tag - organization_tag.
+ */
+module.exports.canGetApiData = function (permission, user, params) {
+  let USER_ACCESS = ROLES.filter(x => user.roles.includes(x.ROLE));
+
+  if (!permission || !params || typeof params !== 'object' || typeof permission !== 'string') return false
+
+  const permission_restricted = permission + '_RESTRICTED';
+
+  for (const role of USER_ACCESS) {
+    if (role[permission]) {
+      allowed = true;
+
+      for (const z of role[permission_restricted]) {
+        if (!z || !user[z] || !params[z] || (user[z].toLowerCase() !== params[z].toLowerCase())) {
+          allowed = false;
+        }
+      }
+      // fast return on match
+      if (allowed) return allowed
+    }
+  }
+  return false;
 };
