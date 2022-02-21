@@ -21,6 +21,7 @@ const ExcelJS = require('exceljs');
 // constants
 const XLSX_PATH = '/home/ubuntu/data/template/';
 const XLSX_TEMPLATE = 'ISCG_4W_Template_2020';
+let _user_using_api;
 
 // ClusterDashboardController
 var ClusterDashboardController = {
@@ -1056,11 +1057,12 @@ var ClusterDashboardController = {
                       filename = req.param('reportname') ? req.param('reportname') : 'beneficiaries'
                       res.setHeader('Content-disposition', 'attachment; filename=' + filename + '.csv');
                       res.send(200, csv);
-                      MetricsController.setApiMetrics({
+                      var user_info = _user_using_api ? _user_using_api : {
                         dashboard: 'cluster_dashboard',
                         theme: params.indicator,
                         url: req.url,
-                      }, function (err) {
+                      };
+                      MetricsController.setApiMetrics(user_info, function (err) {
                         return
                       })
                     } else {
@@ -1404,11 +1406,12 @@ var ClusterDashboardController = {
                     filename = req.param('reportname') ? req.param('reportname') : 'stocks'
                     res.setHeader('Content-disposition', 'attachment; filename=' + filename + '.csv');
                     res.send(200, csv);
-                    MetricsController.setApiMetrics({
+                    var user_info = _user_using_api ? _user_using_api : {
                       dashboard: 'cluster_dashboard',
                       theme: params.indicator,
                       url: req.url,
-                    }, function (err) {
+                    };
+                    MetricsController.setApiMetrics(user_info, function (err) {
                       return
                     });
                   } else {
@@ -2297,6 +2300,15 @@ var ClusterDashboardController = {
                 organization_tag: params.organization_tag,
               });
               if (canDownload) {
+                 _user_using_api = {
+                  organization: user.organization,
+                  email: user.email,
+                  dashboard: 'cluster_dashboard',
+                  theme: params.indicator,
+                  username: user.username,
+                  url: req.url,
+                  format: 'api/text/csv'
+                }
                 returnData();
               } else {
                 return res.json(400, {'message': "you don't have permission to access the data"});
