@@ -8,6 +8,7 @@ Description:
 
     // open mongo shell with find_refs_to_duplicate_orgs.js script
     mongo localhost:27017/ngmHealthCluster find_refs_to_duplicate_orgs.js --shell
+    mongo localhost:27017/ngmHealthCluster find_refs_to_duplicate_orgs.js --eval 'var admin0pcode="AF"' --shell
 
     // 1. DELETE DUPLICATE ORGANIZATIONS
     
@@ -88,7 +89,12 @@ var org_collections = [
 ];
 
 // base match
-var admin0pcode = "ET"
+// var admin0pcode = "ET"
+if (typeof admin0pcode === 'undefined') {
+    print('admin0pcode param not set, eg: --eval \'var admin0pcode="AF"\'')
+    quit(1);
+}
+print("admin0pcode: "+ admin0pcode)
 var lt_report_year = 2023
 
 function merge_objects(objects) {
