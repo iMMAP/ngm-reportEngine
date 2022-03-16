@@ -1199,7 +1199,8 @@ var ReportTasksController = {
           // counter
           var counter = 0,
               length = notifications.length;
-
+          
+          if (!notifications.length) { return res.json(200, { msg: 'Not the time to send a notification email about  due soon report, due to today report, or pending reports for period ' + moment().subtract(1, 'M').format('MMMM YYYY') + '!' }) }
           // for each
           notifications.forEach( function( notification, i ){
 
@@ -1403,7 +1404,7 @@ var ReportTasksController = {
 
         // for each
         var biweekly_period_text = (biweekly_period === 'first')? 'Biweekly First Period': 'Biweekly Second Period';
-        if (!notifications.length) { return res.json(200, { msg: 'There is no report that needs to be sent email reminder for ' + biweekly_period_text + ', ' + moment().format('MMMM, YYYY') + '!' })}
+        if (!notifications.length) { return res.json(200, { msg: 'Not the time to send a notification email about  due soon report, due to today report, or pending reports for ' + biweekly_period_text + ', ' + no_report_pending + '!' })}
         notifications.forEach(function (notification, i) {
 
           User
