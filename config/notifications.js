@@ -20,6 +20,12 @@ const REPORTING_DUE_DATE_NOTIFICATIONS_CONFIG = [
     today: [7],
     reporting_due_date: 7
   }, {
+    admin0pcode: "SO",
+    soon: [3],
+    pending: [7],
+    today: [5],
+    reporting_due_date: 5
+  },{
     admin0pcode: "ALL",
     soon: [8],
     pending: [12],
