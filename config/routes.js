@@ -161,6 +161,7 @@ module.exports.routes = {
   'GET /cluster/list/stockitems': 'Cluster/Lists/ListController.getStockItems',
   'GET /cluster/list/beneficiarytypes': 'Cluster/Lists/ListController.getBeneficiaryTypes',
 
+  'GET /cluster/list/hrpbeneficiarytypes': 'Cluster/Lists/ListController.getHrpBeneficiaryTypes',
   // ADMIN DASHBOARD
   'POST /cluster/admin/indicator': 'Cluster/Dashboards/AdminDashboardController.getClusterAdminIndicator',
 
