@@ -77,7 +77,7 @@ const ROLES = [{
   EDIT_USER_RESTRICTED: [],
   EDIT_ORGANIZATION: false,
   EDIT_ORGANIZATION_RESTRICTED: [],
-  ADMIN: true,
+  ADMIN: false,
   ADMIN_RESTRICTED: ['adminRpcode', 'admin0pcode', 'cluster_id'],
   ADMIN_MENU: ['organization_tag', 'report_id'],
   DASHBOARD_RESTRICTED: ['adminRpcode', 'admin0pcode', 'cluster_id'],
