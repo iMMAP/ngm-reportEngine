@@ -1884,7 +1884,7 @@ var ProjectController = {
         recipient: email.recipient,
       }, {
         to: email.email,
-        subject: 'DEV ReportHub - Succesfully Delete Project'
+        subject: 'ReportHub - Succesfully Delete Project'
       }, function (err) {
 
         // return error
