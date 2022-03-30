@@ -1848,6 +1848,55 @@ var ProjectController = {
 
   },
 
+  sendEmailSuccessDeleteProject: function (req, res) {
+
+    // check params
+    if (!req.param('organization_tag') && !req.param('admin0pcode') && !req.param('admin') && !req.param('admin_email')) {
+      return res.json(401, { msg: 'organization_tag, admin0pcode, reason required' });
+    }
+    // file system
+    var fs = require('fs');
+
+    let admin = req.param('admin');
+    let admin_fullname = req.param('admin_fullname');
+    let admin_email = req.param('admin_email');
+    let organization_tag = req.param('organization_tag');
+    let project_title = req.param('project_title');
+    let country_code = req.param('admin0pcode');
+    let country = req.param('admin0name');
+    let focal_point = req.param('focal_point');
+    let focal_point_username = req.param('focal_point_username');
+    let focal_point_email = req.param('focal_point_email');
+
+    list_emails = [{ email: focal_point_email, recipient: focal_point }];
+
+    if (!fs.existsSync('/home/ubuntu/nginx/www/ngm-reportEngine/config/email.js')) return res.json(200, { 'data': 'No email config' });
+
+    list_emails.forEach(email => {
+      // send email
+      sails.hooks.email.send('notification-delete-project', {
+        type: 'Delete Project',
+        senderName: 'ReportHub',
+        title: project_title,
+        admin: admin,
+        admin_fullname: admin_fullname,
+        country: country,
+        recipient: email.recipient,
+      }, {
+        to: email.email,
+        subject: 'DEV ReportHub - Succesfully Delete Project'
+      }, function (err) {
+
+        // return error
+        if (err) return res.negotiate(err);
+
+      });
+    });
+
+    return res.json(200, { msg: 'Success!' });
+
+  },
+
 };
 
 module.exports = ProjectController;
