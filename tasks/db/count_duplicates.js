@@ -3,6 +3,7 @@ Usage:
 
     # open mongo shell with count_duplicates.js script
     mongo localhost:27017/ngmHealthCluster count_duplicates.js --shell
+    mongo localhost:27017/ngmHealthCluster count_duplicates.js --eval 'var admin0pcode="AF"; var report_year=2021' --shell
 
     # call run_aggregate_queries() to show number of duplicates
     run_aggregate_queries()
@@ -14,12 +15,20 @@ Usage:
     run_aggregate_queries()
 */
 
+if (typeof admin0pcode === 'undefined' || typeof report_year === 'undefined') {
+    print('admin0pcode param not set, eg: --eval \'var admin0pcode="AF"\'')
+    print('report_year param not set, eg: --eval \'var report_year=2022\'')
+    quit(1);
+}
+print(admin0pcode);
+print(report_year);
 var queries = [];
+var admin0pcode = admin0pcode;
 
 var base_match_stage = {
     $match: {
-        report_year: 2021,
-        admin0pcode: "ET",
+        report_year: report_year,
+        admin0pcode: admin0pcode,
         // organization_tag: "akah",
     }
 }
