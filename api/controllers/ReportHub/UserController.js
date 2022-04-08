@@ -779,8 +779,12 @@ var UserController = {
         return res.json(200, { 'msg': 'incorrect months param (should be number and more than 6)!', 'users': false })
       }
       const months = req.param('months') || 12;
-      const admin0 = req.param('admin0pcode') ? { admin0pcode: req.param('admin0pcode') } : {}
-      let filter = Object.assign({ updatedAt: { '<=': moment().subtract(months, 'M').format('YYYY-MM-DD') } }, admin0);
+      const admin0 = req.param('admin0pcode') ? { admin0pcode: req.param('admin0pcode') } : {};
+      const not_immap = { organization_tag: {'!':'immap'}};
+      
+      // let filter = Object.assign({ updatedAt: { '<=': moment().subtract(months, 'M').format('YYYY-MM-DD') } }, admin0);
+
+      let filter = Object.assign({ last_logged_in: { '<=': moment().subtract(months, 'M').endOf('month').format('YYYY-MM-DD') } }, admin0, not_immap, { status: "active"});
       let users = await User.find(filter);
       if (!users.length) return res.json( 200, { 'msg': 'success', 'users': false })
 
@@ -859,8 +863,9 @@ var UserController = {
       }
       const months = req.param('months') || 12;
       const admin0 = req.param('admin0pcode') ? { admin0pcode: req.param('admin0pcode') } : {}
-      let filter = Object.assign({ updatedAt: { $lte: new Date(moment().subtract(months, 'M').format('YYYY-MM-DD')) } }, admin0);
-
+      const not_immap = { organization_tag: {$ne:'immap'}};
+      // let filter = Object.assign({ updatedAt: { $lte: new Date(moment().subtract(months, 'M').format('YYYY-MM-DD')) } }, admin0);
+      let filter = Object.assign({ last_logged_in: { $lte: new Date(moment().subtract(months, 'M').endOf('month').format('YYYY-MM-DD')) } }, admin0, not_immap, {status: "active"});
       // User.autoUpdatedAt = true;
       // let users = await User.update(filter, { 'status': DEACTIVATED_STATUS });
       // User.autoUpdatedAt = false;
