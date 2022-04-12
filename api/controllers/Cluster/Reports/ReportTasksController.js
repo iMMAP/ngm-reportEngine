@@ -115,6 +115,7 @@ var ReportTasksController = {
       .find()
       .where( { project_start_date: { $lte: moment().endOf( 'M' ).format( 'YYYY-MM-DD' ) } } )
       .where( { project_end_date: { $gte: moment().startOf( 'M' ).format( 'YYYY-MM-DD' ) } } )
+      .where({ project_status: "active" })
       .exec( function( err, projects ){
 
         // err
