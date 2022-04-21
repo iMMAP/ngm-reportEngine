@@ -738,40 +738,47 @@ var ReportTasksController = {
             locations.forEach( function( location, i ) {
 
               if ( NotificationService.shouldNotify( location.admin0pcode, location.cluster_id ) ) {
-                // if username dosnt exist
-                if ( !nStore[ location.email ] ) {
+                var _periodExplanation = "Monthly";
+                if (location.report_type_id && location.report_type_id === 'bi-weekly') {
+                  var number_date_of_reporting_period = moment.utc(location.reporting_period).format('D')
+                  _periodExplanation = (number_date_of_reporting_period <= 15 ? 'First Period' : 'Second Period');
+                }
+                if (_periodExplanation !== 'Second Period') {
+                  // if username dosnt exist
+                  if (!nStore[location.email]) {
 
-                // add for notification email template
-                nStore[ location.email ] = {
-                  email: location.email,
-                  username: location.username,
-                  report_month: moment().format( 'MMMM' ),
-                  report_year: moment().format('YYYY'),
-                  report_month_year: moment().format('MMMM, YYYY'),
-                  reportsStore: []
-                };
+                    // add for notification email template
+                    nStore[location.email] = {
+                      email: location.email,
+                      username: location.username,
+                      report_month: moment().format('MMMM'),
+                      report_year: moment().format('YYYY'),
+                      report_month_year: moment().format('MMMM, YYYY'),
+                      reportsStore: []
+                    };
 
-              }
-
-              // group reports by report!
-                if ( !nStore[ location.email ].reportsStore[ location.report_id ] ){
-                  var _periodExplanation = "Monthly";
-                  if (location.report_type_id && location.report_type_id === 'bi-weekly') {
-                    var number_date_of_reporting_period = moment.utc(location.reporting_period).format('D')
-                    _periodExplanation = (number_date_of_reporting_period <= 15 ? 'First Period' : 'Second Period');
                   }
-                  // add location urls
-                    if (_periodExplanation !== 'Second Period'){
-                      nStore[ location.email ].reportsStore[ location.report_id ] = {
-                        country: location.admin0name,
-                        cluster: location.cluster,
-                        username: location.username,
-                        project_title: location.project_title,
-                        report_type_id: location.report_type_id === 'bi-weekly' ? location.report_type_id : 'monthly',
-                        period_explaination: _periodExplanation,
-                          report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
-                      };
-                    }
+
+                  // group reports by report!
+                  if (!nStore[location.email].reportsStore[location.report_id]) {
+                    // var _periodExplanation = "Monthly";
+                    // if (location.report_type_id && location.report_type_id === 'bi-weekly') {
+                    //   var number_date_of_reporting_period = moment.utc(location.reporting_period).format('D')
+                    //   _periodExplanation = (number_date_of_reporting_period <= 15 ? 'First Period' : 'Second Period');
+                    // }
+                    // add location urls
+                    // if (_periodExplanation !== 'Second Period'){
+                    nStore[location.email].reportsStore[location.report_id] = {
+                      country: location.admin0name,
+                      cluster: location.cluster,
+                      username: location.username,
+                      project_title: location.project_title,
+                      report_type_id: location.report_type_id === 'bi-weekly' ? location.report_type_id : 'monthly',
+                      period_explaination: _periodExplanation,
+                      report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
+                    };
+                    // }
+                  }
                 }
               }
             });
@@ -781,43 +788,53 @@ var ReportTasksController = {
             reports.forEach( function( location, i ) {
 
               if (  NotificationService.shouldNotify( location.admin0pcode, location.cluster_id ) ) {
-                location.report_id = location.id;
-                // if username dosnt exist
-                if ( !nStore[ location.email ] ) {
 
-                // add for notification email template
-                nStore[ location.email ] = {
-                  email: location.email,
-                  username: location.username,
-                  report_month: moment().format( 'MMMM' ),
-                  report_year: moment().format('YYYY'),
-                  report_month_year: moment().format('MMMM, YYYY'),
-                  reportsStore: []
-                };
-
-              }
-
-              // group reports by report!
-              if ( !nStore[ location.email ].reportsStore[ location.report_id ] ){
                 var _periodExplanation = "Monthly"
-                if (location.report_type_id && location.report_type_id === 'bi-weekly'){
-                  var number_date_of_reporting_period = moment.utc(location.reporting_period ).format('D')
+                if (location.report_type_id && location.report_type_id === 'bi-weekly') {
+                  var number_date_of_reporting_period = moment.utc(location.reporting_period).format('D')
                   _periodExplanation = (number_date_of_reporting_period <= 15 ? 'First Period' : 'Second Period');
                 }
+                if (_periodExplanation !== 'Second Period') {
+                
+                  location.report_id = location.id;
+                  // if username dosnt exist
+                  if (!nStore[location.email]) {
 
-                // add location urls
-                if (_periodExplanation !== 'Second Period'){
-                    nStore[ location.email ].reportsStore[ location.report_id ] = {
+                    // add for notification email template
+                    nStore[location.email] = {
+                      email: location.email,
+                      username: location.username,
+                      report_month: moment().format('MMMM'),
+                      report_year: moment().format('YYYY'),
+                      report_month_year: moment().format('MMMM, YYYY'),
+                      reportsStore: []
+                    };
+
+                  }
+
+                  // group reports by report!
+                  if (!nStore[location.email].reportsStore[location.report_id]) {
+                    // var _periodExplanation = "Monthly"
+                    // if (location.report_type_id && location.report_type_id === 'bi-weekly'){
+                    //   var number_date_of_reporting_period = moment.utc(location.reporting_period ).format('D')
+                    //   _periodExplanation = (number_date_of_reporting_period <= 15 ? 'First Period' : 'Second Period');
+                    // }
+
+                    // add location urls
+                    // if (_periodExplanation !== 'Second Period'){
+                    nStore[location.email].reportsStore[location.report_id] = {
                       country: location.admin0name,
                       cluster: location.cluster,
                       username: location.username,
                       project_title: location.project_title,
-                      report_type_id: location.report_type_id === 'bi-weekly' ? location.report_type_id:'monthly',
+                      report_type_id: location.report_type_id === 'bi-weekly' ? location.report_type_id : 'monthly',
                       period_explaination: _periodExplanation,
-                        report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
+                      report_url: 'https://' + req.host + '/desk/#/cluster/projects/report/' + location.project_id + '/' + location.report_id
                     };
+                    // }
                   }
                 }
+                
               }
             });
 
@@ -833,11 +850,13 @@ var ReportTasksController = {
               }
 
               // sort
-              nStore[ user ].reports.sort(function(a, b) {
-                return a.country.localeCompare(b.country) ||
-                        a.cluster.localeCompare(b.cluster) ||
-                        a.project_title.localeCompare(b.project_title);
-              });
+              if (nStore[user].reports){
+                nStore[ user ].reports.sort(function(a, b) {
+                  return a.country.localeCompare(b.country) ||
+                          a.cluster.localeCompare(b.cluster) ||
+                          a.project_title.localeCompare(b.project_title);
+                });
+              }
 
               // push
               notifications.push( nStore[ user ] );
@@ -848,6 +867,7 @@ var ReportTasksController = {
             var counter = 0,
                 length = notifications.length;
 
+            if (!notifications.length) { res.json(200, { 'data': 'Reporting not open for ' + moment().format('MMMM') + '!' }); }
             // for each
             notifications.forEach( function( notification, i ){
 
