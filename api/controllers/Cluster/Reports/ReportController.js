@@ -978,6 +978,44 @@ var ReportController = {
 			  return res.json(200, assessed_households);
 		   })
 	  })
+  },
+  removeAllBeneficiary: async function(req, res){
+	  // request input
+	  if (!req.param('report_id') || !req.param('project_id')) {
+		  return res.json(401, { err: 'project_id report_id required!' });
+	  }
+	  var beneficiaries_find={
+		  project_id : req.param('project_id'),
+	  	  report_id : req.param('report_id')
+	  }
+	  if(req.param('group')){
+		  beneficiaries_find[req.param('groupby')] = req.param('groupby_code');
+	  }
+
+	
+	  try {
+		  // 
+		  let array_beneficiaries =[];
+		  let  beneficiairies_id = await Beneficiaries.find(beneficiaries_find);
+		  array_beneficiaries=beneficiairies_id.map(b=>b.id)
+
+		  await Promise.all([
+			  Beneficiaries.destroy(beneficiaries_find),
+			  // for NG  
+			  HygieneActivities.destroy({ beneficiary_id: { $in: array_beneficiaries} }),
+			  Borehole.destroy({ beneficiary_id: { $in: array_beneficiaries } }),
+			  CashActivities.destroy({ beneficiary_id: { $in: array_beneficiaries } }),
+			  AccountabilityActivities.destroy({ beneficiary_id: { $in: array_beneficiaries } }),
+			  SanitationActivities.destroy({ beneficiary_id: { $in: array_beneficiaries } }),
+			  WaterActivities.destroy({ beneficiary_id: { $in: array_beneficiaries } }),
+
+		  ])
+
+		  return res.json(200, { msg: 'Success!' });
+
+	  } catch (err) {
+		  return res.negotiate(err);
+	  }
   }
 
 };
