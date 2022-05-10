@@ -338,15 +338,16 @@ var AdminDashboardController = {
             if (err) return res.negotiate( err );
 
             // return
-            if ( params.list ) {
+            // if ( params.list ) {
 
               // counter
               var counter=0,
                   length=reports.length;
+                  report_saved = 0
 
               // if no reports
               if ( length === 0 ) {
-
+                if (!params.list) return  res.json(200, { 'value': report_saved });
                 // return empty
                 return res.json( 200, [] );
 
@@ -375,12 +376,14 @@ var AdminDashboardController = {
                         // add status
                         reports[i].status = '#fff176'
                         reports[i].status_title = 'Pending';
+                        report_saved++;
                       }
 
                       // reutrn
                       counter++;
                       if ( counter === length ) {
 
+                        if (!params.list) return res.json(200, { 'value': reports.length-report_saved });
                         // !csv
                         if ( !params.csv ) {
                           // table
@@ -409,11 +412,12 @@ var AdminDashboardController = {
 
               }
 
-            } else {
+            // } 
+            // else {
 
-              // return indicator
-              return res.json( 200, { 'value': reports.length });
-            }
+            //   // return indicator
+            //   return res.json( 200, { 'value': reports.length });
+            // }
 
 
           });
