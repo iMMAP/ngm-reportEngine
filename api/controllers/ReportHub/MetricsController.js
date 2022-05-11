@@ -138,10 +138,12 @@ module.exports = MetricsController = {
       let admin0pcodeURL_Native = params.admin0pcode.toLowerCase() === 'all' ? {} : { "url" :  { $regex : "/" + params.admin0pcode.toLowerCase() + "/" }  };
 
       const $nin_organizations = [ 'immap', 'arcs' ];
+      const $nin_organizations_user = ['immap'];
       const $nin_organizations_metrics = [ 'iMMAP' ];
       const $nin_username = ["Naqi100"]
 
       let organization_tag =  { organization_tag: { $nin: $nin_organizations } };
+      let organization_tag_user = { organization_tag: { $nin: $nin_organizations_user } };
       let organization =  { organization: { $nin: $nin_organizations_metrics } };
       let exclude_username = { username: { $nin: $nin_username } };
 
@@ -151,7 +153,7 @@ module.exports = MetricsController = {
       let filterObjectMetrics = _.extend({}, admin0pcodeURL, organization, dateCreated);
       let filterObjectMetricsNative = _.extend({}, admin0pcodeURL_Native, organization, dateCreated);
 
-      let filterObjectByLastLoggedIn = _.extend({}, admin0pcode, organization_tag, dateLastLoggedIn,exclude_username);
+      let filterObjectByLastLoggedIn = _.extend({}, admin0pcode, organization_tag_user, dateLastLoggedIn,exclude_username);
 
       // get value from calc
       const getResult = (array, prop) => array[0] ? array[0][prop] : 0;
