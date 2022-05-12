@@ -338,7 +338,7 @@ var AdminDashboardController = {
             if (err) return res.negotiate( err );
 
             // return
-            // if ( params.list ) {
+            if ( params.list ) {
 
               // counter
               var counter=0,
@@ -347,7 +347,6 @@ var AdminDashboardController = {
 
               // if no reports
               if ( length === 0 ) {
-                if (!params.list) return  res.json(200, { 'value': report_saved });
                 // return empty
                 return res.json( 200, [] );
 
@@ -376,14 +375,12 @@ var AdminDashboardController = {
                         // add status
                         reports[i].status = '#fff176'
                         reports[i].status_title = 'Pending';
-                        report_saved++;
                       }
 
                       // reutrn
                       counter++;
                       if ( counter === length ) {
 
-                        if (!params.list) return res.json(200, { 'value': reports.length-report_saved });
                         // !csv
                         if ( !params.csv ) {
                           // table
@@ -412,12 +409,32 @@ var AdminDashboardController = {
 
               }
 
-            // } 
-            // else {
+            } 
+            else {
+              counter_pending = 0;
+              stock_reports_saved=0;
+              // return indicator
+              if(!reports.length)  return res.json( 200, { 'value': reports.length });
+              // reports
+              reports.forEach(function (d, i) {
 
-            //   // return indicator
-            //   return res.json( 200, { 'value': reports.length });
-            // }
+                // if stocks records
+                Stock
+                  .count({ report_id: d.id })
+                  .exec(function (err, b) {
+
+                    if (b) {
+                      stock_reports_saved += 1;
+                    }
+
+                    counter_pending++;
+                    if (counter_pending === reports.length) {
+                      return res.json(200, { 'value': reports.length - stock_reports_saved });
+
+                    }
+                  });
+              });
+            }
 
 
           });
