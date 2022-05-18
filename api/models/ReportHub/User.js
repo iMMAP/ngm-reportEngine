@@ -374,7 +374,7 @@ module.exports = {
 					user_org: user.organization_name,
 					org_abbr: user.organization,
 					country: user.admin0name,
-					url: 'https://reporthub.org/desk/#/profile/' + user.username,
+					url: 'https://reporthub.immap.org/desk/#/profile/' + user.username,
 					sendername: 'ReportHub'
 				}, {
 					to: contact.email,
@@ -428,7 +428,7 @@ module.exports = {
 					user_org: user.organization_name,
 					org_abbr: user.organization,
 					country: user.admin0name,
-					url: 'https://reporthub.org/desk/#/profile/' + user.username,
+					url: 'https://reporthub.immap.org/desk/#/profile/' + user.username,
 					sendername: 'ReportHub'
 				}, {
 					to: contact.email,
@@ -521,7 +521,7 @@ module.exports = {
 						user_org: user.organization_name,
 						org_abbr: user.organization,
 						country: user.admin0name,
-						url: 'https://reporthub.org/desk/#/profile/' + user.username,
+						url: 'https://reporthub.immap.org/desk/#/profile/' + user.username,
 						sendername: 'ReportHub'
 					}, {
 						to: contact.email,
