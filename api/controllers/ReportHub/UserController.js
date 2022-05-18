@@ -377,7 +377,7 @@ var UserController = {
 					          user_org: result[0].organization_name,
 					          country: result[0].admin0name,
                     sendername: 'ReportHub',
-                    url: 'https://reporthub.org/desk/#/profile/' + result[0].username,
+                    url: 'https://reporthub.immap.org/desk/#/profile/' + result[0].username,
                   }, {
                     to: result[0].email,
                     subject: 'ReportHub User Activated!'
@@ -826,7 +826,7 @@ var UserController = {
           email: email,
           usernameStore: nStore[email].usernameStore,
           usernamesString: nStore[email].usernamesString,
-          profileBaseUrl: 'https://reporthub.org/desk/#/profile/',
+          profileBaseUrl: 'https://reporthub.immap.org/desk/#/profile/',
           sendername: 'ReportHub',
           period: months + ' months'
         },{
@@ -935,7 +935,7 @@ var UserController = {
             // cluster: nStore[email].cluster,
             // country: nStore[email].country,
             // org: nStore[email].org,
-            profileBaseUrl: 'https://reporthub.org/desk/#/profile/',
+            profileBaseUrl: 'https://reporthub.immap.org/desk/#/profile',
             reason: 'have been inactive for more than ' + months + ' months and',
             sendername: 'ReportHub'
           },{
