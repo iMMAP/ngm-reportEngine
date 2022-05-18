@@ -1516,7 +1516,7 @@ var GfaDashboardController = {
 					page_html_body += '' +
 						'<table style="border-width: 0px;">' +
 							'<td width="20%" style="border-width: 0px; margin-top:-10px;">' +
-								'<img src="https://reporthub.org/desk/images/logo/wfp-logo-standard-blue-en.png" width="90%" />' +
+								'<img src="https://reporthub.immap.org/desk/images/logo/wfp-logo-standard-blue-en.png" width="90%" />' +
 							'</td>' +
 							'<td align="center" style="border-width: 0px;">' +
 								'<h3 style="font-family: verdana, arial, sans-serif; font-size: 9px; padding-top:12px; margin:0px; font-weight: 300;">' + template.header_1 + '</h3>' +
@@ -1524,7 +1524,7 @@ var GfaDashboardController = {
 								'<h3 style="font-family: verdana, arial, sans-serif; font-size: 8px; padding-top:6px; margin:0px 0px 10px 0px; color: #616161; font-weight: 300;">' + template.header_2 + '</h3>' +
 							'</td>' +
 							'<td align="right" style="border-width: 0px;">' +
-								'<img src="https://reporthub.org/desk/images/logo/' + params.organization_tag + '-logo.png" width="40%" />' +
+								'<img src="https://reporthub.immap.org/desk/images/logo/' + params.organization_tag + '-logo.png" width="40%" />' +
 							'</td>' +
 						'</table>';
 					
@@ -1691,7 +1691,7 @@ var GfaDashboardController = {
 				page_html_body = '' +
 					'<table style="border-width: 0px;">' +
 						'<td width="20%" style="border-width: 0px; margin-top:-10px;">' +
-							'<img src="https://reporthub.org/desk/images/logo/wfp-logo-standard-blue-en.png" width="90%" />' +
+							'<img src="https://reporthub.immap.org/desk/images/logo/wfp-logo-standard-blue-en.png" width="90%" />' +
 						'</td>' +
 						'<td align="center" style="border-width: 0px;">' +
 							'<h3 style="font-family: verdana, arial, sans-serif; font-size: 12px; padding-top:12px; margin:0px; font-weight: 300;">Integrated Assistance Package in CXB</h3>' +
@@ -1700,7 +1700,7 @@ var GfaDashboardController = {
 							'<h3 style="font-family: verdana, arial, sans-serif; font-size: 10px; padding-top:3px; margin:0px 0px 10px 0px; color: #616161; font-weight: 300;">General Food Distribution for Rohyinga Refugees</h3>' +
 						'</td>' +
 						'<td align="right" style="border-width: 0px;">' +
-							'<img src="https://reporthub.org/desk/images/logo/' + params.organization_tag + '-logo.png" width="40%" />' +
+							'<img src="https://reporthub.immap.org/desk/images/logo/' + params.organization_tag + '-logo.png" width="40%" />' +
 						'</td>' +
 					'</table>' +
 					'<h3 style="font-family: verdana, arial, sans-serif; font-size: 11px; padding-top:5px; margin:0px; font-weight: 300;">Name of Partner: ' + params.organization_tag.toUpperCase() + '</h3>' +
