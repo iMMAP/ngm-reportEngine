@@ -1799,7 +1799,7 @@ var ProjectController = {
         focal_point = req.param('focal_point');
         focal_point_username = req.param('focal_point_username');
         focal_point_email = req.param('focal_point_email');
-    list_emails = [{ email: 'ngmreporthub@gmail.com', recipient: 'Admin' }, { email: 'nsadaqatzada@immap.org', recipient: 'Admin' }, { email: 'finka.mail@gmail.com', recipient: 'Admin' }, { email: 'farifin@immap.org', recipient: 'Admin'}]
+    list_emails = [{ email: 'ngmreporthub@gmail.com', recipient: 'Admin' }, { email: 'nsadaqatzada@immap.org', recipient: 'Admin' }, { email: 'finka.mail@gmail.com', recipient: 'Admin' }, { email: 'farifin@immap.org', recipient: 'Admin' }, { email: 'dchaplin@immap.org', recipient: "Admin" }, { email:"ashtylla@immap.org", recepient:"Admin"}]
 
 
     User
