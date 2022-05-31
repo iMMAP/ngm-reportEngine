@@ -79,7 +79,7 @@ var ClusterDashboardController = {
       response: req.param('response') ? req.param('response') : 'all',
       project_detail: req.param('project_detail') ? req.param('project_detail') : 'all',
       // hide_contact: req.param('hide_contact') ? req.param('hide_contact') : false,
-      report_type_id: req.param('report_type_id'),
+      report_type_id: req.param('report_type_id') ? req.param('report_type_id') :'all',
       api_key: req.param('api_key') ? req.param('api_key') : undefined,
     }
 
